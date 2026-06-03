@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div style="text-align:center; padding: 80px 20px;">
+  <h1>Support Zimbabwe's Wildlife</h1>
+  <p style="font-size:1.2rem; margin: 20px 0 40px;">Every donation helps protect and preserve Zimbabwe's precious wildlife.</p>
+  <a href="{% url 'donations:donate' %}" style="
+    display: inline-block;
+    background: #2e7d32;
+    color: #fff;
+    font-size: 1.3rem;
+    font-weight: bold;
+    padding: 18px 48px;
+    border-radius: 6px;
+    text-decoration: none;
+  ">Donate Now</a>
+</div>
+{% endblock %}

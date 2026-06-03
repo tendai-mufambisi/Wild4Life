@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\BIGSAM TECH\\\\Desktop\\\\Digits_Digits\\\\Palset\\\\Wild4Life\" -Recurse -Exclude \".venv\" -File | Where-Object {$_.Extension -in @\\('.py', '.txt', '.md', '.html', '.css', '.env', '.gitignore', '.example'\\)} | ForEach-Object {$_.FullName})",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\BIGSAM TECH\\\\Desktop\\\\Digits_Digits\\\\Palset\\\\Wild4Life\" -Recurse -File -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object -ExpandProperty FullName)"
+    ]
+  }
+}

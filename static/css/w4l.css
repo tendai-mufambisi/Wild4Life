@@ -1,0 +1,376 @@
+/* Wild4Life Donation System — single stylesheet */
+/* All brand colours are defined here as custom properties.      */
+/* No inline styles, no per-page CSS, no external frameworks.    */
+
+:root {
+  --w4l-green:       #1B7A3D;
+  --w4l-green-dark:  #14582C;
+  --w4l-green-tint:  #EAF4EE;
+  --w4l-red:         #C8202E;
+  --w4l-white:       #FFFFFF;
+  --w4l-ink:         #1A1A1A;
+  --w4l-muted:       #5F6B62;
+  --w4l-border:      #D8E2DB;
+
+  --radius:          8px;
+  --shadow:          0 2px 12px rgba(0,0,0,.08);
+  --transition:      .18s ease;
+}
+
+/* ── Reset / Base ──────────────────────────────────────────────────────────── */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--w4l-green-tint);
+  color: var(--w4l-ink);
+  line-height: 1.6;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Layout ────────────────────────────────────────────────────────────────── */
+
+.site-header {
+  background: var(--w4l-green);
+  padding: 1rem 1.5rem;
+  text-align: center;
+}
+
+.site-header .logo-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  text-decoration: none;
+  color: var(--w4l-white);
+}
+
+/* Slot for a real logo image — add <img src="..." alt="Wild4Life logo"> inside .logo-link */
+.site-header .logo-img {
+  height: 40px;
+  width: auto;
+}
+
+.site-header .logo-text {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: -.5px;
+  color: var(--w4l-white);
+}
+
+.site-header .logo-tagline {
+  font-size: .75rem;
+  opacity: .85;
+  color: var(--w4l-white);
+  display: block;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 2.5rem 1rem 3rem;
+}
+
+.card {
+  background: var(--w4l-white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2.5rem 2rem;
+  width: 100%;
+  max-width: 560px;
+}
+
+.card-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--w4l-green);
+  margin-bottom: .25rem;
+}
+
+.card-subtitle {
+  font-size: .95rem;
+  color: var(--w4l-muted);
+  margin-bottom: 2rem;
+}
+
+.site-footer {
+  background: var(--w4l-white);
+  border-top: 1px solid var(--w4l-border);
+  text-align: center;
+  padding: 1rem;
+  font-size: .8rem;
+  color: var(--w4l-muted);
+}
+
+/* ── Form ──────────────────────────────────────────────────────────────────── */
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+@media (max-width: 480px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .card {
+    padding: 1.75rem 1.25rem;
+  }
+}
+
+.field {
+  margin-bottom: 1.25rem;
+}
+
+.field label {
+  display: block;
+  font-size: .875rem;
+  font-weight: 600;
+  color: var(--w4l-ink);
+  margin-bottom: .35rem;
+}
+
+.field input,
+.field select {
+  display: block;
+  width: 100%;
+  font-size: 1rem; /* ≥16px prevents iOS auto-zoom */
+  padding: .65rem .85rem;
+  border: 1.5px solid var(--w4l-border);
+  border-radius: var(--radius);
+  color: var(--w4l-ink);
+  background: var(--w4l-white);
+  transition: border-color var(--transition), box-shadow var(--transition);
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.field input:focus,
+.field select:focus {
+  outline: none;
+  border-color: var(--w4l-green);
+  box-shadow: 0 0 0 3px rgba(27,122,61,.18);
+}
+
+.field input::placeholder {
+  color: var(--w4l-muted);
+  opacity: 1;
+}
+
+.field .helptext {
+  font-size: .78rem;
+  color: var(--w4l-muted);
+  margin-top: .3rem;
+}
+
+/* Amount row with currency prefix */
+.amount-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: .75rem;
+  align-items: end;
+}
+
+@media (max-width: 360px) {
+  .amount-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ── Error / Validation ────────────────────────────────────────────────────── */
+/* Red is used ONLY for genuine error/danger states — never decorative.        */
+
+.field.has-error input,
+.field.has-error select {
+  border-color: var(--w4l-red);
+  box-shadow: 0 0 0 3px rgba(200,32,46,.15);
+}
+
+.field-errors {
+  list-style: none;
+  margin-top: .35rem;
+}
+
+.field-errors li {
+  font-size: .82rem;
+  color: var(--w4l-red);
+  display: flex;
+  align-items: flex-start;
+  gap: .3rem;
+}
+
+.field-errors li::before {
+  content: "⚠";
+  flex-shrink: 0;
+  margin-top: .05rem;
+}
+
+.form-errors {
+  background: #fdf0f1;
+  border: 1.5px solid var(--w4l-red);
+  border-radius: var(--radius);
+  padding: .85rem 1rem;
+  margin-bottom: 1.25rem;
+  font-size: .875rem;
+  color: var(--w4l-red);
+}
+
+/* ── Buttons ───────────────────────────────────────────────────────────────── */
+/* Primary CTA is ALWAYS green — never red.                                    */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .4rem;
+  font-size: 1rem;
+  font-weight: 600;
+  padding: .75rem 1.75rem;
+  border-radius: var(--radius);
+  border: 2px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background var(--transition), box-shadow var(--transition), transform var(--transition);
+  line-height: 1.2;
+}
+
+.btn:focus-visible {
+  outline: 3px solid var(--w4l-green);
+  outline-offset: 2px;
+}
+
+.btn-primary {
+  background: var(--w4l-green);
+  color: var(--w4l-white);
+  border-color: var(--w4l-green);
+  width: 100%;
+  margin-top: .5rem;
+}
+
+.btn-primary:hover {
+  background: var(--w4l-green-dark);
+  border-color: var(--w4l-green-dark);
+  box-shadow: 0 4px 12px rgba(27,122,61,.3);
+}
+
+.btn-primary:active {
+  transform: translateY(1px);
+}
+
+.btn-primary:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.btn-secondary {
+  background: var(--w4l-white);
+  color: var(--w4l-green);
+  border-color: var(--w4l-green);
+}
+
+.btn-secondary:hover {
+  background: var(--w4l-green-tint);
+}
+
+/* ── Thank-you / Success page ─────────────────────────────────────────────── */
+
+.success-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+  display: block;
+  text-align: center;
+}
+
+.reference-box {
+  background: var(--w4l-green-tint);
+  border: 2px solid var(--w4l-green);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.reference-label {
+  font-size: .8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--w4l-muted);
+  margin-bottom: .35rem;
+}
+
+.reference-code {
+  font-size: 1.6rem;
+  font-weight: 800;
+  font-family: "Courier New", Courier, monospace;
+  color: var(--w4l-green);
+  letter-spacing: .05em;
+  word-break: break-all;
+}
+
+.reference-hint {
+  font-size: .82rem;
+  color: var(--w4l-muted);
+  margin-top: .5rem;
+}
+
+.status-badge {
+  display: inline-block;
+  padding: .25rem .75rem;
+  border-radius: 999px;
+  font-size: .8rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
+.status-badge.paid      { background: #d4edda; color: #155724; }
+.status-badge.pending   { background: #fff3cd; color: #856404; }
+.status-badge.failed    { background: #f8d7da; color: #721c24; }
+.status-badge.cancelled { background: #e2e3e5; color: #383d41; }
+
+/* ── Error page ────────────────────────────────────────────────────────────── */
+
+.error-card .card-title {
+  color: var(--w4l-red);
+}
+
+/* ── Divider ───────────────────────────────────────────────────────────────── */
+
+.divider {
+  border: none;
+  border-top: 1px solid var(--w4l-border);
+  margin: 1.5rem 0;
+}
+
+/* ── Trust strip ───────────────────────────────────────────────────────────── */
+
+.trust-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .5rem;
+  font-size: .78rem;
+  color: var(--w4l-muted);
+  margin-top: 1.25rem;
+}
+
+.trust-strip .lock-icon {
+  font-size: .9rem;
+}

@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block title %}Thank You{% endblock %}
+
+{% block content %}
+<div class="card">
+
+  {% if status == "PAID" %}
+    <span class="success-icon" aria-hidden="true">&#x2705;</span>
+    <h1 class="card-title" style="text-align:center;">Thank you for your donation!</h1>
+    <p class="card-subtitle" style="text-align:center;">
+      Your payment has been confirmed. Wild4Life Organisation is grateful for your support.
+    </p>
+
+    {% if donation %}
+      <div class="reference-box" aria-label="Donation reference">
+        <p class="reference-label">Your donation reference</p>
+        <p class="reference-code">{{ donation.reference }}</p>
+        <p class="reference-hint">Keep this reference for your records. You may need it if you contact us about this donation.</p>
+      </div>
+
+      <hr class="divider">
+
+      <dl style="font-size:.9rem; color:var(--w4l-muted); line-height:2;">
+        <div style="display:flex; justify-content:space-between;">
+          <dt>Amount</dt>
+          <dd style="color:var(--w4l-ink); font-weight:600;">{{ donation.currency }} {{ donation.amount }}</dd>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <dt>Donor</dt>
+          <dd style="color:var(--w4l-ink);">{{ donation.donor.first_name }} {{ donation.donor.last_name }}</dd>
+        </div>
+        <div style="display:flex; justify-content:space-between;">
+          <dt>Status</dt>
+          <dd><span class="status-badge paid">Paid</span></dd>
+        </div>
+      </dl>
+    {% endif %}
+
+    <p style="font-size:.85rem; color:var(--w4l-muted); margin-top:1.5rem; text-align:center;">
+      A confirmation email has been sent to your inbox.
+    </p>
+
+  {% elif status == "PENDING" %}
+    <span class="success-icon" aria-hidden="true">&#x23F3;</span>
+    <h1 class="card-title" style="text-align:center;">Payment Pending</h1>
+    <p class="card-subtitle" style="text-align:center;">
+      Your payment is being processed. This may take a moment.
+    </p>
+
+    {% if donation %}
+      <div class="reference-box">
+        <p class="reference-label">Your reference</p>
+        <p class="reference-code">{{ donation.reference }}</p>
+        <p class="reference-hint">Keep this reference. If payment completes you will receive a confirmation email.</p>
+      </div>
+    {% endif %}
+
+    <p style="font-size:.85rem; color:var(--w4l-muted); margin-top:1rem; text-align:center;">
+      You can safely close this page. We will email you once payment is confirmed.
+    </p>
+
+  {% else %}
+    <span class="success-icon" aria-hidden="true">&#x2139;&#xFE0F;</span>
+    <h1 class="card-title" style="text-align:center;">Donation Received</h1>
+    <p class="card-subtitle" style="text-align:center;">
+      Thank you for completing the payment process with Paynow.
+    </p>
+
+    {% if donation %}
+      <div class="reference-box">
+        <p class="reference-label">Your reference</p>
+        <p class="reference-code">{{ donation.reference }}</p>
+        <p class="reference-hint">Keep this reference for your records.</p>
+      </div>
+    {% endif %}
+
+    <p style="font-size:.85rem; color:var(--w4l-muted); margin-top:1rem; text-align:center;">
+      We will send you a confirmation email once your payment status is finalised.
+    </p>
+  {% endif %}
+
+  <hr class="divider">
+
+  <div style="text-align:center;">
+    <a href="{% url 'donations:donate' %}" class="btn btn-secondary">Make another donation</a>
+  </div>
+
+  <div class="trust-strip">
+    <span class="lock-icon">&#x1F512;</span>
+    <span>Secured by <strong>Paynow Zimbabwe</strong></span>
+  </div>
+
+</div>
+{% endblock %}

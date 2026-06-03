@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Make a Donation{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h1 class="card-title">Make a Donation</h1>
+  <p class="card-subtitle">Your support protects Zimbabwe's wildlife. Every dollar counts.</p>
+
+  {% if form.non_field_errors %}
+    <div class="form-errors" role="alert">
+      {% for error in form.non_field_errors %}
+        <p>{{ error }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  <form method="post" action="{% url 'donations:donate' %}" novalidate>
+    {% csrf_token %}
+
+    <div class="form-row">
+      <div class="field {% if form.first_name.errors %}has-error{% endif %}">
+        <label for="{{ form.first_name.id_for_label }}">{{ form.first_name.label }}</label>
+        {{ form.first_name }}
+        {% if form.first_name.errors %}
+          <ul class="field-errors" role="alert">
+            {% for error in form.first_name.errors %}<li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+
+      <div class="field {% if form.last_name.errors %}has-error{% endif %}">
+        <label for="{{ form.last_name.id_for_label }}">{{ form.last_name.label }}</label>
+        {{ form.last_name }}
+        {% if form.last_name.errors %}
+          <ul class="field-errors" role="alert">
+            {% for error in form.last_name.errors %}<li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="field {% if form.email.errors %}has-error{% endif %}">
+      <label for="{{ form.email.id_for_label }}">{{ form.email.label }}</label>
+      {{ form.email }}
+      {% if form.email.errors %}
+        <ul class="field-errors" role="alert">
+          {% for error in form.email.errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="field {% if form.phone.errors %}has-error{% endif %}">
+      <label for="{{ form.phone.id_for_label }}">{{ form.phone.label }}</label>
+      {{ form.phone }}
+      {% if form.phone.help_text %}
+        <p class="helptext">{{ form.phone.help_text }}</p>
+      {% endif %}
+      {% if form.phone.errors %}
+        <ul class="field-errors" role="alert">
+          {% for error in form.phone.errors %}<li>{{ error }}</li>{% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
+    <div class="amount-row">
+      <div class="field {% if form.currency.errors %}has-error{% endif %}">
+        <label for="{{ form.currency.id_for_label }}">{{ form.currency.label }}</label>
+        {{ form.currency }}
+      </div>
+
+      <div class="field {% if form.amount.errors %}has-error{% endif %}">
+        <label for="{{ form.amount.id_for_label }}">{{ form.amount.label }}</label>
+        {{ form.amount }}
+        {% if form.amount.errors %}
+          <ul class="field-errors" role="alert">
+            {% for error in form.amount.errors %}<li>{{ error }}</li>{% endfor %}
+          </ul>
+        {% endif %}
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">
+      Donate now &#x2192;
+    </button>
+  </form>
+
+  <div class="trust-strip">
+    <span class="lock-icon">&#x1F512;</span>
+    <span>Payments processed securely by <strong>Paynow Zimbabwe</strong></span>
+  </div>
+</div>
+{% endblock %}

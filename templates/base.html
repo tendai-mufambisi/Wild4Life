@@ -1,0 +1,35 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Donate to Wild4Life Organisation — protecting Zimbabwe's wildlife.">
+  <title>{% block title %}Donate{% endblock %} | Wild4Life</title>
+  <link rel="stylesheet" href="{% static 'css/w4l.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<header class="site-header" role="banner">
+  <a href="{% url 'donations:donate' %}" class="logo-link" aria-label="Wild4Life — go to donation form">
+    <!--
+      LOGO SLOT: replace the text below with an <img> tag when the real logo is available.
+      Example:
+        <img src="{% static 'img/w4l-logo.png' %}" alt="Wild4Life logo" class="logo-img">
+    -->
+    <span class="logo-text">Wild4Life</span>
+  </a>
+  <span class="logo-tagline">Protecting Zimbabwe's wildlife</span>
+</header>
+
+<main role="main">
+  {% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer" role="contentinfo">
+  <p>Wild4Life Organisation &mdash; Zimbabwe PVO &nbsp;|&nbsp; <span class="lock-icon">&#x1F512;</span> Secured by Paynow</p>
+</footer>
+
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>
