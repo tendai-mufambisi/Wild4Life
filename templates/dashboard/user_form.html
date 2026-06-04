@@ -1,0 +1,111 @@
+{% extends "dashboard/base.html" %}
+{% block title %}{{ action }} Team Member{% endblock %}
+{% block page_title %}{{ action }} Team Member{% endblock %}
+{% block nav_users %}active{% endblock %}
+
+{% block content %}
+<div style="max-width:520px;">
+
+  <a href="{% url 'donations:user_list' %}" class="btn-ghost" style="margin-bottom:1.25rem;display:inline-flex;">
+    <i data-lucide="arrow-left"></i>&nbsp; Back to team
+  </a>
+
+  <div class="editor-meta">
+    <h2 style="font-size:1.1rem;font-weight:700;color:var(--text);margin-bottom:1.5rem;">
+      {{ action }} Dashboard Member
+    </h2>
+
+    <form method="post">
+      {% csrf_token %}
+
+      {% if errors %}
+      <div class="login-error" style="margin-bottom:1rem;">
+        <i data-lucide="alert-circle"></i>
+        {% for field, msg in errors.items %}{{ msg }}{% if not forloop.last %} &middot; {% endif %}{% endfor %}
+      </div>
+      {% endif %}
+
+      {% if action == "Add" %}
+      <div style="margin-bottom:1rem;">
+        <label>Username</label>
+        <input type="text" name="username" value="{{ form_data.username|default:'' }}"
+               placeholder="e.g. tatenda_m" autocomplete="off" required>
+        {% if errors.username %}<div class="field-error"><i data-lucide="alert-circle"></i>{{ errors.username }}</div>{% endif %}
+      </div>
+      {% endif %}
+
+      <div style="margin-bottom:1rem;">
+        <label>Full Name</label>
+        <input type="text" name="full_name"
+               value="{{ form_data.full_name|default:target_user.get_full_name|default:'' }}"
+               placeholder="First Last" required>
+      </div>
+
+      <div style="margin-bottom:1rem;">
+        <label>Email</label>
+        <input type="email" name="email"
+               value="{{ form_data.email|default:target_user.email|default:'' }}"
+               placeholder="email@example.com">
+      </div>
+
+      <div style="margin-bottom:1rem;">
+        <label>Role</label>
+        <select name="role">
+          {% for value, label in role_choices %}
+          <option value="{{ value }}" {% if form_data.role == value or target_profile.role == value %}selected{% endif %}>
+            {{ label }}
+          </option>
+          {% endfor %}
+        </select>
+        {% if errors.role %}<div class="field-error"><i data-lucide="alert-circle"></i>{{ errors.role }}</div>{% endif %}
+      </div>
+
+      {% if action == "Add" %}
+      <div style="margin-bottom:1rem;">
+        <label>Password</label>
+        <input type="password" name="password" placeholder="••••••••" autocomplete="new-password" required>
+        {% if errors.password %}<div class="field-error"><i data-lucide="alert-circle"></i>{{ errors.password }}</div>{% endif %}
+      </div>
+      <div style="margin-bottom:1.5rem;">
+        <label>Confirm Password</label>
+        <input type="password" name="password2" placeholder="••••••••" autocomplete="new-password" required>
+        {% if errors.password2 %}<div class="field-error"><i data-lucide="alert-circle"></i>{{ errors.password2 }}</div>{% endif %}
+      </div>
+      {% else %}
+      <div style="margin-bottom:1.5rem;">
+        <label>New Password <span style="font-weight:400;opacity:.6;">(leave blank to keep current)</span></label>
+        <input type="password" name="password" placeholder="••••••••" autocomplete="new-password">
+      </div>
+      {% endif %}
+
+      <!-- Role description card -->
+      <div style="background:var(--bg);border-radius:var(--radius-sm);padding:1rem;margin-bottom:1.5rem;font-size:.8rem;color:var(--muted);">
+        <div id="role-hint-admin"  style="display:none;"><strong style="color:var(--sidebar-bg);">Admin</strong> — Full access: analytics, donations, blog, and user management.</div>
+        <div id="role-hint-manager" style="display:none;"><strong style="color:#8a5f00;">Manager</strong> — View analytics, manage all donations and blog posts. Can publish posts. Cannot manage users.</div>
+        <div id="role-hint-writer" style="display:none;"><strong style="color:#1d4ed8;">Writer</strong> — Can create and edit their own blog posts. Saves as draft only. No access to analytics or donations.</div>
+      </div>
+
+      <div class="editor-actions">
+        <button type="submit" class="btn-save">
+          <i data-lucide="save"></i>&nbsp; {{ action }} Member
+        </button>
+        <a href="{% url 'donations:user_list' %}" class="btn-ghost">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  const roleSelect = document.querySelector('select[name="role"]');
+  function showRoleHint() {
+    document.querySelectorAll('[id^="role-hint-"]').forEach(el => el.style.display = 'none');
+    const hint = document.getElementById('role-hint-' + roleSelect.value);
+    if (hint) hint.style.display = 'block';
+  }
+  roleSelect.addEventListener('change', showRoleHint);
+  showRoleHint();
+</script>
+{% endblock %}

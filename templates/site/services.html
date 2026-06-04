@@ -1,0 +1,108 @@
+{% extends "site/base.html" %}
+{% load static %}
+{% block title %}Wild4Life Organisation | Services{% endblock %}
+
+{% block content %}
+<main class="main">
+
+  <div class="page-title dark-background" data-aos="fade" style="background-image: url('{% static 'site/img/gallery/hero.jpg' %}');">
+    <div class="container position-relative">
+      <h1>Wild4Life Services</h1>
+      <p>Strengthening rural health systems in Zimbabwe&rsquo;s hardest&#8209;to&#8209;reach communities through an integrated, community&#8209;centred model.</p>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="{% url 'donations:home' %}">Home</a></li>
+          <li class="current">Services</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section id="services" class="services section">
+    <div class="container section-title">
+      <h2>Core interventions</h2>
+      <p>What makes the Wild4Life model uniquely effective</p>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="services-content" data-aos="fade-left" data-aos-duration="900">
+            <span class="subtitle">Integrated &amp; mutually reinforcing</span>
+            <h2>From clinical mentorship to gender transformation</h2>
+            <p data-aos="fade-right" data-aos-duration="800">We mentor multi&#8209;disciplinary teams, conduct integrated outreaches, support VHW peer mentors, roll out differentiated service delivery, facilitate health centre committee exchanges, and lead community dialogues on gender norms.</p>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="services-image" data-aos="fade-left" data-aos-delay="200">
+            <img src="{% static 'site/img/services/about 2.jpg' %}" alt="Community health outreach" class="img-fluid">
+            <div class="shape-circle"></div>
+            <div class="shape-accent"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-5" data-aos="fade-up" data-aos-duration="1000">
+        <div class="col-12">
+          <div class="services-slider swiper init-swiper">
+            <script type="application/json" class="swiper-config">{"slidesPerView":3,"spaceBetween":20,"loop":true,"speed":600,"autoplay":{"delay":5000},"navigation":{"nextEl":".swiper-nav-next","prevEl":".swiper-nav-prev"},"breakpoints":{"320":{"slidesPerView":1},"768":{"slidesPerView":2},"992":{"slidesPerView":3}}}</script>
+            <div class="swiper-wrapper">
+              <div class="swiper-slide"><div class="service-card"><div class="icon-box"><i class="bi bi-people"></i></div><a href="#" class="arrow-link"><i class="bi bi-arrow-right"></i></a><div class="content"><h4>Integrated Clinical Mentorship</h4><p>Multi&#8209;disciplinary teams mentor on HIV, TB, IMNCI, MNCH, mental health &ndash; plus M&amp;E, pharmacy, CQI targets.</p><div class="service-number">01</div></div></div></div>
+              <div class="swiper-slide"><div class="service-card"><div class="icon-box"><i class="bi bi-truck"></i></div><a href="#" class="arrow-link"><i class="bi bi-arrow-right"></i></a><div class="content"><h4>Integrated Primary Care Outreaches</h4><p>Mentors join nurses in remote villages offering acute dental, ophthalmic care.</p><div class="service-number">02</div></div></div></div>
+              <div class="swiper-slide"><div class="service-card"><div class="icon-box"><i class="bi bi-heart-pulse"></i></div><a href="#" class="arrow-link"><i class="bi bi-arrow-right"></i></a><div class="content"><h4>VHW Mentorship &amp; peer mentors</h4><p>Assessing village health workers, creating a sub&#8209;cadre of VHW peer mentors for continuous on&#8209;job training.</p><div class="service-number">03</div></div></div></div>
+              <div class="swiper-slide"><div class="service-card"><div class="icon-box"><i class="bi bi-diagram-3"></i></div><a href="#" class="arrow-link"><i class="bi bi-arrow-right"></i></a><div class="content"><h4>Differentiated service delivery</h4><p>CARGS, FARGS, Fast Track, support groups &ndash; decongest clinics, improve adherence.</p><div class="service-number">04</div></div></div></div>
+              <div class="swiper-slide"><div class="service-card"><div class="icon-box"><i class="bi bi-chat-square-text"></i></div><a href="#" class="arrow-link"><i class="bi bi-arrow-right"></i></a><div class="content"><h4>Community dialogues &amp; gender norms</h4><p>Communities discuss health concerns, introspect on gender stereotypes, and drive transformation.</p><div class="service-number">05</div></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row"><div class="col-12"><div class="swiper-navigation"><button class="swiper-nav-prev"><i class="bi bi-chevron-left"></i></button><button class="swiper-nav-next"><i class="bi bi-chevron-right"></i></button></div></div></div>
+    </div>
+  </section>
+
+  <section id="interventions" class="services section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Our five pillars</h2>
+      <p>Capacity &middot; MERL &middot; Community &middot; Infrastructure &middot; Governance</p>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row gy-5">
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="200"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/data.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-award"></i></div><h3>Capacity building</h3><p>Integrated clinical mentorship, telehealth, CQI &ndash; strengthening health worker competences.</p></div></div></div>
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="300"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/data2.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-bar-chart"></i></div><h3>MERL</h3><p>Data for decisions &ndash; routine data + abstracts, W4L database, KPIs across all projects.</p></div></div></div>
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="400"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/comunity.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-people-fill"></i></div><h3>Community&#8209;centric</h3><p>VHWs drive programs, outreach to remotest areas, community groups generate demand.</p></div></div></div>
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="300"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/sustainanble.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-building"></i></div><h3>Sustainable infrastructure</h3><p>Water/sanitation, maternal waiting homes, equipment, drug storage.</p></div></div></div>
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="400"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/leadership.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-shield-check"></i></div><h3>Governance &amp; leadership</h3><p>DHEs, health centre committees, transparency, accountability &ndash; continuity beyond Wild4Life.</p></div></div></div>
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="300"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/tech.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-phone"></i></div><h3>Technology integration</h3><p>Telehealth, helpline, telemedicine &ndash; improving access and strengthening mentorship.</p></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="call-to-action" class="call-to-action section light-background">
+    <div class="container">
+      <div class="cta-wrapper">
+        <div class="cta-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div><div class="shape shape-3"></div></div>
+        <div class="row g-0">
+          <div class="col-lg-7">
+            <div class="cta-content p-5">
+              <span class="badge-custom">Theory of Change</span>
+              <h2 class="mt-4 mb-4">Mutually reinforcing drivers of impact</h2>
+              <p class="mb-4">Strengthening provider competencies, increasing access, district coordination, data quality, and community capacities lead to stronger coordination, improved demand and uptake &ndash; ultimately healthy communities.</p>
+              <div class="action-buttons">
+                <a href="https://wa.me/263778378061" class="btn btn-primary"><i class="bi bi-whatsapp"></i> WhatsApp us</a>
+                <a href="{% url 'donations:contact' %}" class="btn btn-outline">Contact team</a>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="cta-image-container">
+              <img src="{% static 'site/img/services/training.jpg' %}" alt="rural clinic" class="img-fluid main-image">
+              <div class="floating-element element-1"><i class="bi bi-star-fill"></i><span>Rated 8.3/10 (external eval)</span></div>
+              <div class="floating-element element-2"><i class="bi bi-people"></i><span>Community driven</span></div>
+              <div class="pattern-dots"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+{% endblock %}

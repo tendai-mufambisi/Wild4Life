@@ -15,8 +15,12 @@ from datetime import date
 from decimal import Decimal
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db import models, transaction
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.utils import timezone
+from django.utils.text import slugify
 
 from .utils import normalize_phone
 
@@ -202,3 +206,114 @@ class Donation(models.Model):
             currency=currency,
             status="PENDING",
         )
+
+
+# ── User roles ─────────────────────────────────────────────────────────────────
+
+User = get_user_model()
+
+ROLE_ADMIN   = "admin"
+ROLE_MANAGER = "manager"
+ROLE_WRITER  = "writer"
+
+ROLE_CHOICES = [
+    (ROLE_ADMIN,   "Admin"),
+    (ROLE_MANAGER, "Manager"),
+    (ROLE_WRITER,  "Writer"),
+]
+
+ROLE_LABELS = {ROLE_ADMIN: "Admin", ROLE_MANAGER: "Manager", ROLE_WRITER: "Writer"}
+
+
+class UserProfile(models.Model):
+    """
+    Extends the built-in User with a role for dashboard access control.
+
+    Admin   — full access: analytics, donations, donors, blog, user management.
+    Manager — analytics, donations, donors, all blog posts (publish/unpublish).
+    Writer  — only their own blog posts (create/edit drafts, cannot publish).
+    """
+
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="profile")
+    role = models.CharField(max_length=20, choices=ROLE_CHOICES, default=ROLE_WRITER)
+
+    def __str__(self) -> str:
+        return f"{self.user.username} [{self.get_role_display()}]"
+
+    @property
+    def is_admin(self) -> bool:
+        return self.role == ROLE_ADMIN or self.user.is_superuser
+
+    @property
+    def is_manager(self) -> bool:
+        return self.role in (ROLE_ADMIN, ROLE_MANAGER) or self.user.is_superuser
+
+    @property
+    def can_publish(self) -> bool:
+        return self.is_manager
+
+    @property
+    def can_manage_users(self) -> bool:
+        return self.is_admin
+
+
+@receiver(post_save, sender=User)
+def _ensure_profile(sender, instance, created, **kwargs):
+    if created and instance.is_staff:
+        UserProfile.objects.get_or_create(
+            user=instance,
+            defaults={"role": ROLE_ADMIN if instance.is_superuser else ROLE_WRITER},
+        )
+
+
+# ── Blog ───────────────────────────────────────────────────────────────────────
+
+BLOG_STATUS = [("draft", "Draft"), ("published", "Published")]
+
+
+class BlogPost(models.Model):
+    """
+    A blog post authored by a staff user.
+
+    Content is stored as HTML produced by the Quill rich-text editor.
+    Thumbnail is an optional uploaded image.
+    Slug is auto-generated from the title and guaranteed unique.
+    """
+
+    id          = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    title       = models.CharField(max_length=255)
+    slug        = models.SlugField(max_length=255, unique=True, blank=True)
+    excerpt     = models.CharField(max_length=350, blank=True, help_text="Short summary shown on listing pages.")
+    content     = models.TextField(help_text="HTML from the rich-text editor.")
+    thumbnail   = models.ImageField(upload_to="blog/thumbnails/", blank=True, null=True)
+    author      = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="blog_posts")
+    status      = models.CharField(max_length=15, choices=BLOG_STATUS, default="draft", db_index=True)
+    published_at = models.DateTimeField(null=True, blank=True)
+    created_at  = models.DateTimeField(auto_now_add=True)
+    updated_at  = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["-created_at"]
+
+    def __str__(self) -> str:
+        return f"{self.title} [{self.status}]"
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base = slugify(self.title)[:200]
+            slug = base
+            n = 1
+            while BlogPost.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                slug = f"{base}-{n}"
+                n += 1
+            self.slug = slug
+        if self.status == "published" and not self.published_at:
+            self.published_at = timezone.now()
+        elif self.status == "draft":
+            self.published_at = None
+        super().save(*args, **kwargs)
+
+    @property
+    def reading_time(self) -> int:
+        words = len(self.content.split())
+        return max(1, round(words / 200))

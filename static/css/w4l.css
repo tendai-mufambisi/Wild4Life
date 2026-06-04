@@ -3,17 +3,19 @@
 /* No inline styles, no per-page CSS, no external frameworks.    */
 
 :root {
-  --w4l-green:       #1B7A3D;
-  --w4l-green-dark:  #14582C;
-  --w4l-green-tint:  #EAF4EE;
-  --w4l-red:         #C8202E;
+  /* Wild4Life brand palette — matches the main site */
+  --w4l-green:       #1a4d4e;   /* brand teal (was generic green) */
+  --w4l-green-dark:  #14363a;
+  --w4l-green-tint:  #eaf4f4;
+  --w4l-gold:        #e8b13e;   /* brand gold accent */
+  --w4l-red:         #b3413d;   /* brand red */
   --w4l-white:       #FFFFFF;
-  --w4l-ink:         #1A1A1A;
-  --w4l-muted:       #5F6B62;
-  --w4l-border:      #D8E2DB;
+  --w4l-ink:         #0d2b2c;
+  --w4l-muted:       #5f7475;
+  --w4l-border:      #dde6e6;
 
-  --radius:          8px;
-  --shadow:          0 2px 12px rgba(0,0,0,.08);
+  --radius:          10px;
+  --shadow:          0 2px 16px rgba(0,0,0,.08);
   --transition:      .18s ease;
 }
 
@@ -28,6 +30,7 @@
 html {
   font-size: 16px;
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -42,39 +45,101 @@ body {
 
 /* ── Layout ────────────────────────────────────────────────────────────────── */
 
+/* Header — white background matching the main site nav */
 .site-header {
-  background: var(--w4l-green);
-  padding: 1rem 1.5rem;
-  text-align: center;
+  background: var(--w4l-white);
+  padding: .8rem 1.5rem;
+  border-bottom: 1px solid var(--w4l-border);
+  box-shadow: 0 1px 8px rgba(0,0,0,.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
+.site-header-inner {
+  max-width: 800px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Logo — image only, no text */
 .site-header .logo-link {
   display: inline-flex;
   align-items: center;
-  gap: .6rem;
   text-decoration: none;
-  color: var(--w4l-white);
+  flex-shrink: 0;
 }
 
-/* Slot for a real logo image — add <img src="..." alt="Wild4Life logo"> inside .logo-link */
 .site-header .logo-img {
-  height: 40px;
+  height: 48px;
   width: auto;
+  transition: opacity var(--transition);
 }
 
-.site-header .logo-text {
-  font-size: 1.4rem;
+.site-header .logo-img:hover { opacity: .88; }
+
+/* Nav — right-side links */
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  flex-wrap: wrap;
+}
+
+/* Primary "Back to site" — teal filled button */
+.nav-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .45rem 1rem;
+  background: var(--w4l-green);
+  color: var(--w4l-white);
+  border-radius: 8px;
+  font-size: .8rem;
   font-weight: 700;
-  letter-spacing: -.5px;
-  color: var(--w4l-white);
+  text-decoration: none;
+  transition: background var(--transition), box-shadow var(--transition);
+  white-space: nowrap;
+  letter-spacing: .01em;
 }
 
-.site-header .logo-tagline {
-  font-size: .75rem;
-  opacity: .85;
-  color: var(--w4l-white);
-  display: block;
+.nav-home-link:hover {
+  background: var(--w4l-green-dark);
+  box-shadow: 0 2px 10px rgba(26,77,78,.25);
 }
+
+/* Secondary nav links — dark muted text on white */
+.nav-link-sm {
+  padding: .4rem .7rem;
+  color: var(--w4l-muted);
+  font-size: .8rem;
+  font-weight: 500;
+  text-decoration: none;
+  border-radius: 6px;
+  transition: color var(--transition), background var(--transition);
+}
+
+.nav-link-sm:hover {
+  color: var(--w4l-green);
+  background: var(--w4l-green-tint);
+}
+
+/* Footer links */
+.footer-links-sm {
+  margin-top: .3rem;
+  font-size: .75rem;
+}
+
+.footer-links-sm a {
+  color: var(--w4l-muted);
+  text-decoration: none;
+}
+
+.footer-links-sm a:hover { color: var(--w4l-green); }
 
 main {
   flex: 1;
@@ -155,8 +220,8 @@ main {
   color: var(--w4l-ink);
   background: var(--w4l-white);
   transition: border-color var(--transition), box-shadow var(--transition);
-  appearance: none;
   -webkit-appearance: none;
+  appearance: none;
 }
 
 .field input:focus,
@@ -201,22 +266,48 @@ main {
 }
 
 .field-errors {
-  list-style: none;
   margin-top: .35rem;
 }
 
-.field-errors li {
+/* Error items — using <p> to avoid <ul>/<li> linter warnings with Django tags */
+.field-errors p {
   font-size: .82rem;
   color: var(--w4l-red);
   display: flex;
   align-items: flex-start;
   gap: .3rem;
+  margin: 0;
 }
 
-.field-errors li::before {
+.field-errors p::before {
   content: "⚠";
   flex-shrink: 0;
   margin-top: .05rem;
+}
+
+/* "Back to homepage" button row */
+.back-home-wrap {
+  text-align: center;
+  margin-bottom: .5rem;
+}
+
+/* Summary dl rows on thank-you page */
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: .9rem;
+  color: var(--w4l-muted);
+  line-height: 2;
+}
+
+.summary-row .summary-value {
+  color: var(--w4l-ink);
+  font-weight: 600;
+}
+
+.action-row {
+  text-align: center;
+  margin-bottom: .75rem;
 }
 
 .form-errors {
@@ -288,6 +379,12 @@ main {
   background: var(--w4l-green-tint);
 }
 
+/* ── Layout utilities ─────────────────────────────────────────────────────── */
+
+.u-center { text-align: center; }
+.u-mt-sm  { margin-top: 1rem;   }
+.u-mt-md  { margin-top: 1.5rem; }
+
 /* ── Thank-you / Success page ─────────────────────────────────────────────── */
 
 .success-icon {
@@ -296,6 +393,9 @@ main {
   display: block;
   text-align: center;
 }
+
+.card-title.u-center,
+.card-subtitle.u-center { text-align: center; }
 
 .reference-box {
   background: var(--w4l-green-tint);

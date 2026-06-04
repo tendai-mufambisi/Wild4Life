@@ -5,10 +5,14 @@
 
 {% block content %}
 <div class="page-header">
-  <h1>💳 Donations <span style="font-size:.85rem;font-weight:400;color:var(--muted);">· showing up to 200</span></h1>
+  <h1 class="page-heading">
+    <span class="page-icon"><i data-lucide="credit-card"></i></span>
+    Donations
+    <span class="page-count">showing up to 200</span>
+  </h1>
   <form method="get" class="search-bar">
-    <input type="text" name="q" value="{{ search }}" placeholder="Ref, name, phone…">
-    <select name="status">
+    <input type="text" name="q" value="{{ search }}" placeholder="Ref, name, phone&hellip;">
+    <select name="status" aria-label="Filter by status">
       <option value="" {% if not status_filter %}selected{% endif %}>All statuses</option>
       <option value="PAID"      {% if status_filter == "PAID"      %}selected{% endif %}>Paid</option>
       <option value="PENDING"   {% if status_filter == "PENDING"   %}selected{% endif %}>Pending</option>
@@ -17,7 +21,7 @@
     </select>
     <button type="submit">Filter</button>
     {% if search or status_filter %}
-    <a href="{% url 'donations:dashboard_donations' %}" style="font-size:.8rem;color:var(--muted);text-decoration:none;">Clear</a>
+    <a href="{% url 'donations:dashboard_donations' %}" class="clear-link">Clear</a>
     {% endif %}
   </form>
 </div>
@@ -42,17 +46,17 @@
       <tr>
         <td><span class="ref-code">{{ d.reference }}</span></td>
         <td class="donor-name">{{ d.donor.first_name }} {{ d.donor.last_name }}</td>
-        <td style="font-family:monospace;font-size:.78rem;color:var(--muted);">{{ d.donor.phone }}</td>
+        <td class="mono-cell muted-cell">{{ d.donor.phone }}</td>
         <td class="amount-cell">{{ d.amount|floatformat:2 }}</td>
-        <td style="color:var(--muted);font-size:.78rem;font-weight:600;">{{ d.currency }}</td>
+        <td class="currency-cell">{{ d.currency }}</td>
         <td>
           <span class="badge {{ d.status|lower }}">
             <span class="badge-dot"></span>{{ d.status }}
           </span>
         </td>
-        <td style="color:var(--muted);font-size:.75rem;white-space:nowrap;">{{ d.created_at|date:"d M Y H:i" }}</td>
-        <td style="color:var(--muted);font-size:.75rem;white-space:nowrap;">
-          {% if d.paid_at %}{{ d.paid_at|date:"d M Y H:i" }}{% else %}—{% endif %}
+        <td class="date-cell">{{ d.created_at|date:"d M Y H:i" }}</td>
+        <td class="date-cell">
+          {% if d.paid_at %}{{ d.paid_at|date:"d M Y H:i" }}{% else %}&mdash;{% endif %}
         </td>
       </tr>
       {% endfor %}
@@ -60,7 +64,7 @@
   </table>
   {% else %}
   <div class="empty-state">
-    <span class="empty-icon">💳</span>
+    <span class="empty-icon"><i data-lucide="credit-card"></i></span>
     {% if search or status_filter %}No donations match your filter.{% else %}No donations yet.{% endif %}
   </div>
   {% endif %}

@@ -1,0 +1,473 @@
+{% extends "site/base.html" %}
+{% load static %}
+{% block title %}Wild4Life Organisation | Integrated rural health{% endblock %}
+{% block extra_scripts %}
+<script>
+  // Donor PWA: show install banner (not to logged-in staff)
+  let donorPrompt = null;
+  const donorBanner = document.getElementById('donor-pwa-modal');
+  const donorInstall = document.getElementById('donor-install-btn');
+  const donorDismiss = document.getElementById('donor-dismiss-btn');
+
+  window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    donorPrompt = e;
+    if (!localStorage.getItem('pwa-dismissed-donor')) {
+      setTimeout(() => {
+        if (donorBanner) { donorBanner.classList.add('show'); donorBanner.removeAttribute('aria-hidden'); }
+      }, 5000);
+    }
+  });
+
+  if (donorInstall) {
+    donorInstall.addEventListener('click', async () => {
+      if (!donorPrompt) return;
+      donorPrompt.prompt();
+      await donorPrompt.userChoice;
+      donorPrompt = null;
+      donorBanner.classList.remove('show');
+    });
+  }
+
+  if (donorDismiss) {
+    donorDismiss.addEventListener('click', () => {
+      donorBanner.classList.remove('show');
+      localStorage.setItem('pwa-dismissed-donor', '1');
+    });
+  }
+
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js').catch(() => {});
+  }
+</script>
+{% endblock %}
+
+{% block content %}
+<main class="main">
+
+  <!-- Hero Section -->
+  <section id="hero" class="hero section dark-background">
+    <div id="hero-carousel" class="carousel slide carousel-fade" data-bs-ride="carousel" data-bs-interval="5000">
+      <div class="carousel-item active">
+        <img src="{% static 'site/img/hero-carousel/hero 1.jpg' %}" alt="">
+        <div class="carousel-container">
+          <h2>Wild4Life: health for hardest&#8209;to&#8209;reach</h2>
+          <p>An integrated model strengthening rural health systems in Binga, Hwange and Lupane.</p>
+          <a href="#about" class="btn-get-started">Learn more</a>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="{% static 'site/img/hero-carousel/2.jpg' %}" alt="">
+        <div class="carousel-container">
+          <h2>Clinical mentorship &amp; beyond</h2>
+          <p>Multi&#8209;disciplinary teams mentor nurses on HIV, TB, MNCH, mental health &ndash; tailored to each clinic.</p>
+          <a href="#services" class="btn-get-started">Our services</a>
+        </div>
+      </div>
+      <div class="carousel-item">
+        <img src="{% static 'site/img/hero-carousel/3.jpg' %}" alt="">
+        <div class="carousel-container">
+          <h2>Community at the centre</h2>
+          <p>Village health workers, peer mentors, and community dialogues drive demand and accountability.</p>
+          <a href="#interventions" class="btn-get-started">Explore programs</a>
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev" aria-label="Previous slide">
+        <span class="carousel-control-prev-icon bi bi-chevron-left" aria-hidden="true"></span>
+      </a>
+      <a class="carousel-control-next" href="#hero-carousel" role="button" data-bs-slide="next" aria-label="Next slide">
+        <span class="carousel-control-next-icon bi bi-chevron-right" aria-hidden="true"></span>
+      </a>
+      <ol class="carousel-indicators"></ol>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section id="about" class="about section">
+    <div class="container section-title">
+      <h2>Our model</h2>
+      <p>Five integrated pillars that address health system weaknesses in rural Zimbabwe</p>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row g-5 align-items-center">
+        <div class="col-lg-6 position-relative">
+          <div class="about-img" data-aos="fade-right">
+            <img src="{% static 'site/img/services/about.jpg' %}" class="img-fluid" alt="">
+          </div>
+          <div class="experience-badge" data-aos="fade-up">
+            <h2>10+</h2>
+            <p>Years of<br>experience</p>
+          </div>
+          <div class="projects-badge" data-aos="fade-left">
+            <h2>3</h2>
+            <p>Districts</p>
+          </div>
+        </div>
+        <div class="col-lg-6" data-aos="fade-left">
+          <h2 class="display-4 fw-bold mb-4">Comprehensive, integrated, community&#8209;led</h2>
+          <p class="lead mb-4">Wild4Life combines clinical mentorship, MERL, community participation, sustainable infrastructure, and governance to transform rural health.</p>
+          <div class="features">
+            <div class="feature-item mb-4" data-aos="fade-up">
+              <div class="feature-icon"><i class="bi bi-clipboard2-pulse"></i></div>
+              <div class="feature-content">
+                <h4>Capacity building for health workers</h4>
+                <p>On&#8209;job clinical mentorship &amp; telehealth platforms, continuous evaluation for uniform quality.</p>
+              </div>
+            </div>
+            <div class="feature-item mb-4" data-aos="fade-up" data-aos-delay="100">
+              <div class="feature-icon"><i class="bi bi-bar-chart-line"></i></div>
+              <div class="feature-content">
+                <h4>MERL &ndash; data for decisions</h4>
+                <p>Routine data + abstracts into W4L database; track KPIs across all donor projects, eliminating silos.</p>
+              </div>
+            </div>
+            <ul class="check-list" data-aos="fade-up" data-aos-delay="200">
+              <li><i class="bi bi-check-circle"></i> Community health workers &amp; volunteers drive village&#8209;level programs.</li>
+              <li><i class="bi bi-check-circle"></i> Infrastructure: water, solar, maternal waiting homes, drug storage.</li>
+              <li><i class="bi bi-check-circle"></i> Governance: DHEs &amp; health centre committees for transparency.</li>
+            </ul>
+            <a href="#services" class="btn btn-primary btn-lg mt-4">Discover our interventions</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Certificate Section -->
+  <section id="w4l-cert-section">
+    <div class="w4l-cert-container">
+      <div class="w4l-cert-card">
+        <div class="w4l-cert-content">
+          <div class="w4l-cert-picture-div">
+            <div class="w4l-cert-image-frame">
+              <img src="{% static 'site/img/cert.jpg' %}"
+                   alt="Wild4Life official registration certificate"
+                   onerror="this.onerror=null;this.src='https://placehold.co/400x500/1e3c3f/b3413d?text=Certificate+Image';">
+            </div>
+            <div class="w4l-cert-pic-caption">
+              <i class="fas fa-certificate"></i> official certificate &middot; PVO#40/2017
+            </div>
+          </div>
+          <div class="w4l-cert-details">
+            <h3><i class="fas fa-check-circle"></i> Certificate of Registration</h3>
+            <div class="w4l-reg-number"><i class="fas fa-hashtag"></i> PVO# 40/2017</div>
+            <p>
+              <strong>Wild4Life Organisation</strong> &ndash; registered Private Voluntary Organization.<br>
+              Trust Deed MA909/2012 &middot; PVO registration renewed annually.<br>
+              <span class="w4l-cert-ministry">Ministry of Public Service, Labour and Social Welfare</span>
+            </p>
+            <div class="w4l-cert-flag">
+              <i class="fas fa-stamp"></i>
+              <span>Registered in Zimbabwe &middot; In good standing</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="w4l-cert-footer-note">
+        <i class="fas fa-file-contract"></i> Full documentation available upon request
+      </div>
+    </div>
+  </section>
+
+  <!-- Services Section -->
+  <section id="services" class="services section">
+    <div class="container section-title">
+      <h2>Core interventions</h2>
+      <p>What makes the Wild4Life model uniquely effective</p>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row">
+        <div class="col-lg-6">
+          <div class="services-content" data-aos="fade-left" data-aos-duration="900">
+            <span class="subtitle">Integrated &amp; mutually reinforcing</span>
+            <h2>From clinical mentorship to gender transformation</h2>
+            <p data-aos="fade-right" data-aos-duration="800">We mentor multi&#8209;disciplinary teams, conduct integrated outreaches, support VHW peer mentors, roll out differentiated service delivery, facilitate health centre committee exchanges, and lead community dialogues on gender norms.</p>
+          </div>
+        </div>
+        <div class="col-lg-6">
+          <div class="services-image" data-aos="fade-left" data-aos-delay="200">
+            <img src="{% static 'site/img/services/about 2.jpg' %}" alt="Community health outreach" class="img-fluid">
+            <div class="shape-circle"></div>
+            <div class="shape-accent"></div>
+          </div>
+        </div>
+      </div>
+      <div class="row mt-5" data-aos="fade-up" data-aos-duration="1000">
+        <div class="col-12">
+          <div class="services-slider swiper init-swiper">
+            <script type="application/json" class="swiper-config">
+              {"slidesPerView":3,"spaceBetween":20,"loop":true,"speed":600,"autoplay":{"delay":5000},"navigation":{"nextEl":".swiper-nav-next","prevEl":".swiper-nav-prev"},"breakpoints":{"320":{"slidesPerView":1},"768":{"slidesPerView":2},"992":{"slidesPerView":3}}}
+            </script>
+            <div class="swiper-wrapper">
+              <div class="swiper-slide"><div class="service-card"><div class="icon-box"><i class="bi bi-people"></i></div><a href="#" class="arrow-link"><i class="bi bi-arrow-right"></i></a><div class="content"><h4>Integrated Clinical Mentorship</h4><p>Multi&#8209;disciplinary teams mentor on HIV, TB, IMNCI, MNCH, mental health &ndash; plus M&amp;E, pharmacy, CQI targets.</p><div class="service-number">01</div></div></div></div>
+              <div class="swiper-slide"><div class="service-card"><div class="icon-box"><i class="bi bi-truck"></i></div><a href="#" class="arrow-link"><i class="bi bi-arrow-right"></i></a><div class="content"><h4>Integrated Primary Care Outreaches</h4><p>Mentors join nurses in remote villages offering acute dental, ophthalmic care &ndash; attracting patients for HIV testing, family planning, etc.</p><div class="service-number">02</div></div></div></div>
+              <div class="swiper-slide"><div class="service-card"><div class="icon-box"><i class="bi bi-heart-pulse"></i></div><a href="#" class="arrow-link"><i class="bi bi-arrow-right"></i></a><div class="content"><h4>VHW Mentorship &amp; peer mentors</h4><p>Assessing village health workers, creating a sub&#8209;cadre of VHW peer mentors for continuous on&#8209;job training.</p><div class="service-number">03</div></div></div></div>
+              <div class="swiper-slide"><div class="service-card"><div class="icon-box"><i class="bi bi-diagram-3"></i></div><a href="#" class="arrow-link"><i class="bi bi-arrow-right"></i></a><div class="content"><h4>Differentiated service delivery</h4><p>CARGS, FARGS, Fast Track, support groups &ndash; decongest clinics, improve adherence, free nurse time.</p><div class="service-number">04</div></div></div></div>
+              <div class="swiper-slide"><div class="service-card"><div class="icon-box"><i class="bi bi-chat-square-text"></i></div><a href="#" class="arrow-link"><i class="bi bi-arrow-right"></i></a><div class="content"><h4>Community dialogues &amp; gender norms</h4><p>Communities discuss health concerns, introspect on gender stereotypes, and drive transformation.</p><div class="service-number">05</div></div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row"><div class="col-12"><div class="swiper-navigation"><button type="button" class="swiper-nav-prev" aria-label="Previous service"><i class="bi bi-chevron-left"></i></button><button type="button" class="swiper-nav-next" aria-label="Next service"><i class="bi bi-chevron-right"></i></button></div></div></div>
+    </div>
+  </section>
+
+  <!-- Five Pillars -->
+  <section id="interventions" class="services section">
+    <div class="container section-title" data-aos="fade-up">
+      <h2>Our five pillars</h2>
+      <p>Capacity &middot; MERL &middot; Community &middot; Infrastructure &middot; Governance</p>
+    </div>
+    <div class="container" data-aos="fade-up" data-aos-delay="100">
+      <div class="row gy-5">
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="200"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/data.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-award"></i></div><h3>Capacity building</h3><p>Integrated clinical mentorship, telehealth, CQI &ndash; strengthening health worker competences.</p></div></div></div>
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="300"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/data2.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-bar-chart"></i></div><h3>MERL</h3><p>Data for decisions &ndash; routine data + abstracts, W4L database, KPIs across all projects.</p></div></div></div>
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="400"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/comunity.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-people-fill"></i></div><h3>Community&#8209;centric</h3><p>VHWs drive programs, outreach to remotest areas, community groups generate demand.</p></div></div></div>
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="300"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/sustainanble.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-building"></i></div><h3>Sustainable infrastructure</h3><p>Water/sanitation, maternal waiting homes, equipment, drug storage &ndash; WHO&#8209;SARA based.</p></div></div></div>
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="400"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/leadership.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-shield-check"></i></div><h3>Governance &amp; leadership</h3><p>DHEs, health centre committees, transparency, accountability &ndash; continuity beyond Wild4Life.</p></div></div></div>
+        <div class="col-xl-4 col-md-6" data-aos="zoom-in" data-aos-delay="300"><div class="service-item"><div class="img"><img src="{% static 'site/img/services/tech.jpg' %}" class="img-fluid" alt=""></div><div class="details position-relative"><div class="icon"><i class="bi bi-phone"></i></div><h3>Technology integration</h3><p>Telehealth, helpline, telemedicine &ndash; improving access, shortening turnaround, strengthening mentorship.</p></div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Call To Action -->
+  <section id="call-to-action" class="call-to-action section light-background">
+    <div class="container">
+      <div class="cta-wrapper">
+        <div class="cta-shapes"><div class="shape shape-1"></div><div class="shape shape-2"></div><div class="shape shape-3"></div></div>
+        <div class="row g-0">
+          <div class="col-lg-7">
+            <div class="cta-content p-5">
+              <span class="badge-custom">Theory of Change</span>
+              <h2 class="mt-4 mb-4">Mutually reinforcing drivers of impact</h2>
+              <p class="mb-4">Strengthening provider competencies, increasing access, district coordination, data quality, and community capacities lead to stronger coordination, improved demand and uptake &ndash; ultimately healthy communities.</p>
+              <div class="row benefits-row mb-5">
+                <div class="col-md-6"><div class="benefit-item"><div class="icon-box"><i class="bi bi-check-circle-fill"></i></div><div class="benefit-content"><h5>Comprehensive</h5><p>All primary care needs, mutually reinforcing.</p></div></div></div>
+                <div class="col-md-6"><div class="benefit-item"><div class="icon-box"><i class="bi bi-check-circle-fill"></i></div><div class="benefit-content"><h5>Tailored &amp; sustainable</h5><p>Support per facility weakness, built for continuity.</p></div></div></div>
+              </div>
+              <div class="action-buttons">
+                <a href="https://wa.me/263778378061" class="btn btn-primary"><i class="bi bi-whatsapp"></i> WhatsApp us</a>
+                <a href="#contact" class="btn btn-outline">Contact team</a>
+                <div class="guarantee-badge"><i class="bi bi-patch-check-fill"></i><span>Data&#8209;driven CQI</span></div>
+              </div>
+            </div>
+          </div>
+          <div class="col-lg-5">
+            <div class="cta-image-container">
+              <img src="{% static 'site/img/services/training.jpg' %}" alt="rural clinic" class="img-fluid main-image">
+              <div class="floating-element element-1"><i class="bi bi-star-fill"></i><span>Rated 8.3/10 (external eval)</span></div>
+              <div class="floating-element element-2"><i class="bi bi-people"></i><span>Community driven</span></div>
+              <div class="pattern-dots"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Gallery Snippets -->
+  <section id="portfolio" class="portfolio section">
+    <div class="container section-title">
+      <h2>Work snippets</h2>
+      <p>Moments from our interventions in Matabeleland North</p>
+    </div>
+    <section class="gallery-slider-top gallery-slider section" id="gallery-slider">
+      <div class="container"><div class="gallery-container"><div class="swiper init-swiper">
+        <script type="application/json" class="swiper-config">{"loop":true,"speed":800,"autoplay":{"delay":4000},"effect":"coverflow","grabCursor":true,"centeredSlides":true,"slidesPerView":"auto","coverflowEffect":{"rotate":50,"stretch":0,"depth":100,"modifier":1,"slideShadows":true},"pagination":{"el":".swiper-pagination","type":"bullets","clickable":true},"navigation":{"nextEl":".swiper-button-next","prevEl":".swiper-button-prev"},"breakpoints":{"320":{"slidesPerView":1,"spaceBetween":10},"768":{"slidesPerView":2,"spaceBetween":20},"1024":{"slidesPerView":3,"spaceBetween":30}}}</script>
+        <div class="swiper-wrapper">
+          {% for n in "12345678" %}<div class="swiper-slide"><div class="gallery-item"><div class="gallery-img"><a class="glightbox" data-gallery="images-gallery" href="{% static 'site/img/gallery/1 (' %}{{ forloop.counter }}).jpg" aria-label="View field photo {{ forloop.counter }}"><img src="{% static 'site/img/gallery/1 (' %}{{ forloop.counter }}).jpg" class="img-fluid w-100" alt="Wild4Life field work photo {{ forloop.counter }}"><div class="gallery-overlay"><i class="bi bi-plus-circle" aria-hidden="true"></i></div></a></div></div></div>{% endfor %}
+        </div>
+        <div class="swiper-pagination"></div>
+        <div class="swiper-button-next"></div>
+        <div class="swiper-button-prev"></div>
+      </div></div></div>
+    </section>
+    <section id="gallery" class="gallery section">
+      <div class="container">
+        <div class="gallery-grid">
+          <div class="gallery-item"><a class="glightbox" data-gallery="images-gallery" href="{% static 'site/img/gallery/1 (10).jpg' %}" aria-label="View photo 10"><img src="{% static 'site/img/gallery/1 (10).jpg' %}" class="img-fluid" alt="Wild4Life programme photo"><div class="gallery-overlay" aria-hidden="true"><i class="bi bi-plus-lg"></i></div></a></div>
+          <div class="gallery-item featured"><a class="glightbox" data-gallery="images-gallery" href="{% static 'site/img/gallery/1 (11).jpg' %}" aria-label="View photo 11"><img src="{% static 'site/img/gallery/1 (11).jpg' %}" class="img-fluid" alt="Wild4Life programme photo"><div class="gallery-overlay" aria-hidden="true"><i class="bi bi-plus-lg"></i></div></a></div>
+          <div class="gallery-item"><a class="glightbox" data-gallery="images-gallery" href="{% static 'site/img/gallery/1 (12).jpg' %}" aria-label="View photo 12"><img src="{% static 'site/img/gallery/1 (12).jpg' %}" class="img-fluid" alt="Wild4Life programme photo"><div class="gallery-overlay" aria-hidden="true"><i class="bi bi-plus-lg"></i></div></a></div>
+          <div class="gallery-item"><a class="glightbox" data-gallery="images-gallery" href="{% static 'site/img/gallery/1 (13).jpg' %}" aria-label="View photo 13"><img src="{% static 'site/img/gallery/1 (13).jpg' %}" class="img-fluid" alt="Wild4Life programme photo"><div class="gallery-overlay" aria-hidden="true"><i class="bi bi-plus-lg"></i></div></a></div>
+          <div class="gallery-item"><a class="glightbox" data-gallery="images-gallery" href="{% static 'site/img/gallery/1 (14).jpg' %}" aria-label="View photo 14"><img src="{% static 'site/img/gallery/1 (14).jpg' %}" class="img-fluid" alt="Wild4Life programme photo"><div class="gallery-overlay" aria-hidden="true"><i class="bi bi-plus-lg"></i></div></a></div>
+          <div class="gallery-item"><a class="glightbox" data-gallery="images-gallery" href="{% static 'site/img/gallery/1 (15).jpg' %}" aria-label="View photo 15"><img src="{% static 'site/img/gallery/1 (15).jpg' %}" class="img-fluid" alt="Wild4Life programme photo"><div class="gallery-overlay" aria-hidden="true"><i class="bi bi-plus-lg"></i></div></a></div>
+          <div class="gallery-item featured"><a class="glightbox" data-gallery="images-gallery" href="{% static 'site/img/gallery/1 (16).jpg' %}" aria-label="View photo 16"><img src="{% static 'site/img/gallery/1 (16).jpg' %}" class="img-fluid" alt="Wild4Life programme photo"><div class="gallery-overlay" aria-hidden="true"><i class="bi bi-plus-lg"></i></div></a></div>
+          <div class="gallery-item"><a class="glightbox" data-gallery="images-gallery" href="{% static 'site/img/gallery/1 (17).jpg' %}" aria-label="View photo 17"><img src="{% static 'site/img/gallery/1 (17).jpg' %}" class="img-fluid" alt="Wild4Life programme photo"><div class="gallery-overlay" aria-hidden="true"><i class="bi bi-plus-lg"></i></div></a></div>
+        </div>
+        <div class="text-center mt-5"><a href="{% url 'donations:gallery' %}" class="btn-view-more">View full gallery <i class="bi bi-arrow-right"></i></a></div>
+      </div>
+    </section>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="faq section">
+    <div class="container section-title">
+      <h2>Frequently Asked Questions</h2>
+      <p>About Wild4Life integrated health model</p>
+    </div>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-10">
+          <div class="faq-wrapper">
+            <div class="faq-item faq-active">
+              <div class="faq-header"><div class="faq-icon"><i class="bi bi-question-circle"></i></div><h4>What areas does Wild4Life cover?</h4><div class="faq-toggle"><i class="bi bi-plus"></i><i class="bi bi-dash"></i></div></div>
+              <div class="faq-content"><div class="content-inner"><p>Binga, Hwange and Lupane districts in Matabeleland North, Zimbabwe &ndash; focusing on the hardest&#8209;to&#8209;reach rural communities.</p></div></div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-header"><div class="faq-icon"><i class="bi bi-question-circle"></i></div><h4>How is the model different from other health programs?</h4><div class="faq-toggle"><i class="bi bi-plus"></i><i class="bi bi-dash"></i></div></div>
+              <div class="faq-content"><div class="content-inner"><p>It combines five pillars (mentorship, MERL, community, infrastructure, governance) that are mutually reinforcing, and it tailors support to each facility&rsquo;s weaknesses using minimal external inputs.</p></div></div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-header"><div class="faq-icon"><i class="bi bi-question-circle"></i></div><h4>Do you work with the Ministry of Health?</h4><div class="faq-toggle"><i class="bi bi-plus"></i><i class="bi bi-dash"></i></div></div>
+              <div class="faq-content"><div class="content-inner"><p>Yes, all activities are done through existing public health facilities, and we collaborate closely with MOHCC and health centre committees.</p></div></div>
+            </div>
+            <div class="faq-item">
+              <div class="faq-header"><div class="faq-icon"><i class="bi bi-question-circle"></i></div><h4>How can I refer someone to your services?</h4><div class="faq-toggle"><i class="bi bi-plus"></i><i class="bi bi-dash"></i></div></div>
+              <div class="faq-content"><div class="content-inner"><p>Contact us via WhatsApp +263 778 378 061 or call +263 712 582 550. We work directly with communities and health facilities.</p></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact -->
+  <section id="contact" class="contact section">
+    <div class="container section-title">
+      <h2>Contact Us</h2>
+      <p>Reach out to Wild4Life for partnerships, inquiries, or support</p>
+    </div>
+    <div class="container">
+      <div class="contact-main-wrapper">
+        <div class="map-wrapper">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d967422.9254695349!2d26.041183692751254!3d-18.70900608039626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1s418%20South%20Cliff%20Hwange%2C%20Zimbabwe!5e0!3m2!1sen!2sus!4v1771594384178!5m2!1sen!2sus"
+            width="100%" height="100%" class="map-borderless" allowfullscreen="" loading="lazy" title="Wild4Life location map"></iframe>
+        </div>
+        <div class="contact-content">
+          <div class="contact-cards-container">
+            <div class="contact-card"><div class="icon-box"><i class="bi bi-geo-alt"></i></div><div class="contact-text"><h4>Location</h4><p>Office 22, Hwange Colliery Hospital Health Department Hwange, Zimbabwe</p></div></div>
+            <div class="contact-card"><div class="icon-box"><i class="bi bi-envelope"></i></div><div class="contact-text"><h4>Email</h4><p><a href="mailto:info@wild4lifezw.org">info@wild4lifezw.org</a></p></div></div>
+            <div class="contact-card"><div class="icon-box"><i class="bi bi-telephone"></i></div><div class="contact-text"><h4>Call / WhatsApp</h4><p><a href="tel:+263778378061">+263 778 378 061</a> / <a href="tel:+263712582550">+263 712 582 550</a></p></div></div>
+            <div class="contact-card"><div class="icon-box"><i class="bi bi-clock"></i></div><div class="contact-text"><h4>Open Hours</h4><p>Mon&#8209;Fri 8AM&#8209;5PM (field activities flexible)</p></div></div>
+          </div>
+          <div class="contact-form-container">
+            <h3>Send a message</h3>
+            <p>For partnership inquiries or to learn more about our model.</p>
+            <form action="{% url 'donations:contact_submit' %}" method="post" class="php-email-form">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-md-6 form-group"><input type="text" name="name" class="form-control" placeholder="Your Name" required></div>
+                <div class="col-md-6 form-group mt-3 mt-md-0"><input type="email" class="form-control" name="email" placeholder="Your Email" required></div>
+              </div>
+              <div class="form-group mt-3"><input type="text" class="form-control" name="subject" placeholder="Subject" required></div>
+              <div class="form-group mt-3"><textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea></div>
+              <div class="my-3">
+                <div class="loading">Loading</div>
+                <div class="error-message"></div>
+                <div class="sent-message">Your message has been sent. Thank you!</div>
+              </div>
+              <div class="form-submit">
+                <button type="submit">Send Message</button>
+                <div class="social-links">
+                  <a href="https://wa.me/263778378061" aria-label="WhatsApp Wild4Life"><i class="bi bi-whatsapp"></i></a>
+                  <a href="#" aria-label="Wild4Life on Facebook"><i class="bi bi-facebook"></i></a>
+                  <a href="#" aria-label="Wild4Life on Instagram"><i class="bi bi-instagram"></i></a>
+                  <a href="#" aria-label="Wild4Life on LinkedIn"><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+  <!-- Blog section (only when posts exist) -->
+  {% if latest_posts %}
+  <section class="w4l-blog-section">
+    <div class="container">
+      <div class="section-title" data-aos="fade-up">
+        <h2>From our blog</h2>
+        <p>Stories, updates, and field insights from our programmes</p>
+      </div>
+      <div class="row gy-4">
+        {% for post in latest_posts %}
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
+          <article class="w4l-blog-card">
+            <a href="{% url 'donations:blog_detail' post.slug %}" class="w4l-blog-thumb-link" aria-label="Read: {{ post.title }}">
+              {% if post.thumbnail %}
+              <img src="{{ post.thumbnail.url }}" alt="{{ post.title }}" class="w4l-blog-thumb">
+              {% else %}
+              <div class="w4l-blog-thumb-placeholder">
+                <i class="bi bi-file-earmark-text" aria-hidden="true"></i>
+              </div>
+              {% endif %}
+            </a>
+            <div class="w4l-blog-body">
+              <div class="w4l-blog-meta">
+                <span><i class="bi bi-calendar3" aria-hidden="true"></i> {{ post.published_at|date:"d M Y" }}</span>
+                <span><i class="bi bi-clock" aria-hidden="true"></i> {{ post.reading_time }} min read</span>
+              </div>
+              <h3 class="w4l-blog-title">
+                <a href="{% url 'donations:blog_detail' post.slug %}">{{ post.title }}</a>
+              </h3>
+              {% if post.excerpt %}<p class="w4l-blog-excerpt">{{ post.excerpt }}</p>{% endif %}
+              <a href="{% url 'donations:blog_detail' post.slug %}" class="w4l-blog-read-more">
+                Read more <i class="bi bi-arrow-right" aria-hidden="true"></i>
+              </a>
+            </div>
+          </article>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="text-center mt-5">
+        <a href="{% url 'donations:blog_list' %}" class="w4l-blog-view-all">
+          View all posts <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+</main>
+
+<!-- Donor PWA install prompt -->
+<div id="donor-pwa-modal" class="donor-pwa-banner" aria-hidden="true">
+  <div class="donor-pwa-inner">
+    <img src="{% static 'site/img/wild.jpg' %}" alt="Wild4Life" class="donor-pwa-logo">
+    <div class="donor-pwa-text">
+      <strong>Add Wild4Life to your home screen</strong>
+      <span>Donate faster next time — one tap away.</span>
+    </div>
+    <button type="button" id="donor-install-btn" class="donor-pwa-install" aria-label="Install Wild4Life app">Install</button>
+    <button type="button" id="donor-dismiss-btn" class="donor-pwa-dismiss" aria-label="Dismiss install prompt">&times;</button>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_head %}
+<link rel="manifest" href="/manifest.json">
+<link rel="apple-touch-icon" href="{% static 'site/img/apple-touch-icon.jpg' %}">
+<style>
+  #w4l-cert-section { font-family:'Inter',sans-serif; background:#f2f0ea; padding:40px 24px; box-sizing:border-box; }
+  .w4l-cert-container { max-width:1200px; margin:0 auto; }
+  .w4l-cert-card { background:#fff; border-radius:40px; box-shadow:0 30px 50px -15px rgba(20,40,35,.25); padding:40px 36px; border:1px solid rgba(180,60,55,.15); }
+  .w4l-cert-content { display:flex; flex-wrap:wrap; align-items:center; gap:40px; }
+  .w4l-cert-picture-div { flex:1 1 300px; min-width:260px; background:#1e3c3f; border-radius:32px; padding:18px; box-shadow:0 20px 30px -8px rgba(30,60,63,.5); display:flex; flex-direction:column; align-items:center; border:2px solid #b3413d; }
+  .w4l-cert-image-frame { width:100%; background:#e8ddcc; border-radius:24px; padding:12px; border:3px solid #d9c8a7; }
+  .w4l-cert-image-frame img { width:100%; height:auto; display:block; border-radius:16px; border:2px solid #b3413d; }
+  .w4l-cert-pic-caption { margin-top:16px; font-size:.85rem; font-weight:500; color:#f2e3c6; background:#b3413d; padding:8px 22px; border-radius:60px; display:inline-flex; align-items:center; gap:8px; }
+  .w4l-cert-details { flex:1 1 320px; }
+  .w4l-cert-details h3 { font-size:2rem; font-weight:700; color:#1e3c3f; margin:0 0 12px; display:flex; align-items:center; gap:10px; border-left:8px solid #b3413d; padding-left:20px; }
+  .w4l-cert-details h3 i { color:#b3413d; }
+  .w4l-reg-number { background:#fff0e8; padding:8px 18px; border-radius:60px; font-weight:700; font-size:1.25rem; color:#1e3c3f; display:inline-block; margin:8px 0 12px; border:2px solid #b3413d; }
+  .w4l-cert-details p { color:#2a4b4d; font-size:1rem; margin:12px 0 0; line-height:1.6; background:rgba(180,65,61,.03); padding:18px 22px; border-radius:30px; border:1px solid rgba(30,60,63,.15); }
+  .w4l-cert-details p strong { color:#b3413d; font-weight:700; }
+  .w4l-cert-flag { background:#1e3c3f; border-radius:100px 16px 16px 100px; padding:16px 28px 16px 24px; font-weight:600; color:#faf1dd; font-size:1.1rem; display:inline-flex; align-items:center; gap:12px; border:2px solid #b3413d; box-shadow:0 6px 0 #0f292b; margin-top:20px; }
+  .w4l-cert-flag i { color:#ffc857; font-size:1.6rem; }
+  .w4l-cert-footer-note { text-align:center; margin-top:30px; font-size:.9rem; color:#fcf5e6; background:#1e3c3f; padding:10px 28px; border-radius:60px; width:fit-content; margin-left:auto; margin-right:auto; border:2px solid #b3413d; font-weight:500; }
+  @media (max-width:850px) { .w4l-cert-content { flex-direction:column; } .w4l-cert-picture-div { max-width:450px; margin:0 auto; width:100%; } }
+</style>
+{% endblock %}

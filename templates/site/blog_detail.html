@@ -1,0 +1,206 @@
+{% extends "site/base.html" %}
+{% load static %}
+{% block title %}{{ post.title }} — Wild4Life Blog{% endblock %}
+{% block meta_description %}{{ post.excerpt|default:post.title }}{% endblock %}
+
+{% block content %}
+<main class="main">
+
+  <!-- Hero -->
+  {% if post.thumbnail %}
+  <div class="w4l-post-hero" style="background-image:url('{{ post.thumbnail.url }}');">
+    <div class="w4l-post-hero-overlay">
+      <div class="container">
+        <nav class="breadcrumbs mb-3">
+          <ol>
+            <li><a href="{% url 'donations:home' %}">Home</a></li>
+            <li><a href="{% url 'donations:blog_list' %}">Blog</a></li>
+            <li class="current">{{ post.title|truncatechars:40 }}</li>
+          </ol>
+        </nav>
+        <h1 class="w4l-post-title">{{ post.title }}</h1>
+        <div class="w4l-post-meta-hero">
+          <span><i class="bi bi-calendar3"></i> {{ post.published_at|date:"d M Y" }}</span>
+          <span><i class="bi bi-person"></i> {{ post.author.get_full_name|default:post.author.username }}</span>
+          <span><i class="bi bi-clock"></i> {{ post.reading_time }} min read</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="page-title dark-background">
+    <div class="container position-relative">
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="{% url 'donations:home' %}">Home</a></li>
+          <li><a href="{% url 'donations:blog_list' %}">Blog</a></li>
+          <li class="current">{{ post.title|truncatechars:40 }}</li>
+        </ol>
+      </nav>
+      <h1>{{ post.title }}</h1>
+      <div class="w4l-post-meta-hero">
+        <span><i class="bi bi-calendar3"></i> {{ post.published_at|date:"d M Y" }}</span>
+        <span><i class="bi bi-person"></i> {{ post.author.get_full_name|default:post.author.username }}</span>
+        <span><i class="bi bi-clock"></i> {{ post.reading_time }} min read</span>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Article body -->
+  <section class="section" style="padding:60px 0;">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+          {% if post.excerpt %}
+          <p class="w4l-post-excerpt lead mb-4">{{ post.excerpt }}</p>
+          <hr style="border-color:#e8eee9;margin-bottom:2rem;">
+          {% endif %}
+
+          <div class="w4l-post-content">
+            {{ post.content|safe }}
+          </div>
+
+          <!-- Share + back -->
+          <div class="w4l-post-footer">
+            <a href="{% url 'donations:blog_list' %}" class="w4l-back-link">
+              <i class="bi bi-arrow-left"></i> All posts
+            </a>
+            <div class="w4l-share">
+              <span>Share:</span>
+              <a href="https://wa.me/?text={{ post.title|urlencode }}%20{{ request.build_absolute_uri }}" target="_blank" rel="noopener" aria-label="Share on WhatsApp">
+                <i class="bi bi-whatsapp"></i>
+              </a>
+              <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" aria-label="Share on Facebook">
+                <i class="bi bi-facebook"></i>
+              </a>
+              <a href="https://twitter.com/intent/tweet?text={{ post.title|urlencode }}&url={{ request.build_absolute_uri|urlencode }}" target="_blank" rel="noopener" aria-label="Share on X">
+                <i class="bi bi-twitter-x"></i>
+              </a>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Related posts -->
+  {% if related %}
+  <section class="section light-background" style="padding:50px 0;">
+    <div class="container">
+      <div class="section-title">
+        <h2>More from our blog</h2>
+      </div>
+      <div class="row gy-4">
+        {% for rp in related %}
+        <div class="col-lg-4 col-md-6" data-aos="fade-up">
+          <article class="w4l-blog-card">
+            <a href="{% url 'donations:blog_detail' rp.slug %}" class="w4l-blog-thumb-link">
+              {% if rp.thumbnail %}
+              <img src="{{ rp.thumbnail.url }}" alt="{{ rp.title }}" class="w4l-blog-thumb">
+              {% else %}
+              <div class="w4l-blog-thumb-placeholder"><i class="bi bi-file-earmark-text"></i></div>
+              {% endif %}
+            </a>
+            <div class="w4l-blog-body">
+              <div class="w4l-blog-meta">
+                <span><i class="bi bi-calendar3"></i> {{ rp.published_at|date:"d M Y" }}</span>
+              </div>
+              <h3 class="w4l-blog-title"><a href="{% url 'donations:blog_detail' rp.slug %}">{{ rp.title }}</a></h3>
+              <a href="{% url 'donations:blog_detail' rp.slug %}" class="w4l-blog-read-more">Read more <i class="bi bi-arrow-right"></i></a>
+            </div>
+          </article>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+  <!-- Donate CTA -->
+  <section class="call-to-action section light-background" style="padding:50px 0;">
+    <div class="container text-center">
+      <h3 style="color:#1a4d4e;font-weight:700;margin-bottom:.75rem;">Support our work in the field</h3>
+      <p style="color:#666;max-width:500px;margin:0 auto 1.5rem;">Every donation goes directly to strengthening rural health systems in Zimbabwe&rsquo;s hardest&#8209;to&#8209;reach communities.</p>
+      <a href="{% url 'donations:donate' %}" class="btn btn-primary btn-lg">Donate now</a>
+    </div>
+  </section>
+
+</main>
+{% endblock %}
+
+{% block extra_head %}
+<style>
+  /* Post hero */
+  .w4l-post-hero {
+    min-height: 420px; background-size: cover; background-position: center;
+    position: relative; display: flex; align-items: flex-end;
+  }
+  .w4l-post-hero-overlay {
+    width: 100%; background: linear-gradient(to top, rgba(13,43,44,.92) 0%, rgba(13,43,44,.4) 60%, transparent 100%);
+    padding: 3rem 0 2rem;
+  }
+  .w4l-post-title { font-size: 2.2rem; font-weight: 800; color: #fff; line-height: 1.3; margin-top: .5rem; }
+  .w4l-post-meta-hero { display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: .82rem;
+    color: rgba(255,255,255,.75); margin-top: .75rem; }
+  .w4l-post-meta-hero i { margin-right: .3rem; }
+
+  /* Excerpt */
+  .w4l-post-excerpt { color: #1a4d4e; border-left: 4px solid #e8b13e; padding-left: 1rem; font-style: italic; }
+
+  /* Article body */
+  .w4l-post-content { font-size: 1.05rem; line-height: 1.8; color: #2d4a4b; }
+  .w4l-post-content h1, .w4l-post-content h2, .w4l-post-content h3 {
+    color: #1a4d4e; font-weight: 700; margin-top: 2rem; margin-bottom: .75rem;
+  }
+  .w4l-post-content h1 { font-size: 1.8rem; }
+  .w4l-post-content h2 { font-size: 1.45rem; }
+  .w4l-post-content h3 { font-size: 1.2rem; }
+  .w4l-post-content p  { margin-bottom: 1.25rem; }
+  .w4l-post-content blockquote {
+    border-left: 4px solid #e8b13e; padding: .75rem 1.25rem;
+    background: #fdf8ee; border-radius: 0 8px 8px 0; margin: 1.5rem 0;
+    font-style: italic; color: #5a4a00;
+  }
+  .w4l-post-content img { max-width: 100%; border-radius: 12px; margin: 1rem 0; }
+  .w4l-post-content ul, .w4l-post-content ol { padding-left: 1.5rem; margin-bottom: 1.25rem; }
+  .w4l-post-content li { margin-bottom: .4rem; }
+  .w4l-post-content a { color: #1a4d4e; font-weight: 600; }
+  .w4l-post-content a:hover { color: #e8b13e; }
+
+  /* Footer */
+  .w4l-post-footer {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-top: 2.5rem; padding-top: 1.5rem;
+    border-top: 2px solid #eaf1ea;
+    flex-wrap: wrap; gap: 1rem;
+  }
+  .w4l-back-link { display: inline-flex; align-items: center; gap: .4rem;
+    color: #1a4d4e; font-weight: 600; text-decoration: none; }
+  .w4l-back-link:hover { color: #e8b13e; }
+  .w4l-share { display: flex; align-items: center; gap: .75rem; font-size: .85rem; color: #888; }
+  .w4l-share a { color: #1a4d4e; font-size: 1.2rem; transition: color .2s; text-decoration: none; }
+  .w4l-share a:hover { color: #e8b13e; }
+
+  /* Blog cards (reused from list) */
+  .w4l-blog-card { background:#fff;border-radius:16px;box-shadow:0 4px 20px rgba(0,0,0,.07);overflow:hidden;height:100%;display:flex;flex-direction:column;transition:transform .2s,box-shadow .2s;border:1px solid #e8eee9; }
+  .w4l-blog-card:hover { transform:translateY(-4px);box-shadow:0 12px 32px rgba(26,77,78,.15); }
+  .w4l-blog-thumb { width:100%;aspect-ratio:16/9;object-fit:cover;display:block; }
+  .w4l-blog-thumb-placeholder { width:100%;aspect-ratio:16/9;background:linear-gradient(135deg,#1a4d4e 0%,#e8b13e 100%);display:flex;align-items:center;justify-content:center; }
+  .w4l-blog-thumb-placeholder i { font-size:2rem;color:rgba(255,255,255,.4); }
+  .w4l-blog-body { padding:1.25rem 1.5rem;display:flex;flex-direction:column;flex:1; }
+  .w4l-blog-meta { display:flex;flex-wrap:wrap;gap:.75rem;font-size:.72rem;color:#888;margin-bottom:.75rem; }
+  .w4l-blog-title { font-size:1.05rem;font-weight:700;line-height:1.4;margin-bottom:.5rem; }
+  .w4l-blog-title a { color:#0d2b2c;text-decoration:none; }
+  .w4l-blog-title a:hover { color:#1a4d4e; }
+  .w4l-blog-read-more { display:inline-flex;align-items:center;gap:.3rem;font-size:.82rem;font-weight:700;color:#1a4d4e;text-decoration:none;margin-top:auto; }
+  .w4l-blog-read-more:hover { color:#e8b13e; }
+
+  @media (max-width:768px) {
+    .w4l-post-title { font-size: 1.5rem; }
+    .w4l-post-content { font-size: .95rem; }
+  }
+</style>
+{% endblock %}

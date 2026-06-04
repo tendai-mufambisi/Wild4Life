@@ -1,0 +1,100 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Team &amp; Roles{% endblock %}
+{% block page_title %}Team &amp; Roles{% endblock %}
+{% block nav_users %}active{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-heading">
+    <span class="page-icon"><i data-lucide="shield"></i></span>
+    Team &amp; Roles
+    <span class="page-count">{{ users.count }} staff member{{ users.count|pluralize }}</span>
+  </h1>
+  <a href="{% url 'donations:user_create' %}" class="btn-add">
+    <i data-lucide="user-plus"></i> Add Member
+  </a>
+</div>
+
+<!-- Role legend -->
+<div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.5rem;">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.5rem 1rem;font-size:.78rem;">
+    <span class="role-badge admin">Admin</span>
+    <span style="color:var(--muted);margin-left:.5rem;">Full access &mdash; analytics, blog, users, donations</span>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.5rem 1rem;font-size:.78rem;">
+    <span class="role-badge manager">Manager</span>
+    <span style="color:var(--muted);margin-left:.5rem;">Analytics, donations, all blog posts (can publish)</span>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.5rem 1rem;font-size:.78rem;">
+    <span class="role-badge writer">Writer</span>
+    <span style="color:var(--muted);margin-left:.5rem;">Own blog posts only &mdash; drafts, cannot publish</span>
+  </div>
+</div>
+
+<div class="full-table-card">
+  {% if users %}
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for u in users %}
+      <tr>
+        <td class="donor-name">
+          {{ u.get_full_name|default:"—" }}
+          {% if u == request.user %}<span style="font-size:.68rem;color:var(--muted);"> (you)</span>{% endif %}
+        </td>
+        <td class="mono-cell">{{ u.username }}</td>
+        <td class="muted-cell">{{ u.email|default:"—" }}</td>
+        <td>
+          {% if u.is_superuser %}
+          <span class="role-badge admin">Superuser</span>
+          {% else %}
+          {% with role=u.profile.role %}
+          <span class="role-badge {{ role }}">{{ u.profile.get_role_display }}</span>
+          {% endwith %}
+          {% endif %}
+        </td>
+        <td>
+          {% if u.is_active %}
+          <span class="badge paid"><span class="badge-dot"></span>Active</span>
+          {% else %}
+          <span class="badge cancelled"><span class="badge-dot"></span>Inactive</span>
+          {% endif %}
+        </td>
+        <td>
+          <div style="display:flex;gap:.5rem;align-items:center;">
+            {% if not u.is_superuser %}
+            <a href="{% url 'donations:user_edit' u.pk %}" class="btn-edit-sm">Edit</a>
+            {% if u != request.user %}
+            <form method="post" action="{% url 'donations:user_delete' u.pk %}" style="display:inline;" onsubmit="return confirm('Remove {{ u.username }} from the dashboard?');">
+              {% csrf_token %}
+              <button type="submit" class="btn-danger">
+                <i data-lucide="user-minus"></i>
+              </button>
+            </form>
+            {% endif %}
+            {% else %}
+            <span style="font-size:.72rem;color:var(--muted);">Protected</span>
+            {% endif %}
+          </div>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <span class="empty-icon"><i data-lucide="users"></i></span>
+    No staff members yet.
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

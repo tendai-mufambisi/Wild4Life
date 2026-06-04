@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>{% block title %}Wild4Life Organisation{% endblock %}</title>
+  <meta name="description" content="{% block meta_description %}Wild4Life strengthens rural health systems through clinical mentorship, community engagement, and sustainable infrastructure.{% endblock %}">
+  <meta name="keywords" content="Wild4Life, rural health, Zimbabwe, clinical mentorship, community health, universal health coverage">
+
+  <link href="{% static 'site/img/favicon.jpg' %}" rel="icon">
+  <link href="{% static 'site/img/apple-touch-icon.jpg' %}" rel="apple-touch-icon">
+
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Font Awesome (for team & cert sections) -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <link href="{% static 'site/vendor/bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'site/vendor/bootstrap-icons/bootstrap-icons.css' %}" rel="stylesheet">
+  <link href="{% static 'site/vendor/aos/aos.css' %}" rel="stylesheet">
+  <link href="{% static 'site/vendor/glightbox/css/glightbox.min.css' %}" rel="stylesheet">
+  <link href="{% static 'site/vendor/swiper/swiper-bundle.min.css' %}" rel="stylesheet">
+  <link href="{% static 'site/css/main.css' %}" rel="stylesheet">
+  <link href="{% static 'css/site-overrides.css' %}" rel="stylesheet">
+  {% block extra_head %}{% endblock %}
+</head>
+
+<body class="index-page">
+
+  <header id="header" class="header d-flex align-items-center sticky-top">
+    <div class="container-fluid container-xl position-relative d-flex align-items-center">
+      <a href="{% url 'donations:home' %}" class="logo d-flex align-items-center me-auto">
+        <img src="{% static 'site/img/wild.jpg' %}" alt="Wild4Life logo">
+      </a>
+
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li>
+            <a href="{% url 'donations:home' %}" {% if request.resolver_match.url_name == 'home' %}class="active"{% endif %}>Home</a>
+          </li>
+          <li class="dropdown">
+            <a href="{% url 'donations:about' %}" {% if request.resolver_match.url_name == 'about' %}class="active"{% endif %}>
+              <span>About</span> <i class="bi bi-chevron-down toggle-dropdown"></i>
+            </a>
+            <ul>
+              <li><a href="{% url 'donations:team' %}" {% if request.resolver_match.url_name == 'team' %}class="active"{% endif %}>Team</a></li>
+              <li><a href="{% url 'donations:testimonials' %}" {% if request.resolver_match.url_name == 'testimonials' %}class="active"{% endif %}>Testimonials</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="{% url 'donations:services' %}" {% if request.resolver_match.url_name == 'services' %}class="active"{% endif %}>
+              <span>Services</span> <i class="bi bi-chevron-down toggle-dropdown"></i>
+            </a>
+            <ul>
+              <li><a href="{% url 'donations:home' %}#services">Integrated Clinical Mentorship</a></li>
+              <li><a href="{% url 'donations:home' %}#services">Primary Care Outreaches</a></li>
+              <li><a href="{% url 'donations:home' %}#services">VHW Mentorship</a></li>
+            </ul>
+          </li>
+          <li class="dropdown">
+            <a href="{% url 'donations:home' %}#services">
+              <span>Programs</span> <i class="bi bi-chevron-down toggle-dropdown"></i>
+            </a>
+            <ul>
+              <li><a href="{% url 'donations:home' %}#interventions">Core interventions</a></li>
+              <li><a href="{% url 'donations:home' %}#services">Differentiated service delivery</a></li>
+              <li><a href="{% url 'donations:home' %}#services">Community dialogues</a></li>
+            </ul>
+          </li>
+          <li><a href="{% url 'donations:home' %}#faq">FAQ</a></li>
+          <li><a href="{% url 'donations:gallery' %}" {% if request.resolver_match.url_name == 'gallery' %}class="active"{% endif %}>Gallery</a></li>
+          <li><a href="{% url 'donations:blog_list' %}" {% if request.resolver_match.url_name in 'blog_list,blog_detail' %}class="active"{% endif %}>Blog</a></li>
+          <li><a href="{% url 'donations:contact' %}" {% if request.resolver_match.url_name == 'contact' %}class="active"{% endif %}>Contact</a></li>
+        </ul>
+        <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+      </nav>
+
+      <a class="btn-getstarted" href="{% url 'donations:donate' %}">Donate Now</a>
+    </div>
+  </header>
+
+  {% block content %}{% endblock %}
+
+  <footer id="footer" class="footer position-relative dark-background">
+    <div class="container footer-top">
+      <div class="row gy-4">
+        <div class="col-lg-5 col-md-12 footer-about">
+          <a href="{% url 'donations:home' %}" class="logo d-flex align-items-center">
+            <span class="sitename">Wild4Life</span>
+          </a>
+          <p>Integrated rural health model &ndash; five pillars to strengthen health systems in the hardest&#8209;to&#8209;reach communities. Mentorship, MERL, community action, infrastructure, governance.</p>
+          <div class="social-links d-flex mt-4">
+            <a href="https://wa.me/263778378061" aria-label="WhatsApp Wild4Life"><i class="bi bi-whatsapp"></i></a>
+            <a href="#" aria-label="Wild4Life on Facebook"><i class="bi bi-facebook"></i></a>
+            <a href="#" aria-label="Wild4Life on Instagram"><i class="bi bi-instagram"></i></a>
+            <a href="#" aria-label="Wild4Life on LinkedIn"><i class="bi bi-linkedin"></i></a>
+          </div>
+        </div>
+        <div class="col-lg-2 col-6 footer-links">
+          <h4>Useful Links</h4>
+          <ul>
+            <li><a href="{% url 'donations:home' %}">Home</a></li>
+            <li><a href="{% url 'donations:about' %}">About</a></li>
+            <li><a href="{% url 'donations:services' %}">Services</a></li>
+            <li><a href="{% url 'donations:gallery' %}">Work snippets</a></li>
+            <li><a href="{% url 'donations:blog_list' %}">Blog</a></li>
+            <li><a href="{% url 'donations:contact' %}">Contact</a></li>
+            <li><a href="{% url 'donations:donate' %}">Donate</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-2 col-6 footer-links">
+          <h4>Our pillars</h4>
+          <ul>
+            <li><a href="{% url 'donations:services' %}">Clinical mentorship</a></li>
+            <li><a href="{% url 'donations:services' %}">MERL</a></li>
+            <li><a href="{% url 'donations:services' %}">Community participation</a></li>
+            <li><a href="{% url 'donations:services' %}">Infrastructure</a></li>
+            <li><a href="{% url 'donations:services' %}">Governance</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
+          <h4>Contact</h4>
+          <p>Office 22, Hwange Colliery Hospital Health Department Hwange, Zimbabwe</p>
+          <p class="mt-2"><strong>WhatsApp:</strong> <a class="footer-contact-link" href="https://wa.me/263778378061">+263 778 378 061</a></p>
+          <p><strong>Phone:</strong> <a class="footer-contact-link" href="tel:+263712582550">+263 712 582 550</a></p>
+          <p><strong>Email:</strong> <a class="footer-contact-link" href="mailto:info@wild4lifezw.org">info@wild4lifezw.org</a></p>
+        </div>
+      </div>
+    </div>
+    <div class="container copyright text-center mt-4">
+      <p>&copy; <span>Copyright</span> <strong class="px-1 sitename">Wild4Life Organisation</strong> <span>All Rights Reserved</span></p>
+      <div class="credits">Powered by <a class="credits-link" href="https://palsetdigital.com/">Palset Digital</a></div>
+      <div><a href="{% url 'donations:dashboard_login' %}" class="staff-portal-link" aria-label="Staff portal">&#9632;</a></div>
+    </div>
+  </footer>
+
+  <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center" aria-label="Scroll to top">
+    <i class="bi bi-arrow-up-short"></i>
+  </a>
+  <div id="preloader">
+    <div></div><div></div><div></div><div></div>
+  </div>
+
+  <script src="{% static 'site/vendor/bootstrap/js/bootstrap.bundle.min.js' %}"></script>
+  <script src="{% static 'site/vendor/aos/aos.js' %}"></script>
+  <script src="{% static 'site/vendor/glightbox/js/glightbox.min.js' %}"></script>
+  <script src="{% static 'site/vendor/imagesloaded/imagesloaded.pkgd.min.js' %}"></script>
+  <script src="{% static 'site/vendor/isotope-layout/isotope.pkgd.min.js' %}"></script>
+  <script src="{% static 'site/vendor/purecounter/purecounter_vanilla.js' %}"></script>
+  <script src="{% static 'site/vendor/waypoints/noframework.waypoints.js' %}"></script>
+  <script src="{% static 'site/vendor/swiper/swiper-bundle.min.js' %}"></script>
+  <script src="{% static 'site/js/main.js' %}"></script>
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

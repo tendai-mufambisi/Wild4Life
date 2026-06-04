@@ -1,9 +1,13 @@
-{% load static %}<!DOCTYPE html>
+{% load static %}
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}Dashboard{% endblock %} — Wild4Life Admin</title>
+  <link rel="manifest" href="/manifest.json">
+  <link rel="apple-touch-icon" href="{% static 'site/img/apple-touch-icon.jpg' %}">
+  <meta name="theme-color" content="#1a4d4e">
   <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
   {% block extra_head %}{% endblock %}
 </head>
@@ -11,47 +15,82 @@
 
 <aside class="sidebar" aria-label="Main navigation">
   <div class="sidebar-brand">
-    <span class="sidebar-paw">🐘</span>
-    <span class="brand-name">Wild4Life</span>
-    <span class="brand-tag">Admin Dashboard</span>
+    <img src="{% static 'site/img/wild.jpg' %}" alt="Wild4Life" class="sidebar-logo">
+    <div>
+      <span class="brand-name">Wild4Life</span>
+      <span class="brand-tag">Admin Portal</span>
+    </div>
   </div>
 
   <div class="sidebar-section">
     <div class="sidebar-section-label">Overview</div>
     <ul class="sidebar-nav">
       <li>
-        <a href="{% url 'donations:dashboard_index' %}"
-           class="{% block nav_home %}{% endblock %}">
-          <span class="nav-icon">📊</span> Analytics
+        <a href="{% url 'donations:dashboard_index' %}" class="{% block nav_home %}{% endblock %}">
+          <span class="nav-icon"><i data-lucide="bar-chart-2"></i></span> Analytics
         </a>
       </li>
     </ul>
   </div>
 
+  {% if profile.is_manager or request.user.is_superuser %}
   <div class="sidebar-section">
-    <div class="sidebar-section-label">Records</div>
+    <div class="sidebar-section-label">Donations</div>
     <ul class="sidebar-nav">
       <li>
-        <a href="{% url 'donations:dashboard_donations' %}"
-           class="{% block nav_donations %}{% endblock %}">
-          <span class="nav-icon">💳</span> Donations
+        <a href="{% url 'donations:dashboard_donations' %}" class="{% block nav_donations %}{% endblock %}">
+          <span class="nav-icon"><i data-lucide="credit-card"></i></span> Transactions
         </a>
       </li>
       <li>
-        <a href="{% url 'donations:dashboard_donors' %}"
-           class="{% block nav_donors %}{% endblock %}">
-          <span class="nav-icon">👥</span> Donors
+        <a href="{% url 'donations:dashboard_donors' %}" class="{% block nav_donors %}{% endblock %}">
+          <span class="nav-icon"><i data-lucide="users"></i></span> Donors
         </a>
       </li>
     </ul>
   </div>
+  {% endif %}
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Content</div>
+    <ul class="sidebar-nav">
+      <li>
+        <a href="{% url 'donations:blog_list_dash' %}" class="{% block nav_blog %}{% endblock %}">
+          <span class="nav-icon"><i data-lucide="file-text"></i></span> Blog Posts
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'donations:blog_create' %}">
+          <span class="nav-icon"><i data-lucide="plus-circle"></i></span> New Post
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  {% if profile.is_admin or request.user.is_superuser %}
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Administration</div>
+    <ul class="sidebar-nav">
+      <li>
+        <a href="{% url 'donations:user_list' %}" class="{% block nav_users %}{% endblock %}">
+          <span class="nav-icon"><i data-lucide="shield"></i></span> Team &amp; Roles
+        </a>
+      </li>
+    </ul>
+  </div>
+  {% endif %}
 
   <div class="sidebar-section">
     <div class="sidebar-section-label">Site</div>
     <ul class="sidebar-nav">
       <li>
-        <a href="{% url 'donations:donate' %}" target="_blank">
-          <span class="nav-icon">🌍</span> Donation Form ↗
+        <a href="{% url 'donations:home' %}" target="_blank" rel="noopener">
+          <span class="nav-icon"><i data-lucide="external-link"></i></span> View Site
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'donations:donate' %}" target="_blank" rel="noopener">
+          <span class="nav-icon"><i data-lucide="heart"></i></span> Donation Form
         </a>
       </li>
     </ul>
@@ -62,11 +101,11 @@
       <div class="avatar">{{ request.user.username|first|upper }}</div>
       <div>
         <div class="uname">{{ request.user.get_full_name|default:request.user.username }}</div>
-        <div class="urole">Administrator</div>
+        <div class="urole">{% if profile %}{{ profile.get_role_display }}{% else %}Admin{% endif %}</div>
       </div>
     </div>
     <a href="{% url 'donations:dashboard_logout' %}" class="btn-logout">
-      <span>⬅</span> Sign out
+      <i data-lucide="log-out"></i> Sign out
     </a>
   </div>
 </aside>
@@ -86,15 +125,116 @@
   </div>
 </div>
 
+<!-- PWA Install Modal -->
+<div id="pwa-modal" class="pwa-modal pwa-modal-hidden" role="dialog" aria-modal="true" aria-label="Install app">
+  <div class="pwa-modal-card">
+    <img src="{% static 'site/img/wild.jpg' %}" alt="Wild4Life" class="pwa-logo">
+    <h3 id="pwa-modal-title">Install Wild4Life Dashboard</h3>
+    <p id="pwa-modal-body">Add the dashboard to your device for faster access — no browser needed next time.</p>
+    <div id="pwa-install-actions" class="pwa-modal-actions">
+      <button type="button" id="pwa-install-btn" class="pwa-btn-install">Install App</button>
+      <button type="button" id="pwa-dismiss-btn" class="pwa-btn-dismiss">Not now</button>
+    </div>
+    <!-- Fallback instructions (shown when browser can't auto-prompt) -->
+    <div id="pwa-manual-instructions" class="pwa-instructions">
+      <div class="pwa-instruction-item" id="pwa-chrome-tip">
+        <strong>Chrome / Edge:</strong> Click the <strong>&#8942;</strong> menu &rarr; <em>Install Wild4Life Dashboard</em> — or look for the install icon <strong>&#10515;</strong> in the address bar.
+      </div>
+      <div class="pwa-instruction-item pwa-tip-hidden" id="pwa-safari-tip">
+        <strong>Safari (iOS/macOS):</strong> Tap <strong>Share</strong> &rarr; <em>Add to Home Screen</em>.
+      </div>
+      <button type="button" id="pwa-dismiss-btn-2" class="pwa-btn-dismiss pwa-btn-spaced">Close</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>
+  lucide.createIcons();
+
+  // Live clock
   (function () {
     function tick() {
       const el = document.getElementById("live-clock");
       if (el) el.textContent = new Date().toLocaleTimeString("en-ZW", { hour: "2-digit", minute: "2-digit" });
     }
-    tick();
-    setInterval(tick, 30000);
+    tick(); setInterval(tick, 30000);
   })();
+
+  // ── PWA install ────────────────────────────────────────────────────────────
+  // Never show prompt if: already running as standalone PWA, or user already
+  // installed/dismissed permanently (persisted in localStorage).
+  const alreadyInstalled =
+    window.matchMedia("(display-mode: standalone)").matches ||
+    window.navigator.standalone === true ||
+    localStorage.getItem("pwa-installed") === "1";
+
+  let deferredPrompt = null;
+  const modal       = document.getElementById("pwa-modal");
+  const installBtn  = document.getElementById("pwa-install-btn");
+  const dismissBtn  = document.getElementById("pwa-dismiss-btn");
+  const dismissBtn2 = document.getElementById("pwa-dismiss-btn-2");
+
+  function showModal() {
+    if (modal && !alreadyInstalled && !localStorage.getItem("pwa-dismissed-dashboard")) {
+      modal.classList.remove("pwa-modal-hidden");
+    }
+  }
+  function hideModal(markInstalled) {
+    if (modal) modal.classList.add("pwa-modal-hidden");
+    if (markInstalled) {
+      localStorage.setItem("pwa-installed", "1");
+    } else {
+      localStorage.setItem("pwa-dismissed-dashboard", "1");
+    }
+  }
+  function showManualInstructions() {
+    document.getElementById("pwa-install-actions").classList.add("pwa-modal-hidden");
+    const inst = document.getElementById("pwa-manual-instructions");
+    inst.classList.add("pwa-modal-actions");
+    inst.style.display = "flex";
+    const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+    if (isSafari) {
+      document.getElementById("pwa-safari-tip").classList.remove("pwa-tip-hidden");
+      document.getElementById("pwa-chrome-tip").classList.add("pwa-tip-hidden");
+    }
+  }
+
+  // Only listen for install prompt if not already installed
+  if (!alreadyInstalled) {
+    window.addEventListener("beforeinstallprompt", (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      setTimeout(showModal, 3000);
+    });
+
+    // Mark as installed the moment the browser confirms it
+    window.addEventListener("appinstalled", () => {
+      localStorage.setItem("pwa-installed", "1");
+      if (modal) modal.classList.add("pwa-modal-hidden");
+    });
+  }
+
+  if (installBtn) {
+    installBtn.addEventListener("click", async () => {
+      if (!deferredPrompt) {
+        showManualInstructions();
+        return;
+      }
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      deferredPrompt = null;
+      hideModal(outcome === "accepted"); // true = mark installed permanently
+    });
+  }
+
+  if (dismissBtn)  dismissBtn.addEventListener("click",  () => hideModal(false));
+  if (dismissBtn2) dismissBtn2.addEventListener("click", () => hideModal(false));
+
+  // Register service worker
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/sw.js").catch(() => {});
+  }
 </script>
 {% block extra_scripts %}{% endblock %}
 </body>

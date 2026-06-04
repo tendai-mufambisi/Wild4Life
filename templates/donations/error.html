@@ -1,13 +1,13 @@
 {% extends "base.html" %}
-
-{% block title %}Something went wrong{% endblock %}
+{% block title %}Something went wrong — Wild4Life{% endblock %}
 
 {% block content %}
 <div class="card error-card">
-  <span class="success-icon" aria-hidden="true">&#x26A0;&#xFE0F;</span>
-  <h1 class="card-title" style="text-align:center;">Something went wrong</h1>
 
-  <p style="text-align:center; color:var(--w4l-muted); margin-top:.5rem; margin-bottom:1.5rem;">
+  <span class="success-icon" aria-hidden="true">&#x26A0;&#xFE0F;</span>
+  <h1 class="card-title u-center">Something went wrong</h1>
+
+  <p class="card-subtitle u-center u-mt-sm">
     {% if message %}
       {{ message }}
     {% else %}
@@ -17,13 +17,18 @@
 
   <hr class="divider">
 
-  <div style="text-align:center;">
+  <div class="action-row">
     <a href="{% url 'donations:donate' %}" class="btn btn-primary">Try again</a>
   </div>
 
+  <div class="back-home-wrap">
+    <a href="{% url 'donations:home' %}" class="btn btn-secondary">&larr; Back to homepage</a>
+  </div>
+
   <div class="trust-strip">
-    <span class="lock-icon">&#x1F512;</span>
+    <span class="lock-icon" aria-hidden="true">&#x1F512;</span>
     <span>Secured by <strong>Paynow Zimbabwe</strong></span>
   </div>
+
 </div>
 {% endblock %}

@@ -1,0 +1,71 @@
+{% extends "site/base.html" %}
+{% load static %}
+{% block title %}Wild4Life Organisation | Contact{% endblock %}
+
+{% block content %}
+<main class="main">
+
+  <div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0">Contact</h1>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="{% url 'donations:home' %}">Home</a></li>
+          <li class="current">Contact</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section id="contact" class="contact section">
+    <div class="container section-title">
+      <h2>Contact Us</h2>
+      <p>Reach out to Wild4Life for partnerships, inquiries, or support</p>
+    </div>
+    <div class="container">
+      <div class="contact-main-wrapper">
+        <div class="map-wrapper">
+          <iframe src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d967422.9254695349!2d26.041183692751254!3d-18.70900608039626!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1s418%20South%20Cliff%20Hwange%2C%20Zimbabwe!5e0!3m2!1sen!2sus!4v1771594384178!5m2!1sen!2sus"
+            width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Wild4Life location map"></iframe>
+        </div>
+        <div class="contact-content">
+          <div class="contact-cards-container">
+            <div class="contact-card"><div class="icon-box"><i class="bi bi-geo-alt"></i></div><div class="contact-text"><h4>Location</h4><p>Office 22, Hwange Colliery Hospital Health Department Hwange, Zimbabwe</p></div></div>
+            <div class="contact-card"><div class="icon-box"><i class="bi bi-envelope"></i></div><div class="contact-text"><h4>Email</h4><p><a href="mailto:info@wild4lifezw.org">info@wild4lifezw.org</a></p></div></div>
+            <div class="contact-card"><div class="icon-box"><i class="bi bi-telephone"></i></div><div class="contact-text"><h4>Call / WhatsApp</h4><p><a href="tel:+263778378061">+263 778 378 061</a> / <a href="tel:+263712582550">+263 712 582 550</a></p></div></div>
+            <div class="contact-card"><div class="icon-box"><i class="bi bi-clock"></i></div><div class="contact-text"><h4>Open Hours</h4><p>Mon&#8209;Fri 8AM&#8209;5PM (field activities flexible)</p></div></div>
+          </div>
+          <div class="contact-form-container">
+            <h3>Send a message</h3>
+            <p>For partnership inquiries or to learn more about our model.</p>
+            <form action="{% url 'donations:contact_submit' %}" method="post" class="php-email-form">
+              {% csrf_token %}
+              <div class="row">
+                <div class="col-md-6 form-group"><input type="text" name="name" class="form-control" placeholder="Your Name" required></div>
+                <div class="col-md-6 form-group mt-3 mt-md-0"><input type="email" class="form-control" name="email" placeholder="Your Email" required></div>
+              </div>
+              <div class="form-group mt-3"><input type="text" class="form-control" name="subject" placeholder="Subject" required></div>
+              <div class="form-group mt-3"><textarea class="form-control" name="message" rows="5" placeholder="Message" required></textarea></div>
+              <div class="my-3">
+                <div class="loading">Loading</div>
+                <div class="error-message"></div>
+                <div class="sent-message">Your message has been sent. Thank you!</div>
+              </div>
+              <div class="form-submit">
+                <button type="submit">Send Message</button>
+                <div class="social-links">
+                  <a href="https://wa.me/263778378061"><i class="bi bi-whatsapp"></i></a>
+                  <a href="#"><i class="bi bi-facebook"></i></a>
+                  <a href="#"><i class="bi bi-instagram"></i></a>
+                  <a href="#"><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+{% endblock %}

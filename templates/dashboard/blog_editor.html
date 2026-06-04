@@ -1,0 +1,214 @@
+{% extends "dashboard/base.html" %}
+{% load static %}
+{% block title %}{% if post %}Edit Post{% else %}New Post{% endif %}{% endblock %}
+{% block page_title %}{% if post %}Edit Post{% else %}New Post{% endif %}{% endblock %}
+{% block nav_blog %}active{% endblock %}
+
+{% block extra_head %}
+<link href="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.snow.css" rel="stylesheet">
+<style>
+  .ql-container { font-family: inherit; font-size: .95rem; }
+  .ql-editor { min-height: 380px; padding: 1.25rem 1.5rem; line-height: 1.75; }
+  .ql-editor h1 { font-size: 1.8rem; font-weight: 700; margin-bottom: .5rem; }
+  .ql-editor h2 { font-size: 1.4rem; font-weight: 700; margin-bottom: .4rem; }
+  .ql-editor h3 { font-size: 1.15rem; font-weight: 600; margin-bottom: .35rem; }
+  .ql-editor blockquote { border-left: 4px solid #1a4d4e; padding-left: 1rem; color: #5f7475; }
+  .ql-toolbar.ql-snow { border: none; padding: .6rem 1rem; }
+  .ql-container.ql-snow { border: none; }
+  .ql-snow .ql-picker { color: #0d2b2c; }
+  .ql-snow .ql-stroke { stroke: #0d2b2c; }
+  .ql-snow .ql-fill { fill: #0d2b2c; }
+  .ql-snow.ql-toolbar button:hover .ql-stroke,
+  .ql-snow .ql-toolbar button:hover .ql-stroke,
+  .ql-snow.ql-toolbar button.ql-active .ql-stroke { stroke: #1a4d4e; }
+  .ql-snow.ql-toolbar button:hover,
+  .ql-snow .ql-toolbar button:hover,
+  .ql-snow.ql-toolbar button.ql-active { color: #1a4d4e; }
+</style>
+{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data" id="blog-form">
+  {% csrf_token %}
+  <input type="hidden" name="content" id="content-input">
+
+  <!-- Top bar: back link + status + save -->
+  <div class="editor-topbar">
+    <a href="{% url 'donations:blog_list_dash' %}" class="btn-ghost">
+      <i data-lucide="arrow-left"></i>&nbsp; All posts
+    </a>
+    <div class="editor-actions">
+      {% if profile.can_publish %}
+      <div class="radio-group">
+        <label>
+          <input type="radio" name="status" value="draft"
+                 {% if not post or post.status == 'draft' %}checked{% endif %}> Draft
+        </label>
+        <label>
+          <input type="radio" name="status" value="published"
+                 {% if post and post.status == 'published' %}checked{% endif %}> Published
+        </label>
+      </div>
+      {% else %}
+      <span class="editor-writer-note">Writers save as Draft only &mdash; a Manager publishes.</span>
+      <input type="hidden" name="status" value="draft">
+      {% endif %}
+      <button type="submit" class="btn-save" id="save-btn">
+        <i data-lucide="save"></i>&nbsp; Save
+      </button>
+    </div>
+  </div>
+
+  {% if errors %}
+  <div class="login-error editor-error-banner">
+    <i data-lucide="alert-circle"></i>
+    {% for field, msg in errors.items %}<strong>{{ field|title }}:</strong> {{ msg }}{% if not forloop.last %} &middot; {% endif %}{% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="editor-layout">
+
+    <!-- ── Main editor column ──────────────────────────────────── -->
+    <div>
+
+      <!-- Title -->
+      <div class="editor-meta editor-title-wrap">
+        <label for="title-input">Post Title</label>
+        <input type="text" id="title-input" name="title"
+               placeholder="Enter a compelling title…"
+               value="{{ saved_title }}" required>
+        {% if errors.title %}
+        <div class="field-error editor-content-error">
+          <i data-lucide="alert-circle"></i>{{ errors.title }}
+        </div>
+        {% endif %}
+      </div>
+
+      <!-- Rich text editor (Quill) -->
+      <div class="editor-wrap">
+        <div id="quill-toolbar" class="editor-toolbar">
+          <span class="ql-formats">
+            <select class="ql-header" aria-label="Text style">
+              <option value="1">Heading 1</option>
+              <option value="2">Heading 2</option>
+              <option value="3">Heading 3</option>
+              <option selected>Normal</option>
+            </select>
+          </span>
+          <span class="ql-formats">
+            <button type="button" class="ql-bold"        title="Bold"></button>
+            <button type="button" class="ql-italic"      title="Italic"></button>
+            <button type="button" class="ql-underline"   title="Underline"></button>
+            <button type="button" class="ql-strike"      title="Strikethrough"></button>
+          </span>
+          <span class="ql-formats">
+            <button type="button" class="ql-list" value="ordered" title="Numbered list"></button>
+            <button type="button" class="ql-list" value="bullet"  title="Bullet list"></button>
+            <button type="button" class="ql-blockquote"  title="Quote"></button>
+          </span>
+          <span class="ql-formats">
+            <button type="button" class="ql-link"        title="Insert link"></button>
+            <button type="button" class="ql-image"       title="Insert image"></button>
+          </span>
+          <span class="ql-formats">
+            <select class="ql-color"      title="Text colour" aria-label="Text colour"></select>
+            <select class="ql-background" title="Highlight"   aria-label="Highlight colour"></select>
+          </span>
+          <span class="ql-formats">
+            <button type="button" class="ql-clean" title="Clear formatting"></button>
+          </span>
+        </div>
+        <div id="quill-editor" class="editor-body">{{ saved_content|safe }}</div>
+      </div>
+
+      {% if errors.content %}
+      <div class="field-error editor-content-error">
+        <i data-lucide="alert-circle"></i>{{ errors.content }}
+      </div>
+      {% endif %}
+
+    </div>
+
+    <!-- ── Right meta column ───────────────────────────────────── -->
+    <div>
+
+      <!-- Thumbnail -->
+      <div class="editor-meta editor-meta-section">
+        <label for="thumbnail-input">Thumbnail Image</label>
+        <img id="thumb-preview"
+             src="{% if post.thumbnail %}{{ post.thumbnail.url }}{% endif %}"
+             alt="Post thumbnail preview"
+             class="thumbnail-preview {% if post.thumbnail %}visible{% endif %}">
+        {% if post.thumbnail %}
+        <label class="clear-thumb-label">
+          <input type="checkbox" name="clear_thumbnail"> Remove current image
+        </label>
+        {% endif %}
+        <input type="file" name="thumbnail" id="thumbnail-input"
+               accept="image/*" aria-label="Upload thumbnail image"
+               class="file-input-block">
+      </div>
+
+      <!-- Excerpt -->
+      <div class="editor-meta editor-meta-section">
+        <label for="excerpt-input">
+          Excerpt <span class="excerpt-label-note">(shown on listing)</span>
+        </label>
+        <textarea id="excerpt-input" name="excerpt"
+                  placeholder="A brief summary of this post…"
+                  maxlength="350">{{ saved_excerpt }}</textarea>
+        <div class="excerpt-hint">Max 350 characters</div>
+      </div>
+
+      <!-- Post metadata (edit mode only) -->
+      {% if post %}
+      <div class="editor-meta">
+        <div class="post-info">
+          <div><strong>Author:</strong> {{ post.author.get_full_name|default:post.author.username }}</div>
+          <div><strong>Created:</strong> {{ post.created_at|date:"d M Y, H:i" }}</div>
+          <div><strong>Updated:</strong> {{ post.updated_at|date:"d M Y, H:i" }}</div>
+          {% if post.status == "published" %}
+          <div><strong>Published:</strong> {{ post.published_at|date:"d M Y, H:i" }}</div>
+          <div class="post-info-view">
+            <a href="{% url 'donations:blog_detail' post.slug %}" target="_blank"
+               rel="noopener" class="post-info-link">View on site &rarr;</a>
+          </div>
+          {% endif %}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+
+</form>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/quill@2.0.2/dist/quill.js"></script>
+<script>
+  const quill = new Quill('#quill-editor', {
+    theme: 'snow',
+    modules: { toolbar: '#quill-toolbar' },
+    placeholder: 'Start writing your post here…',
+  });
+
+  // Copy Quill HTML to hidden input on submit
+  const form = document.getElementById('blog-form');
+  form.addEventListener('submit', function () {
+    document.getElementById('content-input').value = quill.root.innerHTML;
+    const btn = document.getElementById('save-btn');
+    btn.textContent = 'Saving…';
+    btn.disabled = true;
+  });
+
+  // Live thumbnail preview
+  document.getElementById('thumbnail-input').addEventListener('change', function () {
+    const file = this.files[0];
+    if (!file) return;
+    const preview = document.getElementById('thumb-preview');
+    preview.src = URL.createObjectURL(file);
+    preview.classList.add('visible');
+  });
+</script>
+{% endblock %}

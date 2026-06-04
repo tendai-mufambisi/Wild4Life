@@ -1,0 +1,83 @@
+{% extends "site/base.html" %}
+{% load static %}
+{% block title %}Wild4Life Organisation | Testimonials{% endblock %}
+
+{% block content %}
+<main class="main">
+
+  <div class="page-title light-background">
+    <div class="container d-lg-flex justify-content-between align-items-center">
+      <h1 class="mb-2 mb-lg-0">Testimonials</h1>
+      <nav class="breadcrumbs">
+        <ol>
+          <li><a href="{% url 'donations:home' %}">Home</a></li>
+          <li class="current">Testimonials</li>
+        </ol>
+      </nav>
+    </div>
+  </div>
+
+  <section id="testimonials" class="testimonials section">
+    <div class="container">
+      <div class="row gy-4">
+
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="testimonial-item">
+            <h3>Sister E. Ndlovu</h3>
+            <h4>Nurse-in-Charge, Binga Clinic</h4>
+            <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+            <p><i class="bi bi-quote quote-icon-left"></i><span>The clinical mentorship from Wild4Life has transformed how we manage our patients. Before, we worked in silos &ndash; HIV was separate from maternal care. Now the mentors help us look at the whole person. Our confidence in handling emergencies has grown, and we even have regular CQI meetings to track our own progress.</span><i class="bi bi-quote quote-icon-right"></i></p>
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="200">
+          <div class="testimonial-item">
+            <h3>Mr. J. Dube</h3>
+            <h4>Village Health Worker, Lupane</h4>
+            <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+            <p><i class="bi bi-quote quote-icon-left"></i><span>For years we worked alone, learning by doing. Wild4Life introduced peer mentors &ndash; fellow VHWs who refresh our skills. I now know how to screen for NCDs and when to refer. The community trusts us more because we bring better knowledge. The dialogues on gender norms also helped men in our village start coming to the clinic.</span><i class="bi bi-quote quote-icon-right"></i></p>
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="300">
+          <div class="testimonial-item">
+            <h3>Mrs. P. Munkombwe</h3>
+            <h4>Health Centre Committee Chair, Hwange</h4>
+            <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+            <p><i class="bi bi-quote quote-icon-left"></i><span>Our committee used to focus only on maintenance. Through Wild4Life we learned to mobilise the community, advocate for better staffing, and even manage clinic funds transparently. We now exchange ideas with other clinics &ndash; that best&#8209;practice sharing opened our eyes. We feel part of the health system, not just bystanders.</span><i class="bi bi-quote quote-icon-right"></i></p>
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
+          <div class="testimonial-item">
+            <h3>Dr. T. Sibanda</h3>
+            <h4>District Medical Officer, Matabeleland North</h4>
+            <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+            <p><i class="bi bi-quote quote-icon-left"></i><span>The integrated approach Wild4Life brings aligns perfectly with our national health strategy. They don&rsquo;t create parallel systems &ndash; they strengthen what we already have. The MERL framework helps us see data across all our donors, eliminating duplication. I appreciate that they invest in infrastructure like maternal waiting homes; it directly reduces maternal deaths.</span><i class="bi bi-quote quote-icon-right"></i></p>
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="500">
+          <div class="testimonial-item">
+            <h3>Mrs. C. Moyo</h3>
+            <h4>Community Member, Binga</h4>
+            <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+            <p><i class="bi bi-quote quote-icon-left"></i><span>Before the outreaches, I had to walk three hours to get my child vaccinated. Now the Wild4Life team comes to our village with dental and eye care too. Last time, I also got tested for high blood pressure &ndash; something I never knew I had. They treat us with respect and even explain things in our language.</span><i class="bi bi-quote quote-icon-right"></i></p>
+          </div>
+        </div>
+
+        <div class="col-lg-6" data-aos="fade-up" data-aos-delay="600">
+          <div class="testimonial-item">
+            <h3>Mr. L. Ngwenya</h3>
+            <h4>Volunteer Peer Educator, Lupane</h4>
+            <div class="stars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></div>
+            <p><i class="bi bi-quote quote-icon-left"></i><span>Being part of the support groups for HIV clients, I saw how differentiated service delivery decongests the clinic. Fast track refills mean stable patients don&rsquo;t wait long. Wild4Life trained us to run the groups and even link people to mental health support. It&rsquo;s not just about medicine &ndash; it&rsquo;s about dignity.</span><i class="bi bi-quote quote-icon-right"></i></p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+</main>
+{% endblock %}

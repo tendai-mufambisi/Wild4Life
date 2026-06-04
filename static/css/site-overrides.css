@@ -1,0 +1,117 @@
+/* Wild4Life — site-wide overrides (loaded after main.css) */
+
+/* Cert section registry label */
+.w4l-cert-ministry { font-size: .9rem; color: #b3413d; }
+
+/* Gallery slider top padding (replaces inline style) */
+.gallery-slider-top { padding-top: 120px; }
+
+/* Map iframe border reset (replaces inline style) */
+.map-borderless { border: 0; }
+
+/* Footer contact links */
+.footer-contact-link { color: wheat; text-decoration: none; }
+.footer-contact-link:hover { color: #e8b13e; }
+
+/* Credits link */
+.credits-link { font-size: 1.25rem; font-weight: 700; text-decoration: none; color: inherit; }
+.credits-link:hover { color: #e8b13e; }
+
+/* Secret staff portal link in footer — barely visible, accessible */
+.staff-portal-link {
+  display: inline-block;
+  font-size: .55rem;
+  color: rgba(255,255,255,.08);
+  text-decoration: none;
+  margin-top: .35rem;
+  letter-spacing: .1em;
+}
+.staff-portal-link:hover { color: rgba(255,255,255,.3); }
+
+/* Blog section on homepage */
+.w4l-blog-section { padding: 60px 0; }
+
+.w4l-blog-card {
+  background: #fff; border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.07);
+  overflow: hidden; height: 100%;
+  display: flex; flex-direction: column;
+  transition: transform .2s, box-shadow .2s;
+  border: 1px solid #e8eee9;
+}
+.w4l-blog-card:hover { transform: translateY(-4px); box-shadow: 0 12px 32px rgba(26,77,78,.15); }
+.w4l-blog-thumb-link { display: block; }
+.w4l-blog-thumb { width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block; }
+.w4l-blog-thumb-placeholder {
+  width: 100%; aspect-ratio: 16/9;
+  background: linear-gradient(135deg, #1a4d4e 0%, #e8b13e 100%);
+  display: flex; align-items: center; justify-content: center;
+}
+.w4l-blog-thumb-placeholder i { font-size: 2.5rem; color: rgba(255,255,255,.4); }
+.w4l-blog-body { padding: 1.25rem 1.5rem; display: flex; flex-direction: column; flex: 1; }
+.w4l-blog-meta { display: flex; flex-wrap: wrap; gap: .75rem; font-size: .72rem; color: #888; margin-bottom: .75rem; }
+.w4l-blog-meta i { margin-right: .2rem; }
+.w4l-blog-title { font-size: 1.05rem; font-weight: 700; line-height: 1.4; margin-bottom: .5rem; }
+.w4l-blog-title a { color: #0d2b2c; text-decoration: none; }
+.w4l-blog-title a:hover { color: #1a4d4e; }
+.w4l-blog-excerpt {
+  font-size: .85rem; color: #666; line-height: 1.6; flex: 1; margin-bottom: 1rem;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.w4l-blog-read-more {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .82rem; font-weight: 700; color: #1a4d4e; text-decoration: none; margin-top: auto;
+}
+.w4l-blog-read-more:hover { color: #e8b13e; }
+.w4l-blog-view-all {
+  display: inline-flex; align-items: center; gap: .4rem;
+  padding: .75rem 2rem; border: 2px solid #1a4d4e;
+  color: #1a4d4e; border-radius: 8px; font-weight: 700;
+  text-decoration: none; transition: all .2s;
+}
+.w4l-blog-view-all:hover { background: #1a4d4e; color: #fff; }
+
+/* ── Donor PWA install banner ────────────────────────────────────────────── */
+.donor-pwa-banner {
+  position: fixed; bottom: -100px; left: 0; right: 0; z-index: 9000;
+  padding: .75rem 1.25rem;
+  transition: bottom .4s ease;
+}
+.donor-pwa-banner.show { bottom: 0; }
+.donor-pwa-inner {
+  background: #1a4d4e; color: #fff;
+  border-radius: 14px;
+  max-width: 600px; margin: 0 auto;
+  display: flex; align-items: center; gap: .85rem;
+  padding: .85rem 1.1rem;
+  box-shadow: 0 8px 32px rgba(0,0,0,.25);
+}
+.donor-pwa-logo { width: 40px; height: 40px; border-radius: 10px; object-fit: cover; flex-shrink: 0; }
+.donor-pwa-text { flex: 1; min-width: 0; font-size: .82rem; line-height: 1.4; }
+.donor-pwa-text strong { display: block; font-size: .9rem; }
+.donor-pwa-text span { opacity: .8; }
+.donor-pwa-install {
+  padding: .45rem 1rem; background: #e8b13e; color: #1a4d4e;
+  border: none; border-radius: 8px; font-size: .82rem; font-weight: 700;
+  cursor: pointer; flex-shrink: 0; white-space: nowrap;
+  transition: background .2s;
+}
+.donor-pwa-install:hover { background: #f0c050; }
+.donor-pwa-dismiss {
+  background: none; border: none; color: rgba(255,255,255,.6);
+  font-size: 1.3rem; cursor: pointer; flex-shrink: 0; line-height: 1;
+  padding: 0 .25rem;
+  transition: color .2s;
+}
+.donor-pwa-dismiss:hover { color: #fff; }
+
+/* Pagination */
+.w4l-pagination { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 3rem; }
+.w4l-page-btn {
+  display: inline-flex; align-items: center; gap: .35rem;
+  padding: .6rem 1.25rem; background: #1a4d4e; color: #fff;
+  border-radius: 8px; text-decoration: none; font-size: .85rem; font-weight: 600;
+  transition: background .2s;
+}
+.w4l-page-btn:hover { background: #25636a; }
+.w4l-page-info { font-size: .85rem; color: #888; }
