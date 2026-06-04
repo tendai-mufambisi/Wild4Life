@@ -1,0 +1,101 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Dashboard{% endblock %} — Wild4Life Admin</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+
+<aside class="sidebar" aria-label="Main navigation">
+  <div class="sidebar-brand">
+    <span class="sidebar-paw">🐘</span>
+    <span class="brand-name">Wild4Life</span>
+    <span class="brand-tag">Admin Dashboard</span>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Overview</div>
+    <ul class="sidebar-nav">
+      <li>
+        <a href="{% url 'donations:dashboard_index' %}"
+           class="{% block nav_home %}{% endblock %}">
+          <span class="nav-icon">📊</span> Analytics
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Records</div>
+    <ul class="sidebar-nav">
+      <li>
+        <a href="{% url 'donations:dashboard_donations' %}"
+           class="{% block nav_donations %}{% endblock %}">
+          <span class="nav-icon">💳</span> Donations
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'donations:dashboard_donors' %}"
+           class="{% block nav_donors %}{% endblock %}">
+          <span class="nav-icon">👥</span> Donors
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Site</div>
+    <ul class="sidebar-nav">
+      <li>
+        <a href="{% url 'donations:donate' %}" target="_blank">
+          <span class="nav-icon">🌍</span> Donation Form ↗
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="sidebar-bottom">
+    <div class="sidebar-user">
+      <div class="avatar">{{ request.user.username|first|upper }}</div>
+      <div>
+        <div class="uname">{{ request.user.get_full_name|default:request.user.username }}</div>
+        <div class="urole">Administrator</div>
+      </div>
+    </div>
+    <a href="{% url 'donations:dashboard_logout' %}" class="btn-logout">
+      <span>⬅</span> Sign out
+    </a>
+  </div>
+</aside>
+
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-title">{% block page_title %}Dashboard{% endblock %}</div>
+    <div class="topbar-meta">
+      <span class="live-dot"></span>
+      <span id="live-clock"></span>
+      <span>Africa/Harare</span>
+    </div>
+  </header>
+
+  <div class="page-content">
+    {% block content %}{% endblock %}
+  </div>
+</div>
+
+<script>
+  (function () {
+    function tick() {
+      const el = document.getElementById("live-clock");
+      if (el) el.textContent = new Date().toLocaleTimeString("en-ZW", { hour: "2-digit", minute: "2-digit" });
+    }
+    tick();
+    setInterval(tick, 30000);
+  })();
+</script>
+{% block extra_scripts %}{% endblock %}
+</body>
+</html>

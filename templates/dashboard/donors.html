@@ -1,0 +1,55 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Donors{% endblock %}
+{% block page_title %}Donors{% endblock %}
+{% block nav_donors %}active{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1>👥 Donors <span style="font-size:.85rem;font-weight:400;color:var(--muted);">· {{ donors.count }} total</span></h1>
+  <form method="get" class="search-bar">
+    <input type="text" name="q" value="{{ search }}" placeholder="Search name, phone, email…">
+    <button type="submit">Search</button>
+    {% if search %}<a href="{% url 'donations:dashboard_donors' %}" style="font-size:.8rem;color:var(--muted);text-decoration:none;">Clear</a>{% endif %}
+  </form>
+</div>
+
+<div class="full-table-card">
+  {% if donors %}
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Phone</th>
+        <th>Email</th>
+        <th>Total Donated</th>
+        <th>Paid</th>
+        <th>All Attempts</th>
+        <th>Joined</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for donor in donors %}
+      <tr>
+        <td class="donor-name">{{ donor.first_name }} {{ donor.last_name }}</td>
+        <td style="font-family:monospace;font-size:.8rem;">{{ donor.phone }}</td>
+        <td style="color:var(--muted);font-size:.8rem;">{{ donor.email }}</td>
+        <td class="amount-cell" style="color:var(--accent);">
+          {% if donor.total %}${{ donor.total|floatformat:2 }}{% else %}—{% endif %}
+        </td>
+        <td>
+          <span class="badge paid"><span class="badge-dot"></span>{{ donor.paid }}</span>
+        </td>
+        <td style="color:var(--muted);">{{ donor.total_count }}</td>
+        <td style="color:var(--muted);font-size:.75rem;">{{ donor.created_at|date:"d M Y" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="empty-state">
+    <span class="empty-icon">👥</span>
+    {% if search %}No donors matching "{{ search }}".{% else %}No donors yet.{% endif %}
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

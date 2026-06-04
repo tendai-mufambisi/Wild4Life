@@ -1,0 +1,50 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Login — Wild4Life</title>
+  <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body class="login-body">
+
+  <div class="login-bg-art" aria-hidden="true">
+    <span style="width:400px;height:400px;top:-100px;left:-100px;"></span>
+    <span style="width:300px;height:300px;bottom:-80px;right:-80px;"></span>
+    <span style="width:180px;height:180px;top:40%;left:60%;"></span>
+  </div>
+
+  <div class="login-card">
+    <div class="login-brand">
+      <span class="logo-icon">🐘</span>
+      <h1>Wild4Life</h1>
+      <p>Admin Dashboard — Staff access only</p>
+    </div>
+
+    {% if error %}
+    <div class="login-error">
+      <span>⚠</span> {{ error }}
+    </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'donations:dashboard_login' %}">
+      {% csrf_token %}
+
+      <div class="login-field">
+        <label for="username">Username</label>
+        <input id="username" name="username" type="text"
+               placeholder="admin" autocomplete="username" autofocus required>
+      </div>
+
+      <div class="login-field">
+        <label for="password">Password</label>
+        <input id="password" name="password" type="password"
+               placeholder="••••••••" autocomplete="current-password" required>
+      </div>
+
+      <button type="submit" class="btn-login">Sign in →</button>
+    </form>
+  </div>
+
+</body>
+</html>

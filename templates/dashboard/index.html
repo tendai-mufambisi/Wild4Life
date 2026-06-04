@@ -1,0 +1,315 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Analytics{% endblock %}
+{% block page_title %}Analytics Overview{% endblock %}
+{% block nav_home %}active{% endblock %}
+
+{% block content %}
+
+<!-- ── Stat cards ─────────────────────────────────────────────────────────── -->
+<div class="stats-grid">
+
+  <div class="stat-card green">
+    <div class="stat-header">
+      <span class="stat-label">Total Raised (USD)</span>
+      <div class="stat-icon">💵</div>
+    </div>
+    <div class="stat-value">${{ total_usd|floatformat:2 }}</div>
+    <div class="stat-sub">{{ paid_count }} successful transaction{{ paid_count|pluralize }}</div>
+  </div>
+
+  <div class="stat-card gold">
+    <div class="stat-header">
+      <span class="stat-label">Total Raised (ZWG)</span>
+      <div class="stat-icon">💴</div>
+    </div>
+    <div class="stat-value small">ZWG {{ total_zwg|floatformat:2 }}</div>
+    <div class="stat-sub">Local currency donations</div>
+  </div>
+
+  <div class="stat-card blue">
+    <div class="stat-header">
+      <span class="stat-label">Total Donors</span>
+      <div class="stat-icon">👥</div>
+    </div>
+    <div class="stat-value">{{ total_donors }}</div>
+    <div class="stat-sub">Unique supporters</div>
+  </div>
+
+  <div class="stat-card purple">
+    <div class="stat-header">
+      <span class="stat-label">Success Rate</span>
+      <div class="stat-icon">📈</div>
+    </div>
+    <div class="stat-value">{{ success_rate }}%</div>
+    <div class="stat-sub">{{ paid_count }} paid of {{ total_count }} attempts</div>
+  </div>
+
+  <div class="stat-card green">
+    <div class="stat-header">
+      <span class="stat-label">Today's Collections</span>
+      <div class="stat-icon">📅</div>
+    </div>
+    <div class="stat-value small">${{ today_raised|floatformat:2 }}</div>
+    <div class="stat-sub">{{ today_count }} donation{{ today_count|pluralize }} initiated today</div>
+  </div>
+
+  <div class="stat-card gold">
+    <div class="stat-header">
+      <span class="stat-label">This Month</span>
+      <div class="stat-icon">🗓</div>
+    </div>
+    <div class="stat-value small">${{ month_raised|floatformat:2 }}</div>
+    <div class="stat-sub">{{ month_count }} donation{{ month_count|pluralize }} this month</div>
+  </div>
+
+  <div class="stat-card blue">
+    <div class="stat-header">
+      <span class="stat-label">Avg. Donation</span>
+      <div class="stat-icon">⚖️</div>
+    </div>
+    <div class="stat-value small">${{ avg_donation|floatformat:2 }}</div>
+    <div class="stat-sub">Per successful transaction</div>
+  </div>
+
+  <div class="stat-card red">
+    <div class="stat-header">
+      <span class="stat-label">Pending / Failed</span>
+      <div class="stat-icon">⏳</div>
+    </div>
+    <div class="stat-value">{{ pending_count }}</div>
+    <div class="stat-sub"><span class="down">{{ failed_count }} failed</span> &nbsp;·&nbsp; {{ cancelled_count }} cancelled</div>
+  </div>
+
+</div>
+
+<!-- ── Charts ─────────────────────────────────────────────────────────────── -->
+<div class="charts-row">
+
+  <!-- Line chart: 30-day activity -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">30-Day Donation Activity</div>
+        <div class="chart-subtitle">Transactions initiated &amp; confirmed per day</div>
+      </div>
+      <div class="chart-toggle">
+        <button class="active" onclick="setLine('count',this)">Count</button>
+        <button onclick="setLine('amount',this)">Amount</button>
+      </div>
+    </div>
+    <div class="chart-wrap">
+      <canvas id="lineChart"></canvas>
+    </div>
+  </div>
+
+  <!-- Donut: status breakdown -->
+  <div class="chart-card">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Status Breakdown</div>
+        <div class="chart-subtitle">All-time distribution</div>
+      </div>
+    </div>
+    <div class="chart-wrap" style="height:200px;">
+      <canvas id="donutChart"></canvas>
+    </div>
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;margin-top:.75rem;font-size:.72rem;">
+      <span style="display:flex;align-items:center;gap:.3rem;"><span style="width:10px;height:10px;background:#22c55e;border-radius:2px;display:inline-block;"></span>Paid {{ paid_count }}</span>
+      <span style="display:flex;align-items:center;gap:.3rem;"><span style="width:10px;height:10px;background:#f59e0b;border-radius:2px;display:inline-block;"></span>Pending {{ pending_count }}</span>
+      <span style="display:flex;align-items:center;gap:.3rem;"><span style="width:10px;height:10px;background:#ef4444;border-radius:2px;display:inline-block;"></span>Failed {{ failed_count }}</span>
+      <span style="display:flex;align-items:center;gap:.3rem;"><span style="width:10px;height:10px;background:#94a3b8;border-radius:2px;display:inline-block;"></span>Cancelled {{ cancelled_count }}</span>
+    </div>
+  </div>
+
+</div>
+
+<!-- Monthly bar chart (full width) -->
+<div class="charts-row" style="margin-bottom:1.75rem;">
+  <div class="chart-card" style="grid-column:1/-1;">
+    <div class="chart-card-header">
+      <div>
+        <div class="chart-title">Monthly Revenue</div>
+        <div class="chart-subtitle">USD confirmed payments per month</div>
+      </div>
+    </div>
+    <div class="chart-wrap" style="height:180px;">
+      <canvas id="barChart"></canvas>
+    </div>
+  </div>
+</div>
+
+<!-- ── Tables ─────────────────────────────────────────────────────────────── -->
+<div class="tables-row">
+
+  <!-- Recent donations -->
+  <div class="table-card">
+    <div class="table-card-header">
+      <span class="table-card-title">Recent Donations</span>
+      <a href="{% url 'donations:dashboard_donations' %}" class="view-all">View all →</a>
+    </div>
+    {% if recent %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Reference</th>
+          <th>Donor</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for d in recent %}
+        <tr>
+          <td><span class="ref-code">{{ d.reference }}</span></td>
+          <td>
+            <div class="donor-name">{{ d.donor.first_name }} {{ d.donor.last_name }}</div>
+            <div class="donor-phone">{{ d.donor.phone }}</div>
+          </td>
+          <td class="amount-cell">{{ d.currency }} {{ d.amount|floatformat:2 }}</td>
+          <td>
+            <span class="badge {{ d.status|lower }}">
+              <span class="badge-dot"></span>{{ d.status }}
+            </span>
+          </td>
+          <td style="color:var(--muted);font-size:.75rem;">{{ d.created_at|date:"d M Y" }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">💳</span>
+      No donations yet.
+    </div>
+    {% endif %}
+  </div>
+
+  <!-- Top donors -->
+  <div class="table-card">
+    <div class="table-card-header">
+      <span class="table-card-title">Top Donors</span>
+      <a href="{% url 'donations:dashboard_donors' %}" class="view-all">View all →</a>
+    </div>
+    {% if top_donors %}
+      {% for donor in top_donors %}
+      <div class="donor-row">
+        <div class="donor-rank {% if forloop.first %}top{% endif %}">{{ forloop.counter }}</div>
+        <div class="donor-info">
+          <div class="name">{{ donor.first_name }} {{ donor.last_name }}</div>
+          <div class="meta">{{ donor.count }} donation{{ donor.count|pluralize }} · {{ donor.phone }}</div>
+        </div>
+        <div class="donor-total">${{ donor.total|floatformat:2 }}</div>
+      </div>
+      {% endfor %}
+    {% else %}
+    <div class="empty-state">
+      <span class="empty-icon">👥</span>
+      No donors yet.
+    </div>
+    {% endif %}
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<script>
+const labels30  = {{ chart_labels_30|safe }};
+const dataCount = {{ chart_count|safe }};
+const dataRaised = {{ chart_raised|safe }};
+const dataMonthly = {{ chart_monthly|safe }};
+const labelsMonthly = {{ chart_labels_monthly|safe }};
+const dataStatus = {{ chart_status|safe }};
+
+Chart.defaults.font.family = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif';
+Chart.defaults.color = '#6b7280';
+
+/* ── Line chart ── */
+const lineCtx = document.getElementById('lineChart').getContext('2d');
+const lineChart = new Chart(lineCtx, {
+  type: 'line',
+  data: {
+    labels: labels30,
+    datasets: [{
+      label: 'Donations',
+      data: dataCount,
+      borderColor: '#22c55e',
+      backgroundColor: 'rgba(34,197,94,.08)',
+      borderWidth: 2.5,
+      pointRadius: 3,
+      pointBackgroundColor: '#22c55e',
+      fill: true,
+      tension: 0.4,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { maxTicksLimit: 8 } },
+      y: { grid: { color: '#f0f6f2' }, beginAtZero: true, ticks: { precision: 0 } }
+    }
+  }
+});
+
+function setLine(mode, btn) {
+  document.querySelectorAll('.chart-toggle button').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  if (mode === 'count') {
+    lineChart.data.datasets[0].data = dataCount;
+    lineChart.data.datasets[0].label = 'Donations';
+  } else {
+    lineChart.data.datasets[0].data = dataRaised;
+    lineChart.data.datasets[0].label = 'USD Raised';
+  }
+  lineChart.update();
+}
+
+/* ── Donut ── */
+new Chart(document.getElementById('donutChart'), {
+  type: 'doughnut',
+  data: {
+    labels: ['Paid', 'Pending', 'Failed', 'Cancelled'],
+    datasets: [{
+      data: dataStatus,
+      backgroundColor: ['#22c55e', '#f59e0b', '#ef4444', '#94a3b8'],
+      borderWidth: 0,
+      hoverOffset: 6,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    cutout: '68%',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed}` } }
+    }
+  }
+});
+
+/* ── Bar chart ── */
+new Chart(document.getElementById('barChart'), {
+  type: 'bar',
+  data: {
+    labels: labelsMonthly,
+    datasets: [{
+      label: 'USD Raised',
+      data: dataMonthly,
+      backgroundColor: 'rgba(34,197,94,.75)',
+      borderRadius: 6,
+      borderSkipped: false,
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false } },
+      y: { grid: { color: '#f0f6f2' }, beginAtZero: true }
+    }
+  }
+});
+</script>
+{% endblock %}
