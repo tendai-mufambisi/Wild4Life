@@ -1,0 +1,56 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Gallery{% endblock %}
+{% block page_title %}Gallery Images{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-heading">
+    <span class="page-icon"><i data-lucide="image"></i></span>
+    Gallery
+    <span class="page-count">{{ images.count }} images</span>
+  </h1>
+</div>
+
+<!-- Upload form -->
+<div class="full-table-card" style="padding:1.5rem;margin-bottom:1.5rem;">
+  <h3 class="card-section-title" style="margin-bottom:1rem;">Upload New Images</h3>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div style="display:flex;gap:1rem;flex-wrap:wrap;align-items:flex-end;">
+      <label style="flex:1;min-width:200px;">
+        Images (select multiple)
+        <input type="file" name="images" multiple accept="image/*" required class="file-input-block">
+      </label>
+      <label style="flex:1;min-width:200px;">
+        Caption (optional, applies to all)
+        <input type="text" name="caption" placeholder="e.g. Field visit, Binga 2025" class="settings-input">
+      </label>
+      <button type="submit" class="btn-save" style="align-self:flex-end;"><i data-lucide="upload"></i>&nbsp; Upload</button>
+    </div>
+  </form>
+</div>
+
+<!-- Image grid -->
+{% if images %}
+<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:1rem;">
+  {% for img in images %}
+  <div style="background:var(--card);border-radius:12px;overflow:hidden;box-shadow:var(--shadow-sm);position:relative;">
+    <img src="{{ img.image.url }}" alt="{{ img.caption }}" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block;">
+    <div style="padding:.6rem .75rem;font-size:.75rem;color:var(--muted);">
+      {% if img.caption %}{{ img.caption }}{% else %}<em>No caption</em>{% endif %}
+      <br><span style="font-size:.68rem;">Order: {{ img.ordering }}</span>
+    </div>
+    <form method="post" action="{% url 'donations:gallery_delete' img.pk %}" style="position:absolute;top:.5rem;right:.5rem;" onsubmit="return confirm('Delete this image?');">
+      {% csrf_token %}
+      <button type="submit" class="btn-danger" style="padding:.3rem .5rem;"><i data-lucide="trash-2"></i></button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="full-table-card"><div class="empty-state">
+  <span class="empty-icon"><i data-lucide="image"></i></span>
+  No gallery images uploaded yet. Use the form above to add some.
+</div></div>
+{% endif %}
+{% endblock %}

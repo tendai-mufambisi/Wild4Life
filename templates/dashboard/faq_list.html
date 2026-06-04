@@ -1,0 +1,44 @@
+{% extends "dashboard/base.html" %}
+{% block title %}FAQs{% endblock %}
+{% block page_title %}FAQs{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-heading">
+    <span class="page-icon"><i data-lucide="help-circle"></i></span>
+    FAQs
+    <span class="page-count">{{ faqs.count }} total</span>
+  </h1>
+  <a href="{% url 'donations:faq_create' %}" class="btn-add"><i data-lucide="plus"></i> Add FAQ</a>
+</div>
+
+{% if faqs %}
+<div class="full-table-card">
+  <table class="data-table">
+    <thead>
+      <tr><th>Question</th><th>Order</th><th>Active</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for f in faqs %}
+      <tr>
+        <td>{{ f.question|truncatechars:80 }}</td>
+        <td>{{ f.ordering }}</td>
+        <td>{% if f.is_active %}<span class="status-pill paid">Yes</span>{% else %}<span class="status-pill cancelled">No</span>{% endif %}</td>
+        <td>
+          <a href="{% url 'donations:faq_edit' f.pk %}" class="btn-edit-sm">Edit</a>
+          <form method="post" action="{% url 'donations:faq_delete' f.pk %}" style="display:inline;" onsubmit="return confirm('Delete this FAQ?');">
+            {% csrf_token %}<button type="submit" class="btn-danger"><i data-lucide="trash-2"></i></button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="full-table-card"><div class="empty-state">
+  <span class="empty-icon"><i data-lucide="help-circle"></i></span>
+  No FAQs yet. <a href="{% url 'donations:faq_create' %}" style="color:var(--sidebar-bg);font-weight:600;">Add the first one &rarr;</a>
+</div></div>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Testimonials{% endblock %}
+{% block page_title %}Testimonials{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-heading">
+    <span class="page-icon"><i data-lucide="message-square"></i></span>
+    Testimonials
+    <span class="page-count">{{ testimonials.count }} total</span>
+  </h1>
+  <a href="{% url 'donations:testimonial_create' %}" class="btn-add"><i data-lucide="plus"></i> Add Testimonial</a>
+</div>
+
+{% if testimonials %}
+<div class="full-table-card">
+  <table class="data-table">
+    <thead>
+      <tr><th>Name</th><th>Title / Role</th><th>Location</th><th>Rating</th><th>Order</th><th>Active</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for t in testimonials %}
+      <tr>
+        <td><strong>{{ t.name }}</strong></td>
+        <td>{{ t.title }}</td>
+        <td>{{ t.location|default:"—" }}</td>
+        <td>{{ t.rating }}/5</td>
+        <td>{{ t.ordering }}</td>
+        <td>{% if t.is_active %}<span class="status-pill paid">Yes</span>{% else %}<span class="status-pill cancelled">No</span>{% endif %}</td>
+        <td>
+          <a href="{% url 'donations:testimonial_edit' t.pk %}" class="btn-edit-sm">Edit</a>
+          <form method="post" action="{% url 'donations:testimonial_delete' t.pk %}" style="display:inline;" onsubmit="return confirm('Delete this testimonial?');">
+            {% csrf_token %}<button type="submit" class="btn-danger"><i data-lucide="trash-2"></i></button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="full-table-card"><div class="empty-state">
+  <span class="empty-icon"><i data-lucide="message-square"></i></span>
+  No testimonials yet. <a href="{% url 'donations:testimonial_create' %}" style="color:var(--sidebar-bg);font-weight:600;">Add the first one &rarr;</a>
+</div></div>
+{% endif %}
+{% endblock %}

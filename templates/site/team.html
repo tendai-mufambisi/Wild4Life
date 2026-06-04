@@ -23,6 +23,20 @@
       <p style="color:#426768;margin-top:14px;font-size:1.1rem;">Board members and staff driving the Wild4Life mission</p>
     </div>
 
+    {% if board_members %}
+    <div class="w4l-board-row">
+      {% for m in board_members %}
+      <div class="w4l-card w4l-board-card">
+        <div class="w4l-card-header"><h3>{{ m.name }}</h3><span class="w4l-role">Board</span></div>
+        <div class="w4l-board-position">{{ m.role }}</div>
+        {% if m.bio %}<div class="w4l-exp">{{ m.bio }}</div>{% endif %}
+        {% if m.qualifications %}<hr><div class="w4l-note">{{ m.qualifications }}</div>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    <p class="w4l-board-notice"><i class="fas fa-sync-alt"></i> Board positions shown are current and may be subject to change.</p>
+    {% else %}
+    {# ── Hardcoded fallback — shown until team members are added via the dashboard ── #}
     <div class="w4l-board-row">
       <div class="w4l-card w4l-board-card">
         <div class="w4l-card-header"><h3>Kel Sheppey</h3><span class="w4l-role">Board</span></div>
@@ -49,14 +63,33 @@
         <hr><div class="w4l-note">Board member &amp; Program Director (see staff)</div>
       </div>
     </div>
+    <p class="w4l-board-notice"><i class="fas fa-sync-alt"></i> Board positions shown are current and may be subject to change.</p>
+    {% endif %}
 
-    <p style="text-align:center;color:#6a8b8c;margin:5px 0 35px;"><i class="fas fa-sync-alt"></i> Board positions shown are current and may be subject to change.</p>
-
+    {% if staff_members %}
+    <div class="w4l-staff-row">
+      {% for m in staff_members %}
+      <div class="w4l-card w4l-staff-card">
+        <div class="w4l-card-header"><h3>{{ m.name }}</h3><span class="w4l-role">{{ m.role }}</span></div>
+        {% if m.contact_whatsapp %}
+        <div class="w4l-contact"><i class="fab fa-whatsapp"></i><a href="https://wa.me/{{ m.contact_whatsapp }}" target="_blank" rel="noopener">{{ m.contact_whatsapp }}</a></div>
+        {% elif m.contact_phone %}
+        <div class="w4l-contact"><i class="fas fa-phone-alt"></i><a href="tel:{{ m.contact_phone }}">{{ m.contact_phone }}</a></div>
+        {% endif %}
+        {% if m.experience_years or m.bio %}
+        <div class="w4l-exp">{% if m.experience_years %}<strong>{{ m.experience_years }} years of experience</strong>{% if m.bio %} &ndash; {% endif %}{% endif %}{{ m.bio }}</div>
+        {% endif %}
+        {% if m.qualifications_list %}<ul class="w4l-qualifications">{% for q in m.qualifications_list %}<li>{{ q }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    {# ── Hardcoded fallback ── #}
     <div class="w4l-staff-row">
       <div class="w4l-card w4l-staff-card">
         <div class="w4l-card-header"><h3>Latelang Ndlovu</h3><span class="w4l-role">Program Director</span></div>
         <div class="w4l-contact"><i class="fab fa-whatsapp"></i><a href="https://wa.me/263778378061" target="_blank" rel="noopener">+263 778 378 061</a></div>
-        <div class="w4l-exp"><strong>21 years of experience</strong> developed through various roles &ndash; Provincial HIV Coordinator, PMTCT district focal person under EGPAF, Technical Officer of OI/ART under Beat AIDS Project Zimbabwe, Program Manager under Painted Dog Conservation and Program Director under Pangaea Zimbabwe.</div>
+        <div class="w4l-exp"><strong>21 years of experience</strong> &ndash; Provincial HIV Coordinator, PMTCT district focal person under EGPAF, Technical Officer of OI/ART under Beat AIDS Project Zimbabwe, Program Manager under Painted Dog Conservation and Program Director under Pangaea Zimbabwe.</div>
         <ul class="w4l-qualifications">
           <li>Master&rsquo;s degree in Public Policy and Development Management</li>
           <li>Master&rsquo;s degree in Climate Change and Sustainability</li>
@@ -68,7 +101,7 @@
       <div class="w4l-card w4l-staff-card">
         <div class="w4l-card-header"><h3>Maedwa Mudimba</h3><span class="w4l-role">Clinical &amp; M&amp;E Officer</span></div>
         <div class="w4l-contact"><i class="fab fa-whatsapp"></i><a href="https://wa.me/263773660836" target="_blank" rel="noopener">+263 773 660 836</a></div>
-        <div class="w4l-exp"><strong>19 years of working experience</strong> &ndash; District HIV focal person with MoH, Clinical Monitoring and Evaluation Officer with Painted Dog Conservation and now with Pangaea Zimbabwe. Key duties: coordinating clinical mentoring, integrated outreaches, trainings and program data management.</div>
+        <div class="w4l-exp"><strong>19 years of working experience</strong> &ndash; District HIV focal person with MoH, Clinical Monitoring and Evaluation Officer with Painted Dog Conservation and now with Pangaea Zimbabwe.</div>
         <ul class="w4l-qualifications">
           <li>Diploma in Midwifery</li>
           <li>Diploma in General Nursing</li>
@@ -78,7 +111,7 @@
       <div class="w4l-card w4l-staff-card">
         <div class="w4l-card-header"><h3>Memory Sibanda</h3><span class="w4l-role">Program Officer</span></div>
         <div class="w4l-contact"><i class="fab fa-whatsapp"></i><a href="https://wa.me/263773721902" target="_blank" rel="noopener">+263 773 721 902</a></div>
-        <div class="w4l-exp"><strong>16 years&rsquo; experience in Development work</strong> starting as a Food monitor at World Vision, rising to Program Coordinator. Currently at Pangaea Zimbabwe, responsible for coordinating, implementing, monitoring, supporting and supervising community activities.</div>
+        <div class="w4l-exp"><strong>16 years&rsquo; experience in Development work</strong> starting as a Food monitor at World Vision, rising to Program Coordinator. Currently at Pangaea Zimbabwe.</div>
         <ul class="w4l-qualifications">
           <li>Masters in Development Studies</li>
           <li>BSc Honours in Development Studies</li>
@@ -89,7 +122,7 @@
       <div class="w4l-card w4l-staff-card">
         <div class="w4l-card-header"><h3>Rachel Zhou</h3><span class="w4l-role">Finance Officer</span></div>
         <div class="w4l-contact"><i class="fas fa-phone-alt"></i><a href="tel:+263712582550">+263 712 582 550</a></div>
-        <div class="w4l-exp"><strong>19 years&rsquo; experience</strong> in finance departments &ndash; Finance Clerk at Hwange Local Board, Accountant at Lubhancho House, Finance Officer at Painted Dog Conservation and now at Pangaea Zimbabwe. Roles include finance reporting, budgetary preparation and tracking, bank reconciliations.</div>
+        <div class="w4l-exp"><strong>19 years&rsquo; experience</strong> in finance departments &ndash; Finance Clerk at Hwange Local Board, Accountant at Lubhancho House, Finance Officer at Painted Dog Conservation and now at Pangaea Zimbabwe.</div>
         <ul class="w4l-qualifications">
           <li>Diploma CGI (Chartered Governance Institute)</li>
           <li>Master&rsquo;s in Commerce: Professional Accounting &amp; Corporate Governance</li>
@@ -99,10 +132,7 @@
         </ul>
       </div>
     </div>
-
-    <div style="margin-top:40px;text-align:center;font-size:.9rem;color:#4f7879;background:#ebf3f4;padding:10px;border-radius:60px;max-width:550px;margin-left:auto;margin-right:auto;">
-      <i class="fas fa-handshake" style="margin-right:8px;"></i> Latelang Ndlovu serves both as Board member (Program Operations) and Program Director.
-    </div>
+    {% endif %}
   </div>
 </section>
 

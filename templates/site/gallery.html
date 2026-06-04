@@ -43,7 +43,25 @@
       </div></div></div>
     </section>
 
+    {% if gallery_images %}
+    {# ── Dynamic gallery from dashboard uploads ── #}
     <section id="gallery" class="gallery section">
+      <div class="container">
+        <div class="gallery-grid">
+          {% for img in gallery_images %}
+          <div class="gallery-item {% if forloop.counter == 2 or forloop.counter == 7 %}featured{% endif %}">
+            <a class="glightbox" data-gallery="images-gallery" href="{{ img.image.url }}" title="{{ img.caption }}">
+              <img src="{{ img.image.url }}" class="img-fluid" alt="{{ img.caption|default:'Wild4Life field work' }}">
+              <div class="gallery-overlay"><i class="bi bi-plus-lg"></i></div>
+            </a>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+    {% else %}
+    {# ── Hardcoded fallback — shown until images are uploaded via the dashboard ── #}
+    <section class="gallery section">
       <div class="container">
         <div class="gallery-grid">
           {% with imgs="10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58" %}
@@ -59,6 +77,7 @@
         </div>
       </div>
     </section>
+    {% endif %}
   </section>
 
 </main>

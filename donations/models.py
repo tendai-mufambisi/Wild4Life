@@ -317,3 +317,120 @@ class BlogPost(models.Model):
     def reading_time(self) -> int:
         words = len(self.content.split())
         return max(1, round(words / 200))
+
+
+# ── Site-wide editable content ─────────────────────────────────────────────────
+
+class SiteSettings(models.Model):
+    """Singleton — stores all site-wide content admins can edit from the dashboard."""
+
+    # Contact & location
+    address      = models.CharField(max_length=400, blank=True, default="")
+    email        = models.EmailField(blank=True, default="")
+    phone_primary   = models.CharField(max_length=30, blank=True, default="")
+    phone_secondary = models.CharField(max_length=30, blank=True, default="")
+    whatsapp     = models.CharField(max_length=30, blank=True, default="")
+    office_hours = models.CharField(max_length=200, blank=True, default="")
+    maps_embed_url = models.TextField(blank=True, default="")
+
+    # Social media
+    social_facebook  = models.URLField(blank=True, default="")
+    social_instagram = models.URLField(blank=True, default="")
+    social_linkedin  = models.URLField(blank=True, default="")
+
+    # Certificate / registration
+    pvo_number   = models.CharField(max_length=50, blank=True, default="")
+    trust_deed   = models.CharField(max_length=50, blank=True, default="")
+    cert_image   = models.ImageField(upload_to="site/cert/", blank=True, null=True)
+    cert_caption = models.CharField(max_length=200, blank=True, default="")
+    cert_description = models.TextField(blank=True, default="")
+
+    # Key stats (home / about pages)
+    stat_years     = models.CharField(max_length=20, blank=True, default="")
+    stat_districts = models.CharField(max_length=20, blank=True, default="")
+    stat_score     = models.CharField(max_length=20, blank=True, default="")
+
+    class Meta:
+        verbose_name = "Site Settings"
+
+    def save(self, *args, **kwargs):
+        self.pk = 1
+        super().save(*args, **kwargs)
+
+    @classmethod
+    def get(cls):
+        obj, _ = cls.objects.get_or_create(pk=1)
+        return obj
+
+    def __str__(self):
+        return "Site Settings"
+
+
+class TeamMember(models.Model):
+    BOARD = "board"
+    STAFF = "staff"
+    TYPE_CHOICES = [(BOARD, "Board Member"), (STAFF, "Staff Member")]
+
+    name           = models.CharField(max_length=200)
+    role           = models.CharField(max_length=200)
+    member_type    = models.CharField(max_length=10, choices=TYPE_CHOICES, default=STAFF)
+    photo          = models.ImageField(upload_to="team/", blank=True, null=True)
+    bio            = models.TextField(blank=True, default="")
+    experience_years = models.PositiveIntegerField(null=True, blank=True)
+    qualifications = models.TextField(blank=True, default="", help_text="One qualification per line.")
+    contact_whatsapp = models.CharField(max_length=30, blank=True, default="")
+    contact_phone    = models.CharField(max_length=30, blank=True, default="")
+    ordering       = models.PositiveIntegerField(default=0)
+    is_active      = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["ordering", "name"]
+
+    def __str__(self):
+        return f"{self.name} [{self.get_member_type_display()}]"
+
+    def qualifications_list(self):
+        return [q.strip() for q in self.qualifications.splitlines() if q.strip()]
+
+
+class Testimonial(models.Model):
+    name      = models.CharField(max_length=200)
+    title     = models.CharField(max_length=200)
+    location  = models.CharField(max_length=200, blank=True, default="")
+    quote     = models.TextField()
+    rating    = models.PositiveSmallIntegerField(default=5)
+    is_active = models.BooleanField(default=True)
+    ordering  = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["ordering", "name"]
+
+    def __str__(self):
+        return f"{self.name} — {self.title}"
+
+
+class GalleryImage(models.Model):
+    image     = models.ImageField(upload_to="gallery/")
+    caption   = models.CharField(max_length=300, blank=True, default="")
+    ordering  = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["ordering", "pk"]
+
+    def __str__(self):
+        return self.caption or f"Gallery image #{self.pk}"
+
+
+class FAQ(models.Model):
+    question  = models.CharField(max_length=500)
+    answer    = models.TextField()
+    ordering  = models.PositiveIntegerField(default=0)
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ["ordering"]
+        verbose_name = "FAQ"
+
+    def __str__(self):
+        return self.question[:80]

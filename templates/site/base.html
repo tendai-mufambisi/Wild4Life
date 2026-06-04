@@ -93,10 +93,10 @@
           </a>
           <p>Integrated rural health model &ndash; five pillars to strengthen health systems in the hardest&#8209;to&#8209;reach communities. Mentorship, MERL, community action, infrastructure, governance.</p>
           <div class="social-links d-flex mt-4">
-            <a href="https://wa.me/263778378061" aria-label="WhatsApp Wild4Life"><i class="bi bi-whatsapp"></i></a>
-            <a href="#" aria-label="Wild4Life on Facebook"><i class="bi bi-facebook"></i></a>
-            <a href="#" aria-label="Wild4Life on Instagram"><i class="bi bi-instagram"></i></a>
-            <a href="#" aria-label="Wild4Life on LinkedIn"><i class="bi bi-linkedin"></i></a>
+            <a href="https://wa.me/{{ site.whatsapp|default:'263778378061' }}" aria-label="WhatsApp Wild4Life"><i class="bi bi-whatsapp"></i></a>
+            {% if site.social_facebook %}<a href="{{ site.social_facebook }}" aria-label="Wild4Life on Facebook" target="_blank" rel="noopener"><i class="bi bi-facebook"></i></a>{% else %}<a href="#" aria-label="Wild4Life on Facebook"><i class="bi bi-facebook"></i></a>{% endif %}
+            {% if site.social_instagram %}<a href="{{ site.social_instagram }}" aria-label="Wild4Life on Instagram" target="_blank" rel="noopener"><i class="bi bi-instagram"></i></a>{% else %}<a href="#" aria-label="Wild4Life on Instagram"><i class="bi bi-instagram"></i></a>{% endif %}
+            {% if site.social_linkedin %}<a href="{{ site.social_linkedin }}" aria-label="Wild4Life on LinkedIn" target="_blank" rel="noopener"><i class="bi bi-linkedin"></i></a>{% else %}<a href="#" aria-label="Wild4Life on LinkedIn"><i class="bi bi-linkedin"></i></a>{% endif %}
           </div>
         </div>
         <div class="col-lg-2 col-6 footer-links">
@@ -123,10 +123,10 @@
         </div>
         <div class="col-lg-3 col-md-12 footer-contact text-center text-md-start">
           <h4>Contact</h4>
-          <p>Office 22, Hwange Colliery Hospital Health Department Hwange, Zimbabwe</p>
-          <p class="mt-2"><strong>WhatsApp:</strong> <a class="footer-contact-link" href="https://wa.me/263778378061">+263 778 378 061</a></p>
-          <p><strong>Phone:</strong> <a class="footer-contact-link" href="tel:+263712582550">+263 712 582 550</a></p>
-          <p><strong>Email:</strong> <a class="footer-contact-link" href="mailto:info@wild4lifezw.org">info@wild4lifezw.org</a></p>
+          <p>{{ site.address|default:"Office 22, Hwange Colliery Hospital Health Department Hwange, Zimbabwe" }}</p>
+          <p class="mt-2"><strong>WhatsApp:</strong> <a class="footer-contact-link" href="https://wa.me/{{ site.whatsapp|default:'263778378061' }}">{{ site.phone_primary|default:"+263 778 378 061" }}</a></p>
+          {% if site.phone_secondary %}<p><strong>Phone:</strong> <a class="footer-contact-link" href="tel:{{ site.phone_secondary }}">{{ site.phone_secondary }}</a></p>{% else %}<p><strong>Phone:</strong> <a class="footer-contact-link" href="tel:+263712582550">+263 712 582 550</a></p>{% endif %}
+          <p><strong>Email:</strong> <a class="footer-contact-link" href="mailto:{{ site.email|default:'info@wild4lifezw.org' }}">{{ site.email|default:"info@wild4lifezw.org" }}</a></p>
         </div>
       </div>
     </div>

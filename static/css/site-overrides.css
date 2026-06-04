@@ -70,6 +70,9 @@
   text-decoration: none; transition: all .2s;
 }
 .w4l-blog-view-all:hover { background: #1a4d4e; color: #fff; }
+.w4l-blog-view-all--spaced { margin-top: 1rem; }
+.w4l-blog-empty-note { color: #888; }
+.w4l-board-notice { text-align:center; color:#6a8b8c; margin:5px 0 35px; }
 
 /* ── Donor PWA install banner ────────────────────────────────────────────── */
 .donor-pwa-banner {

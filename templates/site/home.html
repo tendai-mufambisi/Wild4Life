@@ -140,21 +140,32 @@
         <div class="w4l-cert-content">
           <div class="w4l-cert-picture-div">
             <div class="w4l-cert-image-frame">
+              {% if site.cert_image %}
+              <img src="{{ site.cert_image.url }}" alt="Wild4Life official registration certificate">
+              {% else %}
               <img src="{% static 'site/img/cert.jpg' %}"
                    alt="Wild4Life official registration certificate"
                    onerror="this.onerror=null;this.src='https://placehold.co/400x500/1e3c3f/b3413d?text=Certificate+Image';">
+              {% endif %}
             </div>
             <div class="w4l-cert-pic-caption">
-              <i class="fas fa-certificate"></i> official certificate &middot; PVO#40/2017
+              <i class="fas fa-certificate"></i>
+              {{ site.cert_caption|default:"official certificate · PVO#40/2017" }}
             </div>
           </div>
           <div class="w4l-cert-details">
             <h3><i class="fas fa-check-circle"></i> Certificate of Registration</h3>
-            <div class="w4l-reg-number"><i class="fas fa-hashtag"></i> PVO# 40/2017</div>
+            <div class="w4l-reg-number">
+              <i class="fas fa-hashtag"></i> PVO# {{ site.pvo_number|default:"40/2017" }}
+            </div>
             <p>
+              {% if site.cert_description %}
+              {{ site.cert_description }}
+              {% else %}
               <strong>Wild4Life Organisation</strong> &ndash; registered Private Voluntary Organization.<br>
-              Trust Deed MA909/2012 &middot; PVO registration renewed annually.<br>
+              Trust Deed {{ site.trust_deed|default:"MA909/2012" }} &middot; PVO registration renewed annually.<br>
               <span class="w4l-cert-ministry">Ministry of Public Service, Labour and Social Welfare</span>
+              {% endif %}
             </p>
             <div class="w4l-cert-flag">
               <i class="fas fa-stamp"></i>
@@ -309,6 +320,15 @@
       <div class="row justify-content-center">
         <div class="col-lg-10">
           <div class="faq-wrapper">
+            {% if faqs %}
+            {% for f in faqs %}
+            <div class="faq-item {% if forloop.first %}faq-active{% endif %}">
+              <div class="faq-header"><div class="faq-icon"><i class="bi bi-question-circle"></i></div><h4>{{ f.question }}</h4><div class="faq-toggle"><i class="bi bi-plus"></i><i class="bi bi-dash"></i></div></div>
+              <div class="faq-content"><div class="content-inner"><p>{{ f.answer }}</p></div></div>
+            </div>
+            {% endfor %}
+            {% else %}
+            {# ── Hardcoded fallback — shown until FAQs are added via the dashboard ── #}
             <div class="faq-item faq-active">
               <div class="faq-header"><div class="faq-icon"><i class="bi bi-question-circle"></i></div><h4>What areas does Wild4Life cover?</h4><div class="faq-toggle"><i class="bi bi-plus"></i><i class="bi bi-dash"></i></div></div>
               <div class="faq-content"><div class="content-inner"><p>Binga, Hwange and Lupane districts in Matabeleland North, Zimbabwe &ndash; focusing on the hardest&#8209;to&#8209;reach rural communities.</p></div></div>
@@ -323,8 +343,9 @@
             </div>
             <div class="faq-item">
               <div class="faq-header"><div class="faq-icon"><i class="bi bi-question-circle"></i></div><h4>How can I refer someone to your services?</h4><div class="faq-toggle"><i class="bi bi-plus"></i><i class="bi bi-dash"></i></div></div>
-              <div class="faq-content"><div class="content-inner"><p>Contact us via WhatsApp +263 778 378 061 or call +263 712 582 550. We work directly with communities and health facilities.</p></div></div>
+              <div class="faq-content"><div class="content-inner"><p>Contact us via WhatsApp {{ site.phone_primary|default:"+263 778 378 061" }} or call {{ site.phone_secondary|default:"+263 712 582 550" }}. We work directly with communities and health facilities.</p></div></div>
             </div>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -382,15 +403,15 @@
     </div>
   </section>
 
-</main>
-  <!-- Blog section (only when posts exist) -->
-  {% if latest_posts %}
-  <section class="w4l-blog-section">
+  <!-- ── Blog section ─────────────────────────────────────────────────── -->
+  <section class="w4l-blog-section section">
     <div class="container">
       <div class="section-title" data-aos="fade-up">
-        <h2>From our blog</h2>
-        <p>Stories, updates, and field insights from our programmes</p>
+        <h2>From Our Blog</h2>
+        <p>Stories, updates, and field insights from our programmes in Matabeleland North</p>
       </div>
+
+      {% if latest_posts %}
       <div class="row gy-4">
         {% for post in latest_posts %}
         <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="{{ forloop.counter0|add:'1' }}00">
@@ -407,6 +428,7 @@
             <div class="w4l-blog-body">
               <div class="w4l-blog-meta">
                 <span><i class="bi bi-calendar3" aria-hidden="true"></i> {{ post.published_at|date:"d M Y" }}</span>
+                <span><i class="bi bi-person" aria-hidden="true"></i> {{ post.author.get_full_name|default:post.author.username }}</span>
                 <span><i class="bi bi-clock" aria-hidden="true"></i> {{ post.reading_time }} min read</span>
               </div>
               <h3 class="w4l-blog-title">
@@ -421,14 +443,24 @@
         </div>
         {% endfor %}
       </div>
-      <div class="text-center mt-5">
+
+      <div class="text-center mt-5" data-aos="fade-up">
         <a href="{% url 'donations:blog_list' %}" class="w4l-blog-view-all">
-          View all posts <i class="bi bi-arrow-right" aria-hidden="true"></i>
+          View all posts &nbsp;<i class="bi bi-arrow-right" aria-hidden="true"></i>
         </a>
       </div>
+
+      {% else %}
+      <div class="text-center py-4" data-aos="fade-up">
+        <p class="w4l-blog-empty-note">No posts yet — check back soon for updates from the field.</p>
+        <a href="{% url 'donations:blog_list' %}" class="w4l-blog-view-all w4l-blog-view-all--spaced">
+          Visit the blog <i class="bi bi-arrow-right" aria-hidden="true"></i>
+        </a>
+      </div>
+      {% endif %}
+
     </div>
   </section>
-  {% endif %}
 
 </main>
 

@@ -1,0 +1,38 @@
+{% extends "dashboard/base.html" %}
+{% block title %}{% if faq %}Edit FAQ{% else %}Add FAQ{% endif %}{% endblock %}
+{% block page_title %}{% if faq %}Edit FAQ{% else %}Add FAQ{% endif %}{% endblock %}
+
+{% block content %}
+<form method="post">
+  {% csrf_token %}
+  {% if errors %}
+  <div class="login-error" style="margin-bottom:1.5rem;">
+    {% for field, msg in errors.items %}<strong>{{ field|title }}:</strong> {{ msg }} {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="full-table-card" style="padding:2rem;margin-bottom:1rem;">
+    <div style="display:grid;gap:1.25rem;">
+      <label>Question *
+        <input type="text" name="question" value="{{ faq.question|default:form_data.question }}" required class="settings-input">
+      </label>
+      <label>Answer *
+        <textarea name="answer" rows="5" required class="settings-input">{{ faq.answer|default:form_data.answer }}</textarea>
+      </label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+        <label>Display Order
+          <input type="number" name="ordering" value="{{ faq.ordering|default:form_data.ordering|default:0 }}" min="0" class="settings-input">
+        </label>
+        <label style="display:flex;align-items:center;gap:.5rem;font-weight:600;align-self:end;padding-bottom:.5rem;">
+          <input type="checkbox" name="is_active" {% if faq.is_active or not faq %}checked{% endif %}> Active (shown on site)
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div style="display:flex;gap:1rem;">
+    <button type="submit" class="btn-save"><i data-lucide="save"></i>&nbsp; Save</button>
+    <a href="{% url 'donations:faq_list' %}" class="pwa-btn-dismiss" style="padding:.7rem 1.25rem;border-radius:10px;text-decoration:none;">Cancel</a>
+  </div>
+</form>
+{% endblock %}

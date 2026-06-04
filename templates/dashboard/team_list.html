@@ -1,0 +1,48 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Team Members{% endblock %}
+{% block page_title %}Team Members{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <h1 class="page-heading">
+    <span class="page-icon"><i data-lucide="users"></i></span>
+    Team Members
+    <span class="page-count">{{ members.count }} total</span>
+  </h1>
+  <a href="{% url 'donations:team_create' %}" class="btn-add"><i data-lucide="plus"></i> Add Member</a>
+</div>
+
+{% if members %}
+<div class="full-table-card">
+  <table class="data-table">
+    <thead>
+      <tr>
+        <th>Name</th><th>Role</th><th>Type</th><th>Order</th><th>Active</th><th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for m in members %}
+      <tr>
+        <td><strong>{{ m.name }}</strong></td>
+        <td>{{ m.role }}</td>
+        <td><span class="status-pill {% if m.member_type == 'board' %}paid{% else %}pending{% endif %}">{{ m.get_member_type_display }}</span></td>
+        <td>{{ m.ordering }}</td>
+        <td>{% if m.is_active %}<span class="status-pill paid">Yes</span>{% else %}<span class="status-pill cancelled">No</span>{% endif %}</td>
+        <td>
+          <a href="{% url 'donations:team_edit' m.pk %}" class="btn-edit-sm">Edit</a>
+          <form method="post" action="{% url 'donations:team_delete' m.pk %}" style="display:inline;" onsubmit="return confirm('Delete {{ m.name }}?');">
+            {% csrf_token %}<button type="submit" class="btn-danger"><i data-lucide="trash-2"></i></button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% else %}
+<div class="full-table-card"><div class="empty-state">
+  <span class="empty-icon"><i data-lucide="users"></i></span>
+  No team members yet. <a href="{% url 'donations:team_create' %}" style="color:var(--sidebar-bg);font-weight:600;">Add the first one &rarr;</a>
+</div></div>
+{% endif %}
+{% endblock %}

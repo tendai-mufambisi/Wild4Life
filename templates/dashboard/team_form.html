@@ -1,0 +1,73 @@
+{% extends "dashboard/base.html" %}
+{% block title %}{% if member %}Edit Member{% else %}Add Member{% endif %}{% endblock %}
+{% block page_title %}{% if member %}Edit: {{ member.name }}{% else %}Add Team Member{% endif %}{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {% if errors %}
+  <div class="login-error" style="margin-bottom:1.5rem;">
+    {% for field, msg in errors.items %}<strong>{{ field|title }}:</strong> {{ msg }} {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="full-table-card" style="padding:2rem;margin-bottom:1rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+
+      <label>Name *
+        <input type="text" name="name" value="{{ member.name|default:form_data.name }}" required class="settings-input">
+      </label>
+      <label>Role / Position *
+        <input type="text" name="role" value="{{ member.role|default:form_data.role }}" required class="settings-input">
+      </label>
+
+      <label>Type *
+        <select name="member_type" class="settings-input">
+          {% for val, label in type_choices %}
+          <option value="{{ val }}" {% if member.member_type == val or form_data.member_type == val %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+      </label>
+      <label>Years of Experience
+        <input type="number" name="experience_years" value="{{ member.experience_years|default:form_data.experience_years }}" min="0" class="settings-input">
+      </label>
+
+      <label style="grid-column:1/-1;">Bio / Description
+        <textarea name="bio" rows="3" class="settings-input">{{ member.bio|default:form_data.bio }}</textarea>
+      </label>
+      <label style="grid-column:1/-1;">Qualifications <span style="font-weight:400;font-size:.82rem;">(one per line)</span>
+        <textarea name="qualifications" rows="5" class="settings-input">{{ member.qualifications|default:form_data.qualifications }}</textarea>
+      </label>
+
+      <label>WhatsApp Number
+        <input type="text" name="contact_whatsapp" value="{{ member.contact_whatsapp|default:form_data.contact_whatsapp }}" placeholder="+263778000000" class="settings-input">
+      </label>
+      <label>Phone Number
+        <input type="text" name="contact_phone" value="{{ member.contact_phone|default:form_data.contact_phone }}" class="settings-input">
+      </label>
+
+      <label>Photo
+        {% if member.photo %}
+        <img src="{{ member.photo.url }}" alt="Photo" style="height:64px;border-radius:50%;display:block;margin-bottom:.5rem;">
+        <label style="font-weight:400;font-size:.82rem;"><input type="checkbox" name="clear_photo"> Remove photo</label>
+        {% endif %}
+        <input type="file" name="photo" accept="image/*" class="file-input-block">
+      </label>
+      <div>
+        <label>Display Order
+          <input type="number" name="ordering" value="{{ member.ordering|default:form_data.ordering|default:0 }}" min="0" class="settings-input">
+        </label>
+        <label style="display:flex;align-items:center;gap:.5rem;margin-top:1rem;font-weight:600;">
+          <input type="checkbox" name="is_active" {% if member.is_active or not member %}checked{% endif %}> Active (shown on site)
+        </label>
+      </div>
+
+    </div>
+  </div>
+
+  <div style="display:flex;gap:1rem;">
+    <button type="submit" class="btn-save"><i data-lucide="save"></i>&nbsp; Save</button>
+    <a href="{% url 'donations:team_list' %}" class="pwa-btn-dismiss" style="padding:.7rem 1.25rem;border-radius:10px;text-decoration:none;">Cancel</a>
+  </div>
+</form>
+{% endblock %}

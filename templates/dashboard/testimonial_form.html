@@ -1,0 +1,49 @@
+{% extends "dashboard/base.html" %}
+{% block title %}{% if item %}Edit Testimonial{% else %}Add Testimonial{% endif %}{% endblock %}
+{% block page_title %}{% if item %}Edit Testimonial{% else %}Add Testimonial{% endif %}{% endblock %}
+
+{% block content %}
+<form method="post">
+  {% csrf_token %}
+  {% if errors %}
+  <div class="login-error" style="margin-bottom:1.5rem;">
+    {% for field, msg in errors.items %}<strong>{{ field|title }}:</strong> {{ msg }} {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="full-table-card" style="padding:2rem;margin-bottom:1rem;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1.25rem;">
+
+      <label>Name *
+        <input type="text" name="name" value="{{ item.name|default:form_data.name }}" required class="settings-input">
+      </label>
+      <label>Title / Role *
+        <input type="text" name="title" value="{{ item.title|default:form_data.title }}" placeholder="Nurse-in-Charge, Binga Clinic" required class="settings-input">
+      </label>
+      <label>Location
+        <input type="text" name="location" value="{{ item.location|default:form_data.location }}" placeholder="Binga" class="settings-input">
+      </label>
+      <label>Rating (out of 5)
+        <input type="number" name="rating" value="{{ item.rating|default:form_data.rating|default:5 }}" min="1" max="5" class="settings-input">
+      </label>
+
+      <label style="grid-column:1/-1;">Quote *
+        <textarea name="quote" rows="5" required class="settings-input">{{ item.quote|default:form_data.quote }}</textarea>
+      </label>
+
+      <label>Display Order
+        <input type="number" name="ordering" value="{{ item.ordering|default:form_data.ordering|default:0 }}" min="0" class="settings-input">
+      </label>
+      <label style="display:flex;align-items:center;gap:.5rem;font-weight:600;align-self:end;padding-bottom:.5rem;">
+        <input type="checkbox" name="is_active" {% if item.is_active or not item %}checked{% endif %}> Active (shown on site)
+      </label>
+
+    </div>
+  </div>
+
+  <div style="display:flex;gap:1rem;">
+    <button type="submit" class="btn-save"><i data-lucide="save"></i>&nbsp; Save</button>
+    <a href="{% url 'donations:testimonial_list' %}" class="pwa-btn-dismiss" style="padding:.7rem 1.25rem;border-radius:10px;text-decoration:none;">Cancel</a>
+  </div>
+</form>
+{% endblock %}

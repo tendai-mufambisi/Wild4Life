@@ -81,6 +81,45 @@
   {% endif %}
 
   <div class="sidebar-section">
+    <div class="sidebar-section-label">Site Content</div>
+    <ul class="sidebar-nav">
+      <li>
+        <a href="{% url 'donations:team_list' %}" class="{% block nav_team %}{% endblock %}">
+          <span class="nav-icon"><i data-lucide="users"></i></span> Team
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'donations:testimonial_list' %}" class="{% block nav_testimonials %}{% endblock %}">
+          <span class="nav-icon"><i data-lucide="message-square"></i></span> Testimonials
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'donations:gallery_manage' %}" class="{% block nav_gallery %}{% endblock %}">
+          <span class="nav-icon"><i data-lucide="image"></i></span> Gallery
+        </a>
+      </li>
+      <li>
+        <a href="{% url 'donations:faq_list' %}" class="{% block nav_faqs %}{% endblock %}">
+          <span class="nav-icon"><i data-lucide="help-circle"></i></span> FAQs
+        </a>
+      </li>
+    </ul>
+  </div>
+
+  {% if profile.is_admin or request.user.is_superuser %}
+  <div class="sidebar-section">
+    <div class="sidebar-section-label">Configuration</div>
+    <ul class="sidebar-nav">
+      <li>
+        <a href="{% url 'donations:site_settings' %}" class="{% block nav_settings %}{% endblock %}">
+          <span class="nav-icon"><i data-lucide="settings"></i></span> Site Settings
+        </a>
+      </li>
+    </ul>
+  </div>
+  {% endif %}
+
+  <div class="sidebar-section">
     <div class="sidebar-section-label">Site</div>
     <ul class="sidebar-nav">
       <li>
@@ -162,12 +201,14 @@
   })();
 
   // ── PWA install ────────────────────────────────────────────────────────────
-  // Never show prompt if: already running as standalone PWA, or user already
-  // installed/dismissed permanently (persisted in localStorage).
   const alreadyInstalled =
     window.matchMedia("(display-mode: standalone)").matches ||
     window.navigator.standalone === true ||
     localStorage.getItem("pwa-installed") === "1";
+
+  // "pwa-prompt-shown" is set the moment the modal becomes visible, so the
+  // user only ever sees it once across all dashboard pages.
+  const promptAlreadySeen = localStorage.getItem("pwa-prompt-shown") === "1";
 
   let deferredPrompt = null;
   const modal       = document.getElementById("pwa-modal");
@@ -176,23 +217,21 @@
   const dismissBtn2 = document.getElementById("pwa-dismiss-btn-2");
 
   function showModal() {
-    if (modal && !alreadyInstalled && !localStorage.getItem("pwa-dismissed-dashboard")) {
-      modal.classList.remove("pwa-modal-hidden");
-    }
+    if (!modal || alreadyInstalled || localStorage.getItem("pwa-prompt-shown") === "1") return;
+    localStorage.setItem("pwa-prompt-shown", "1"); // set NOW so other pages skip it
+    modal.classList.remove("pwa-modal-hidden");
   }
+
   function hideModal(markInstalled) {
     if (modal) modal.classList.add("pwa-modal-hidden");
-    if (markInstalled) {
-      localStorage.setItem("pwa-installed", "1");
-    } else {
-      localStorage.setItem("pwa-dismissed-dashboard", "1");
-    }
+    if (markInstalled) localStorage.setItem("pwa-installed", "1");
   }
+
   function showManualInstructions() {
-    document.getElementById("pwa-install-actions").classList.add("pwa-modal-hidden");
+    const actions = document.getElementById("pwa-install-actions");
+    if (actions) actions.style.display = "none";
     const inst = document.getElementById("pwa-manual-instructions");
-    inst.classList.add("pwa-modal-actions");
-    inst.style.display = "flex";
+    if (inst) inst.style.display = "flex";
     const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
     if (isSafari) {
       document.getElementById("pwa-safari-tip").classList.remove("pwa-tip-hidden");
@@ -200,20 +239,19 @@
     }
   }
 
-  // Only listen for install prompt if not already installed
-  if (!alreadyInstalled) {
+  if (!alreadyInstalled && !promptAlreadySeen) {
     window.addEventListener("beforeinstallprompt", (e) => {
       e.preventDefault();
       deferredPrompt = e;
       setTimeout(showModal, 3000);
     });
-
-    // Mark as installed the moment the browser confirms it
-    window.addEventListener("appinstalled", () => {
-      localStorage.setItem("pwa-installed", "1");
-      if (modal) modal.classList.add("pwa-modal-hidden");
-    });
   }
+
+  // Mark as installed the moment the browser confirms it
+  window.addEventListener("appinstalled", () => {
+    localStorage.setItem("pwa-installed", "1");
+    if (modal) modal.classList.add("pwa-modal-hidden");
+  });
 
   if (installBtn) {
     installBtn.addEventListener("click", async () => {
@@ -224,7 +262,7 @@
       deferredPrompt.prompt();
       const { outcome } = await deferredPrompt.userChoice;
       deferredPrompt = null;
-      hideModal(outcome === "accepted"); // true = mark installed permanently
+      hideModal(outcome === "accepted");
     });
   }
 

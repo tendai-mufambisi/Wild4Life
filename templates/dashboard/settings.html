@@ -1,0 +1,109 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Site Settings{% endblock %}
+{% block page_title %}Site Settings{% endblock %}
+
+{% block content %}
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  {% if errors %}
+  <div class="login-error" style="margin-bottom:1.5rem;">
+    {% for field, msg in errors.items %}<strong>{{ field|title }}:</strong> {{ msg }} {% endfor %}
+  </div>
+  {% endif %}
+
+  <div class="settings-grid">
+
+    <!-- Contact & Location -->
+    <div class="full-table-card" style="margin-bottom:1.5rem;">
+      <div class="card-header-row"><h3 class="card-section-title">Contact &amp; Location</h3></div>
+      <div class="settings-fields">
+        <label>Address
+          <textarea name="address" rows="2" class="settings-input">{{ settings.address }}</textarea>
+        </label>
+        <label>Email
+          <input type="email" name="email" value="{{ settings.email }}" class="settings-input">
+        </label>
+        <label>WhatsApp Number
+          <input type="text" name="whatsapp" value="{{ settings.whatsapp }}" placeholder="+263778378061" class="settings-input">
+        </label>
+        <label>Phone (primary)
+          <input type="text" name="phone_primary" value="{{ settings.phone_primary }}" class="settings-input">
+        </label>
+        <label>Phone (secondary)
+          <input type="text" name="phone_secondary" value="{{ settings.phone_secondary }}" class="settings-input">
+        </label>
+        <label>Office Hours
+          <input type="text" name="office_hours" value="{{ settings.office_hours }}" placeholder="Mon-Fri 8AM-5PM" class="settings-input">
+        </label>
+        <label>Google Maps Embed URL
+          <textarea name="maps_embed_url" rows="3" class="settings-input" placeholder="Paste the full Google Maps iframe src URL here">{{ settings.maps_embed_url }}</textarea>
+        </label>
+      </div>
+    </div>
+
+    <!-- Social Media -->
+    <div class="full-table-card" style="margin-bottom:1.5rem;">
+      <div class="card-header-row"><h3 class="card-section-title">Social Media Links</h3></div>
+      <div class="settings-fields">
+        <label>Facebook URL
+          <input type="url" name="social_facebook" value="{{ settings.social_facebook }}" placeholder="https://facebook.com/wild4life" class="settings-input">
+        </label>
+        <label>Instagram URL
+          <input type="url" name="social_instagram" value="{{ settings.social_instagram }}" placeholder="https://instagram.com/wild4life" class="settings-input">
+        </label>
+        <label>LinkedIn URL
+          <input type="url" name="social_linkedin" value="{{ settings.social_linkedin }}" placeholder="https://linkedin.com/company/wild4life" class="settings-input">
+        </label>
+      </div>
+    </div>
+
+    <!-- Certificate / Registration -->
+    <div class="full-table-card" style="margin-bottom:1.5rem;">
+      <div class="card-header-row"><h3 class="card-section-title">Certificate &amp; Registration</h3></div>
+      <div class="settings-fields">
+        <label>PVO Number
+          <input type="text" name="pvo_number" value="{{ settings.pvo_number }}" placeholder="PVO# 40/2017" class="settings-input">
+        </label>
+        <label>Trust Deed Number
+          <input type="text" name="trust_deed" value="{{ settings.trust_deed }}" placeholder="MA909/2012" class="settings-input">
+        </label>
+        <label>Certificate Image
+          {% if settings.cert_image %}
+          <img src="{{ settings.cert_image.url }}" alt="Certificate" style="height:80px;display:block;margin-bottom:.5rem;border-radius:8px;">
+          <label style="font-weight:400;font-size:.85rem;"><input type="checkbox" name="clear_cert_image"> Remove current image</label>
+          {% endif %}
+          <input type="file" name="cert_image" accept="image/*" class="file-input-block">
+        </label>
+        <label>Certificate Caption
+          <input type="text" name="cert_caption" value="{{ settings.cert_caption }}" placeholder="official certificate · PVO#40/2017" class="settings-input">
+        </label>
+        <label>Certificate Description
+          <textarea name="cert_description" rows="3" class="settings-input" placeholder="Description shown below the certificate number…">{{ settings.cert_description }}</textarea>
+        </label>
+      </div>
+    </div>
+
+    <!-- Key Stats -->
+    <div class="full-table-card" style="margin-bottom:1.5rem;">
+      <div class="card-header-row"><h3 class="card-section-title">Key Statistics</h3></div>
+      <div class="settings-fields" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1rem;">
+        <label>Years of Experience
+          <input type="text" name="stat_years" value="{{ settings.stat_years }}" placeholder="10+" class="settings-input">
+        </label>
+        <label>Districts Covered
+          <input type="text" name="stat_districts" value="{{ settings.stat_districts }}" placeholder="3" class="settings-input">
+        </label>
+        <label>Overall Score
+          <input type="text" name="stat_score" value="{{ settings.stat_score }}" placeholder="8.3/10" class="settings-input">
+        </label>
+      </div>
+    </div>
+
+  </div>
+
+  <div style="margin-top:1.5rem;">
+    <button type="submit" class="btn-save"><i data-lucide="save"></i>&nbsp; Save Settings</button>
+  </div>
+</form>
+{% endblock %}

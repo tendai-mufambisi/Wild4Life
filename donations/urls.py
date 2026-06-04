@@ -44,4 +44,29 @@ urlpatterns = [
     path("dashboard/users/<int:user_id>/edit/",   dashboard_views.user_edit,   name="user_edit"),
     path("dashboard/users/<int:user_id>/delete/", dashboard_views.user_delete,  name="user_delete"),
     path("dashboard/password/",                   dashboard_views.change_password, name="change_password"),
+
+    # ── Dashboard — site settings ─────────────────────────────────────────────
+    path("dashboard/settings/", dashboard_views.site_settings_edit, name="site_settings"),
+
+    # ── Dashboard — team ──────────────────────────────────────────────────────
+    path("dashboard/team/",                         dashboard_views.team_list,   name="team_list"),
+    path("dashboard/team/new/",                     dashboard_views.team_create, name="team_create"),
+    path("dashboard/team/<int:member_id>/edit/",    dashboard_views.team_edit,   name="team_edit"),
+    path("dashboard/team/<int:member_id>/delete/",  dashboard_views.team_delete, name="team_delete"),
+
+    # ── Dashboard — testimonials ──────────────────────────────────────────────
+    path("dashboard/testimonials/",                       dashboard_views.testimonial_list,   name="testimonial_list"),
+    path("dashboard/testimonials/new/",                   dashboard_views.testimonial_create, name="testimonial_create"),
+    path("dashboard/testimonials/<int:item_id>/edit/",    dashboard_views.testimonial_edit,   name="testimonial_edit"),
+    path("dashboard/testimonials/<int:item_id>/delete/",  dashboard_views.testimonial_delete, name="testimonial_delete"),
+
+    # ── Dashboard — gallery ───────────────────────────────────────────────────
+    path("dashboard/gallery/",                       dashboard_views.gallery_manage, name="gallery_manage"),
+    path("dashboard/gallery/<int:image_id>/delete/", dashboard_views.gallery_delete, name="gallery_delete"),
+
+    # ── Dashboard — FAQs ──────────────────────────────────────────────────────
+    path("dashboard/faqs/",                    dashboard_views.faq_list,   name="faq_list"),
+    path("dashboard/faqs/new/",                dashboard_views.faq_create, name="faq_create"),
+    path("dashboard/faqs/<int:faq_id>/edit/",  dashboard_views.faq_edit,   name="faq_edit"),
+    path("dashboard/faqs/<int:faq_id>/delete/",dashboard_views.faq_delete, name="faq_delete"),
 ]

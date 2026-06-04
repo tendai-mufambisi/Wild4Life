@@ -27,7 +27,7 @@ from django.views.decorators.http import require_http_methods
 from django.core.paginator import Paginator
 
 from .forms import DonationForm
-from .models import BlogPost, Donor, Donation, TERMINAL_STATES
+from .models import BlogPost, Donor, Donation, TERMINAL_STATES, FAQ, GalleryImage, TeamMember, Testimonial
 from . import paynow_service
 
 logger = logging.getLogger(__name__)
@@ -37,7 +37,8 @@ logger = logging.getLogger(__name__)
 
 def home(request: HttpRequest) -> HttpResponse:
     latest_posts = BlogPost.objects.filter(status="published").order_by("-published_at")[:3]
-    return render(request, "site/home.html", {"latest_posts": latest_posts})
+    faqs = FAQ.objects.filter(is_active=True)
+    return render(request, "site/home.html", {"latest_posts": latest_posts, "faqs": faqs})
 
 
 def about(request: HttpRequest) -> HttpResponse:
@@ -49,15 +50,22 @@ def services(request: HttpRequest) -> HttpResponse:
 
 
 def gallery(request: HttpRequest) -> HttpResponse:
-    return render(request, "site/gallery.html")
+    gallery_images = GalleryImage.objects.filter(is_active=True)
+    return render(request, "site/gallery.html", {"gallery_images": gallery_images})
 
 
 def team(request: HttpRequest) -> HttpResponse:
-    return render(request, "site/team.html")
+    board_members = TeamMember.objects.filter(member_type=TeamMember.BOARD, is_active=True)
+    staff_members = TeamMember.objects.filter(member_type=TeamMember.STAFF, is_active=True)
+    return render(request, "site/team.html", {
+        "board_members": board_members,
+        "staff_members": staff_members,
+    })
 
 
 def testimonials(request: HttpRequest) -> HttpResponse:
-    return render(request, "site/testimonials.html")
+    testimonial_list = Testimonial.objects.filter(is_active=True)
+    return render(request, "site/testimonials.html", {"testimonials": testimonial_list})
 
 
 def contact(request: HttpRequest) -> HttpResponse:

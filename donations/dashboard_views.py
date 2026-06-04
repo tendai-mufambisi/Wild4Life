@@ -24,6 +24,7 @@ from django.utils import timezone
 from .models import (
     BlogPost, Donation, Donor,
     UserProfile, ROLE_ADMIN, ROLE_MANAGER, ROLE_WRITER, ROLE_CHOICES,
+    SiteSettings, TeamMember, Testimonial, GalleryImage, FAQ,
 )
 
 User = get_user_model()
@@ -403,6 +404,277 @@ def user_delete(request: HttpRequest, user_id: int) -> HttpResponse:
     if request.method == "POST" and target_user != request.user and not target_user.is_superuser:
         target_user.delete()
     return redirect("donations:user_list")
+
+
+# ── Site Settings (admin only) ────────────────────────────────────────────────
+
+@require_role(ROLE_ADMIN)
+def site_settings_edit(request: HttpRequest) -> HttpResponse:
+    profile = _get_profile(request.user)
+    settings = SiteSettings.get()
+    errors = {}
+    if request.method == "POST":
+        settings.address        = request.POST.get("address", "").strip()
+        settings.email          = request.POST.get("email", "").strip()
+        settings.phone_primary  = request.POST.get("phone_primary", "").strip()
+        settings.phone_secondary = request.POST.get("phone_secondary", "").strip()
+        settings.whatsapp       = request.POST.get("whatsapp", "").strip()
+        settings.office_hours   = request.POST.get("office_hours", "").strip()
+        settings.maps_embed_url = request.POST.get("maps_embed_url", "").strip()
+        settings.social_facebook  = request.POST.get("social_facebook", "").strip()
+        settings.social_instagram = request.POST.get("social_instagram", "").strip()
+        settings.social_linkedin  = request.POST.get("social_linkedin", "").strip()
+        settings.pvo_number     = request.POST.get("pvo_number", "").strip()
+        settings.trust_deed     = request.POST.get("trust_deed", "").strip()
+        settings.cert_caption   = request.POST.get("cert_caption", "").strip()
+        settings.cert_description = request.POST.get("cert_description", "").strip()
+        settings.stat_years     = request.POST.get("stat_years", "").strip()
+        settings.stat_districts = request.POST.get("stat_districts", "").strip()
+        settings.stat_score     = request.POST.get("stat_score", "").strip()
+        if "cert_image" in request.FILES:
+            settings.cert_image = request.FILES["cert_image"]
+        elif request.POST.get("clear_cert_image"):
+            settings.cert_image = None
+        if not errors:
+            settings.save()
+            return redirect("donations:site_settings")
+    return render(request, "dashboard/settings.html", {
+        "profile": profile, "settings": settings, "errors": errors,
+    })
+
+
+# ── Team members ──────────────────────────────────────────────────────────────
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def team_list(request: HttpRequest) -> HttpResponse:
+    members = TeamMember.objects.all()
+    return render(request, "dashboard/team_list.html", {
+        "members": members, "profile": _get_profile(request.user),
+    })
+
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def team_create(request: HttpRequest) -> HttpResponse:
+    profile = _get_profile(request.user)
+    errors = {}
+    if request.method == "POST":
+        errors, member = _save_team_member(request, None)
+        if not errors:
+            return redirect("donations:team_list")
+    return render(request, "dashboard/team_form.html", {
+        "profile": profile, "member": None, "errors": errors,
+        "form_data": request.POST, "type_choices": TeamMember.TYPE_CHOICES,
+    })
+
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def team_edit(request: HttpRequest, member_id: int) -> HttpResponse:
+    profile = _get_profile(request.user)
+    member = get_object_or_404(TeamMember, pk=member_id)
+    errors = {}
+    if request.method == "POST":
+        errors, member = _save_team_member(request, member)
+        if not errors:
+            return redirect("donations:team_list")
+    return render(request, "dashboard/team_form.html", {
+        "profile": profile, "member": member, "errors": errors,
+        "form_data": request.POST, "type_choices": TeamMember.TYPE_CHOICES,
+    })
+
+
+def _save_team_member(request, member):
+    errors = {}
+    name = request.POST.get("name", "").strip()
+    role = request.POST.get("role", "").strip()
+    if not name:
+        errors["name"] = "Name is required."
+    if not role:
+        errors["role"] = "Role is required."
+    if errors:
+        return errors, member
+    if member is None:
+        member = TeamMember()
+    member.name            = name
+    member.role            = role
+    member.member_type     = request.POST.get("member_type", TeamMember.STAFF)
+    member.bio             = request.POST.get("bio", "").strip()
+    member.qualifications  = request.POST.get("qualifications", "").strip()
+    member.contact_whatsapp = request.POST.get("contact_whatsapp", "").strip()
+    member.contact_phone   = request.POST.get("contact_phone", "").strip()
+    member.ordering        = int(request.POST.get("ordering", 0) or 0)
+    member.is_active       = request.POST.get("is_active") == "on"
+    exp = request.POST.get("experience_years", "").strip()
+    member.experience_years = int(exp) if exp.isdigit() else None
+    if "photo" in request.FILES:
+        member.photo = request.FILES["photo"]
+    elif request.POST.get("clear_photo"):
+        member.photo = None
+    member.save()
+    return {}, member
+
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def team_delete(request: HttpRequest, member_id: int) -> HttpResponse:
+    member = get_object_or_404(TeamMember, pk=member_id)
+    if request.method == "POST":
+        member.delete()
+    return redirect("donations:team_list")
+
+
+# ── Testimonials ──────────────────────────────────────────────────────────────
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def testimonial_list(request: HttpRequest) -> HttpResponse:
+    items = Testimonial.objects.all()
+    return render(request, "dashboard/testimonials_list.html", {
+        "testimonials": items, "profile": _get_profile(request.user),
+    })
+
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def testimonial_create(request: HttpRequest) -> HttpResponse:
+    profile = _get_profile(request.user)
+    errors = {}
+    if request.method == "POST":
+        errors, _ = _save_testimonial(request, None)
+        if not errors:
+            return redirect("donations:testimonial_list")
+    return render(request, "dashboard/testimonial_form.html", {
+        "profile": profile, "item": None, "errors": errors, "form_data": request.POST,
+    })
+
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def testimonial_edit(request: HttpRequest, item_id: int) -> HttpResponse:
+    profile = _get_profile(request.user)
+    item = get_object_or_404(Testimonial, pk=item_id)
+    errors = {}
+    if request.method == "POST":
+        errors, item = _save_testimonial(request, item)
+        if not errors:
+            return redirect("donations:testimonial_list")
+    return render(request, "dashboard/testimonial_form.html", {
+        "profile": profile, "item": item, "errors": errors, "form_data": request.POST,
+    })
+
+
+def _save_testimonial(request, item):
+    errors = {}
+    name  = request.POST.get("name", "").strip()
+    title = request.POST.get("title", "").strip()
+    quote = request.POST.get("quote", "").strip()
+    if not name:  errors["name"]  = "Name is required."
+    if not title: errors["title"] = "Title/role is required."
+    if not quote: errors["quote"] = "Quote text is required."
+    if errors:
+        return errors, item
+    if item is None:
+        item = Testimonial()
+    item.name     = name
+    item.title    = title
+    item.location = request.POST.get("location", "").strip()
+    item.quote    = quote
+    item.rating   = int(request.POST.get("rating", 5) or 5)
+    item.ordering = int(request.POST.get("ordering", 0) or 0)
+    item.is_active = request.POST.get("is_active") == "on"
+    item.save()
+    return {}, item
+
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def testimonial_delete(request: HttpRequest, item_id: int) -> HttpResponse:
+    item = get_object_or_404(Testimonial, pk=item_id)
+    if request.method == "POST":
+        item.delete()
+    return redirect("donations:testimonial_list")
+
+
+# ── Gallery ───────────────────────────────────────────────────────────────────
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def gallery_manage(request: HttpRequest) -> HttpResponse:
+    profile = _get_profile(request.user)
+    if request.method == "POST":
+        files = request.FILES.getlist("images")
+        caption = request.POST.get("caption", "").strip()
+        for f in files:
+            GalleryImage.objects.create(image=f, caption=caption)
+        return redirect("donations:gallery_manage")
+    images = GalleryImage.objects.all()
+    return render(request, "dashboard/gallery_manage.html", {
+        "images": images, "profile": profile,
+    })
+
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def gallery_delete(request: HttpRequest, image_id: int) -> HttpResponse:
+    image = get_object_or_404(GalleryImage, pk=image_id)
+    if request.method == "POST":
+        image.delete()
+    return redirect("donations:gallery_manage")
+
+
+# ── FAQs ──────────────────────────────────────────────────────────────────────
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def faq_list(request: HttpRequest) -> HttpResponse:
+    faqs = FAQ.objects.all()
+    return render(request, "dashboard/faq_list.html", {
+        "faqs": faqs, "profile": _get_profile(request.user),
+    })
+
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def faq_create(request: HttpRequest) -> HttpResponse:
+    profile = _get_profile(request.user)
+    errors = {}
+    if request.method == "POST":
+        errors, _ = _save_faq(request, None)
+        if not errors:
+            return redirect("donations:faq_list")
+    return render(request, "dashboard/faq_form.html", {
+        "profile": profile, "faq": None, "errors": errors, "form_data": request.POST,
+    })
+
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def faq_edit(request: HttpRequest, faq_id: int) -> HttpResponse:
+    profile = _get_profile(request.user)
+    faq = get_object_or_404(FAQ, pk=faq_id)
+    errors = {}
+    if request.method == "POST":
+        errors, faq = _save_faq(request, faq)
+        if not errors:
+            return redirect("donations:faq_list")
+    return render(request, "dashboard/faq_form.html", {
+        "profile": profile, "faq": faq, "errors": errors, "form_data": request.POST,
+    })
+
+
+def _save_faq(request, faq):
+    errors = {}
+    question = request.POST.get("question", "").strip()
+    answer   = request.POST.get("answer", "").strip()
+    if not question: errors["question"] = "Question is required."
+    if not answer:   errors["answer"]   = "Answer is required."
+    if errors:
+        return errors, faq
+    if faq is None:
+        faq = FAQ()
+    faq.question  = question
+    faq.answer    = answer
+    faq.ordering  = int(request.POST.get("ordering", 0) or 0)
+    faq.is_active = request.POST.get("is_active") == "on"
+    faq.save()
+    return {}, faq
+
+
+@require_role(ROLE_ADMIN, ROLE_MANAGER)
+def faq_delete(request: HttpRequest, faq_id: int) -> HttpResponse:
+    faq = get_object_or_404(FAQ, pk=faq_id)
+    if request.method == "POST":
+        faq.delete()
+    return redirect("donations:faq_list")
 
 
 # ── Self-service password change (any dashboard user) ─────────────────────────

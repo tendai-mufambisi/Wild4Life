@@ -1,13 +1,11 @@
 // Wild4Life Service Worker
-const CACHE = 'w4l-v1';
+const CACHE = 'w4l-v2';
 const OFFLINE_URL = '/';
 
+// Only pre-cache genuine static assets — never HTML pages.
+// HTML pages are dynamic (blog posts, donation counts) so they must always
+// be fetched fresh from the network.
 const PRECACHE = [
-  '/',
-  '/donate/',
-  '/blog/',
-  '/about/',
-  '/contact/',
   '/static/site/css/main.css',
   '/static/css/site-overrides.css',
   '/static/site/js/main.js',
@@ -33,16 +31,36 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', (e) => {
   if (e.request.method !== 'GET') return;
-  if (e.request.url.includes('/dashboard/')) return; // never cache dashboard
+  if (e.request.url.includes('/dashboard/')) return;
   if (e.request.url.includes('/admin/'))    return;
   if (e.request.url.includes('/api/'))      return;
 
+  const url = new URL(e.request.url);
+
+  // HTML pages — always network-first so new blog posts, donations, etc.
+  // are always up to date. Fall back to cache only when offline.
+  if (e.request.headers.get('accept') && e.request.headers.get('accept').includes('text/html')) {
+    e.respondWith(
+      fetch(e.request)
+        .then((response) => {
+          if (response.ok) {
+            const clone = response.clone();
+            caches.open(CACHE).then((c) => c.put(e.request, clone));
+          }
+          return response;
+        })
+        .catch(() => caches.match(e.request).then((cached) => cached || caches.match(OFFLINE_URL)))
+    );
+    return;
+  }
+
+  // Static assets (CSS, JS, images) — cache-first for speed.
   e.respondWith(
     caches.match(e.request).then((cached) => {
       if (cached) return cached;
       return fetch(e.request)
         .then((response) => {
-          if (response.ok && e.request.url.startsWith(self.location.origin)) {
+          if (response.ok && url.origin === self.location.origin) {
             const clone = response.clone();
             caches.open(CACHE).then((c) => c.put(e.request, clone));
           }
