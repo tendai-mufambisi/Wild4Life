@@ -359,7 +359,7 @@ def user_create(request: HttpRequest) -> HttpResponse:
 
     return render(request, "dashboard/user_form.html", {
         "action": "Add", "profile": profile, "errors": errors,
-        "role_choices": ROLE_CHOICES, "form_data": request.POST,
+        "role_choices": ROLE_CHOICES, "form_data": request.POST.dict(),
     })
 
 
@@ -394,7 +394,7 @@ def user_edit(request: HttpRequest, user_id: int) -> HttpResponse:
     return render(request, "dashboard/user_form.html", {
         "action": "Edit", "target_user": target_user, "target_profile": target_profile,
         "profile": profile, "errors": errors, "role_choices": ROLE_CHOICES,
-        "form_data": request.POST,
+        "form_data": request.POST.dict(),
     })
 
 
@@ -463,7 +463,7 @@ def team_create(request: HttpRequest) -> HttpResponse:
             return redirect("donations:team_list")
     return render(request, "dashboard/team_form.html", {
         "profile": profile, "member": None, "errors": errors,
-        "form_data": request.POST, "type_choices": TeamMember.TYPE_CHOICES,
+        "form_data": request.POST.dict(), "type_choices": TeamMember.TYPE_CHOICES,
     })
 
 
@@ -478,7 +478,7 @@ def team_edit(request: HttpRequest, member_id: int) -> HttpResponse:
             return redirect("donations:team_list")
     return render(request, "dashboard/team_form.html", {
         "profile": profile, "member": member, "errors": errors,
-        "form_data": request.POST, "type_choices": TeamMember.TYPE_CHOICES,
+        "form_data": request.POST.dict(), "type_choices": TeamMember.TYPE_CHOICES,
     })
 
 
@@ -540,7 +540,7 @@ def testimonial_create(request: HttpRequest) -> HttpResponse:
         if not errors:
             return redirect("donations:testimonial_list")
     return render(request, "dashboard/testimonial_form.html", {
-        "profile": profile, "item": None, "errors": errors, "form_data": request.POST,
+        "profile": profile, "item": None, "errors": errors, "form_data": request.POST.dict(),
     })
 
 
@@ -554,7 +554,7 @@ def testimonial_edit(request: HttpRequest, item_id: int) -> HttpResponse:
         if not errors:
             return redirect("donations:testimonial_list")
     return render(request, "dashboard/testimonial_form.html", {
-        "profile": profile, "item": item, "errors": errors, "form_data": request.POST,
+        "profile": profile, "item": item, "errors": errors, "form_data": request.POST.dict(),
     })
 
 
@@ -633,7 +633,7 @@ def faq_create(request: HttpRequest) -> HttpResponse:
         if not errors:
             return redirect("donations:faq_list")
     return render(request, "dashboard/faq_form.html", {
-        "profile": profile, "faq": None, "errors": errors, "form_data": request.POST,
+        "profile": profile, "faq": None, "errors": errors, "form_data": request.POST.dict(),
     })
 
 
@@ -647,7 +647,7 @@ def faq_edit(request: HttpRequest, faq_id: int) -> HttpResponse:
         if not errors:
             return redirect("donations:faq_list")
     return render(request, "dashboard/faq_form.html", {
-        "profile": profile, "faq": faq, "errors": errors, "form_data": request.POST,
+        "profile": profile, "faq": faq, "errors": errors, "form_data": request.POST.dict(),
     })
 
 
