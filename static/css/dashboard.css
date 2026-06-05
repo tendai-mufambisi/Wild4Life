@@ -73,6 +73,7 @@ body {
 
 .sidebar-scroll {
   flex: 1;
+  min-height: 0;        /* lets the flex item shrink below content height so overflow kicks in */
   overflow-y: auto;
   overflow-x: hidden;
   padding-bottom: .5rem;

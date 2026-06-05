@@ -5,7 +5,11 @@
 {% block extra_head %}
 <style>
   /* Override the minimal card layout for this page */
-  main { padding: 0 !important; align-items: stretch !important; }
+  main {
+    padding: 0 !important;
+    align-items: stretch !important;
+    flex-direction: column !important;
+  }
 
   /* ── Hero band ── */
   .ty-hero {
@@ -443,7 +447,7 @@
     </p>
     <a href="{% url 'donations:home' %}" class="ty-btn-primary ty-btn-block">Back to homepage</a>
   </div>
-  <div class="trust-strip" style="margin-top:1.5rem;">
+  <div class="trust-strip ty-trust-spaced">
     <span class="lock-icon" aria-hidden="true">&#x1F512;</span>
     <span>Secured by <strong>Paynow Zimbabwe</strong></span>
   </div>
