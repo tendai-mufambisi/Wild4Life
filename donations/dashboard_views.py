@@ -361,6 +361,7 @@ def user_create(request: HttpRequest) -> HttpResponse:
     return render(request, "dashboard/user_form.html", {
         "action": "Add", "profile": profile, "errors": errors,
         "role_choices": ROLE_CHOICES, "form_data": defaultdict(str, request.POST.dict()),
+        "target_user": None, "target_profile": None,
     })
 
 

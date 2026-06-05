@@ -37,14 +37,14 @@
       <div style="margin-bottom:1rem;">
         <label>Full Name</label>
         <input type="text" name="full_name"
-               value="{{ form_data.full_name|default:target_user.get_full_name|default:'' }}"
+               value="{% if form_data.full_name %}{{ form_data.full_name }}{% elif target_user %}{{ target_user.get_full_name }}{% endif %}"
                placeholder="First Last" required>
       </div>
 
       <div style="margin-bottom:1rem;">
         <label>Email</label>
         <input type="email" name="email"
-               value="{{ form_data.email|default:target_user.email|default:'' }}"
+               value="{% if form_data.email %}{{ form_data.email }}{% elif target_user %}{{ target_user.email }}{% endif %}"
                placeholder="email@example.com">
       </div>
 
@@ -52,7 +52,7 @@
         <label>Role</label>
         <select name="role">
           {% for value, label in role_choices %}
-          <option value="{{ value }}" {% if form_data.role == value or target_profile.role == value %}selected{% endif %}>
+          <option value="{{ value }}" {% if form_data.role == value %}selected{% elif target_profile and target_profile.role == value and not form_data.role %}selected{% endif %}>
             {{ label }}
           </option>
           {% endfor %}
