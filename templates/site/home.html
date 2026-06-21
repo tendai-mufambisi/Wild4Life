@@ -52,8 +52,23 @@
         <img src="{% static 'site/img/hero-carousel/hero 1.jpg' %}" alt="">
         <div class="carousel-container">
           <h2>Wild4Life: health for hardest&#8209;to&#8209;reach</h2>
-          <p>An integrated model strengthening rural health systems in Binga, Hwange and Lupane.</p>
-          <a href="#about" class="btn-get-started">Learn more</a>
+          <p>Nurses mentored. Communities strengthened. Lives saved &mdash; in Zimbabwe&rsquo;s most remote districts.</p>
+          <div class="hero-cta-group">
+            <a href="{% url 'donations:donate' %}" class="btn-donate-hero">
+              <i class="bi bi-heart-fill"></i>&nbsp;Donate Now
+            </a>
+            <a href="#about" class="btn-get-started btn-ghost">Learn more</a>
+          </div>
+          <p class="hero-impact-note">
+            <i class="bi bi-check2-circle"></i>&nbsp;Your gift directly funds nurses and community health workers in Binga, Hwange &amp; Lupane
+          </p>
+          <div class="hero-stats-row">
+            <span><strong>10+</strong> Years</span>
+            <span class="hero-stats-sep">|</span>
+            <span><strong>3</strong> Districts</span>
+            <span class="hero-stats-sep">|</span>
+            <span><strong>100%</strong> Community&#8209;led</span>
+          </div>
         </div>
       </div>
       <div class="carousel-item">
@@ -61,7 +76,12 @@
         <div class="carousel-container">
           <h2>Clinical mentorship &amp; beyond</h2>
           <p>Multi&#8209;disciplinary teams mentor nurses on HIV, TB, MNCH, mental health &ndash; tailored to each clinic.</p>
-          <a href="#services" class="btn-get-started">Our services</a>
+          <div class="hero-cta-group">
+            <a href="{% url 'donations:donate' %}" class="btn-donate-hero">
+              <i class="bi bi-heart-fill"></i>&nbsp;Donate Now
+            </a>
+            <a href="#services" class="btn-get-started btn-ghost">Our services</a>
+          </div>
         </div>
       </div>
       <div class="carousel-item">
@@ -69,7 +89,12 @@
         <div class="carousel-container">
           <h2>Community at the centre</h2>
           <p>Village health workers, peer mentors, and community dialogues drive demand and accountability.</p>
-          <a href="#interventions" class="btn-get-started">Explore programs</a>
+          <div class="hero-cta-group">
+            <a href="{% url 'donations:donate' %}" class="btn-donate-hero">
+              <i class="bi bi-heart-fill"></i>&nbsp;Donate Now
+            </a>
+            <a href="#interventions" class="btn-get-started btn-ghost">Explore programs</a>
+          </div>
         </div>
       </div>
       <a class="carousel-control-prev" href="#hero-carousel" role="button" data-bs-slide="prev" aria-label="Previous slide">

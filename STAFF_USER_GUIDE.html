@@ -1,0 +1,1612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wild4Life — Staff User Guide</title>
+  <style>
+    /* ── Reset & Base ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --brand:       #1a4d4e;
+      --brand-light: #256b6c;
+      --brand-pale:  #e8f4f4;
+      --gold:        #c9932a;
+      --gold-pale:   #fdf4e3;
+      --red:         #c0392b;
+      --red-pale:    #fdecea;
+      --green:       #1e7e34;
+      --green-pale:  #eaf5ec;
+      --blue:        #1a56a4;
+      --blue-pale:   #e8f0fb;
+      --text:        #1c2b2b;
+      --muted:       #5a6e6e;
+      --border:      #d0e0e0;
+      --bg:          #f4f8f8;
+      --white:       #ffffff;
+      --radius:      10px;
+      --shadow:      0 2px 12px rgba(26,77,78,.10);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      font-size: 16px;
+      line-height: 1.7;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* ── Cover Page ── */
+    .cover {
+      background: linear-gradient(135deg, var(--brand) 0%, var(--brand-light) 60%, #2e8a8b 100%);
+      color: var(--white);
+      text-align: center;
+      padding: 80px 40px 60px;
+      position: relative;
+      overflow: hidden;
+    }
+    .cover::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .cover-badge {
+      display: inline-block;
+      background: rgba(255,255,255,.15);
+      border: 1px solid rgba(255,255,255,.3);
+      color: rgba(255,255,255,.9);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 50px;
+      margin-bottom: 28px;
+    }
+    .cover h1 {
+      font-size: clamp(2.2rem, 5vw, 3.4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .cover h1 span { color: #80d8d9; }
+    .cover .subtitle {
+      font-size: 1.15rem;
+      opacity: .85;
+      max-width: 540px;
+      margin: 0 auto 40px;
+    }
+    .cover-meta {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      flex-wrap: wrap;
+      opacity: .75;
+      font-size: 13px;
+    }
+    .cover-meta span { display: flex; align-items: center; gap: 6px; }
+
+    /* ── Table of Contents ── */
+    .toc-wrap {
+      max-width: 860px;
+      margin: 48px auto;
+      padding: 0 24px;
+    }
+    .toc {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 36px;
+      box-shadow: var(--shadow);
+    }
+    .toc h2 {
+      font-size: 1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--brand);
+      margin-bottom: 20px;
+      padding-bottom: 12px;
+      border-bottom: 2px solid var(--brand-pale);
+    }
+    .toc ol { padding-left: 20px; }
+    .toc li { margin-bottom: 8px; }
+    .toc a {
+      color: var(--brand);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color .2s;
+    }
+    .toc a:hover { color: var(--gold); text-decoration: underline; }
+    .toc .sub { padding-left: 18px; font-size: 14px; color: var(--muted); }
+
+    /* ── Main Layout ── */
+    .main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 24px 80px;
+    }
+
+    /* ── Section Headers ── */
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin: 56px 0 24px;
+      padding-bottom: 16px;
+      border-bottom: 2px solid var(--brand-pale);
+    }
+    .section-icon {
+      width: 48px;
+      height: 48px;
+      background: var(--brand);
+      color: var(--white);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      flex-shrink: 0;
+    }
+    .section-header h2 {
+      font-size: 1.6rem;
+      font-weight: 800;
+      color: var(--brand);
+      line-height: 1.2;
+    }
+    .section-header p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-top: 2px;
+    }
+    h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--brand);
+      margin: 28px 0 10px;
+    }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin-bottom: 20px;
+      box-shadow: var(--shadow);
+    }
+    .card-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    .card-sm {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 18px 20px;
+      box-shadow: var(--shadow);
+    }
+    .card-sm h4 { font-size: 15px; font-weight: 700; color: var(--brand); margin-bottom: 6px; }
+    .card-sm p  { font-size: 14px; color: var(--muted); }
+
+    /* ── Steps ── */
+    .steps { counter-reset: step; list-style: none; padding: 0; }
+    .steps li {
+      counter-increment: step;
+      display: flex;
+      gap: 16px;
+      margin-bottom: 18px;
+      align-items: flex-start;
+    }
+    .steps li::before {
+      content: counter(step);
+      min-width: 32px;
+      height: 32px;
+      background: var(--brand);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .steps li .step-body { flex: 1; }
+    .steps li .step-body strong { display: block; margin-bottom: 3px; color: var(--text); }
+    .steps li .step-body p { font-size: 14px; color: var(--muted); margin: 0; }
+
+    /* ── Callouts ── */
+    .callout {
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      border-radius: var(--radius);
+      padding: 16px 20px;
+      margin: 20px 0;
+      font-size: 14px;
+    }
+    .callout-icon { font-size: 20px; flex-shrink: 0; margin-top: 1px; }
+    .callout.tip    { background: var(--brand-pale); border-left: 4px solid var(--brand); }
+    .callout.warn   { background: var(--gold-pale);  border-left: 4px solid var(--gold);  }
+    .callout.danger { background: var(--red-pale);   border-left: 4px solid var(--red);   }
+    .callout.info   { background: var(--blue-pale);  border-left: 4px solid var(--blue);  }
+    .callout p      { margin: 0; line-height: 1.6; }
+    .callout strong { display: block; margin-bottom: 4px; }
+
+    /* ── Badge pill ── */
+    .badge {
+      display: inline-block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      padding: 3px 10px;
+      border-radius: 50px;
+    }
+    .badge-admin   { background: #fde8e8; color: #c0392b; }
+    .badge-manager { background: #fdf4e3; color: #b07d10; }
+    .badge-writer  { background: var(--brand-pale); color: var(--brand); }
+
+    /* ── Table ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      margin: 16px 0;
+    }
+    th {
+      background: var(--brand);
+      color: var(--white);
+      text-align: left;
+      padding: 10px 14px;
+      font-weight: 600;
+    }
+    td { padding: 10px 14px; border-bottom: 1px solid var(--border); vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:nth-child(even) td { background: var(--bg); }
+
+    /* ── Highlight box ── */
+    .highlight {
+      background: linear-gradient(135deg, var(--brand-pale), #d6eaea);
+      border: 1px solid var(--brand);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      margin: 20px 0;
+    }
+    .highlight h4 { color: var(--brand); font-size: 15px; margin-bottom: 8px; }
+
+    /* ── Key visual ── */
+    .key-visual {
+      background: var(--brand);
+      color: var(--white);
+      border-radius: var(--radius);
+      padding: 20px 24px;
+      text-align: center;
+      font-size: 2.4rem;
+      letter-spacing: 2px;
+      margin: 16px 0;
+    }
+    .key-label { font-size: 12px; opacity: .7; margin-top: 6px; text-transform: uppercase; letter-spacing: 1px; }
+
+    /* ── Stat card row ── */
+    .stat-row {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 12px;
+      margin: 16px 0;
+    }
+    .stat-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 16px 18px;
+      box-shadow: var(--shadow);
+    }
+    .stat-card .sc-icon { font-size: 24px; margin-bottom: 8px; }
+    .stat-card .sc-label { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; font-weight: 600; }
+    .stat-card .sc-desc  { font-size: 13px; color: var(--text); margin-top: 4px; }
+
+    /* ── Divider ── */
+    hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+
+    /* ── Footer ── */
+    .doc-footer {
+      background: var(--brand);
+      color: rgba(255,255,255,.75);
+      text-align: center;
+      padding: 32px 24px;
+      font-size: 13px;
+    }
+    .doc-footer strong { color: var(--white); }
+
+    /* ── Print ── */
+    @media print {
+      .cover { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { background: white; }
+    }
+
+    @media (max-width: 600px) {
+      .cover { padding: 60px 24px 40px; }
+      .cover-meta { flex-direction: column; align-items: center; gap: 12px; }
+      .section-header { flex-direction: column; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     COVER PAGE
+══════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-badge">Official Staff Reference</div>
+  <h1>Wild4Life Organisation<br><span>Website &amp; Dashboard</span><br>User Guide</h1>
+  <p class="subtitle">
+    Everything you need to know to manage the Wild4Life website, receive donations,
+    publish content, and keep your team running smoothly — no technical knowledge required.
+  </p>
+  <div class="cover-meta">
+    <span>&#128198; Version 1.0 &nbsp;·&nbsp; June 2026</span>
+    <span>&#127758; wild4life.org.zw</span>
+    <span>&#9654; Prepared for Wild4Life Staff</span>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     TABLE OF CONTENTS
+══════════════════════════════════════════ -->
+<div class="toc-wrap">
+  <div class="toc">
+    <h2>&#128220; Table of Contents</h2>
+    <ol>
+      <li><a href="#s1">What is the Dashboard?</a></li>
+      <li><a href="#s2">Installing the App on Your Phone (PWA)</a></li>
+      <li><a href="#s3">How to Access the Dashboard (The Secret Button)</a></li>
+      <li><a href="#s4">Logging In</a></li>
+      <li><a href="#s5">Understanding Your Role &amp; Permissions</a></li>
+      <li><a href="#s6">The Analytics Overview</a></li>
+      <li><a href="#s7">Donations &amp; Donors</a>
+        <ol class="sub">
+          <li><a href="#s7-1">Viewing Transactions</a></li>
+          <li><a href="#s7-2">Viewing the Donor List</a></li>
+        </ol>
+      </li>
+      <li><a href="#s8">Writing &amp; Publishing Blog Posts</a></li>
+      <li><a href="#s9">Managing the Team Page</a></li>
+      <li><a href="#s10">Managing Testimonials</a></li>
+      <li><a href="#s11">Managing the Photo Gallery</a></li>
+      <li><a href="#s12">Managing FAQs</a></li>
+      <li><a href="#s13">Managing Staff Users (Accounts &amp; Roles)</a></li>
+      <li><a href="#s14">Site Settings (Contact, Social Media, Certificate)</a></li>
+      <li><a href="#s15">Changing Your Password</a></li>
+      <li><a href="#s16">Quick Reference &amp; Tips</a></li>
+    </ol>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     MAIN CONTENT
+══════════════════════════════════════════ -->
+<div class="main">
+
+  <!-- ── SECTION 1 ── -->
+  <div class="section-header" id="s1">
+    <div class="section-icon">&#127968;</div>
+    <div>
+      <h2>1. What is the Dashboard?</h2>
+      <p>Your command centre for the entire Wild4Life website</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>
+      The <strong>Wild4Life Dashboard</strong> is a private, staff-only area of the Wild4Life website.
+      Think of it as the "back office" — while visitors see the public website at the front,
+      you use the dashboard behind the scenes to manage everything on it.
+    </p>
+    <br>
+    <p>From the dashboard you can:</p>
+    <br>
+    <div class="card-row">
+      <div class="card-sm">
+        <h4>&#128200; See Donations</h4>
+        <p>View every donation made in real time, see who gave, how much, and in which currency.</p>
+      </div>
+      <div class="card-sm">
+        <h4>&#9997;&#65039; Publish Blog Posts</h4>
+        <p>Write news, updates, and stories directly from your browser — no coding needed.</p>
+      </div>
+      <div class="card-sm">
+        <h4>&#128101; Manage the Team</h4>
+        <p>Add, update, or remove board members and staff that appear on the public website.</p>
+      </div>
+      <div class="card-sm">
+        <h4>&#128247; Manage the Gallery</h4>
+        <p>Upload new photos and organise the gallery that the public sees.</p>
+      </div>
+      <div class="card-sm">
+        <h4>&#10029; Manage Testimonials</h4>
+        <p>Add quotes and feedback from community members, partners, and stakeholders.</p>
+      </div>
+      <div class="card-sm">
+        <h4>&#9881;&#65039; Configure the Site</h4>
+        <p>Update contact details, social media links, and registration certificates.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-icon">&#128161;</div>
+    <p><strong>You do not need to know how to code.</strong>
+    Every action in the dashboard is point-and-click. If you can use Facebook or WhatsApp, you can use this dashboard.</p>
+  </div>
+
+
+  <!-- ── SECTION 2 ── -->
+  <div class="section-header" id="s2">
+    <div class="section-icon">&#128241;</div>
+    <div>
+      <h2>2. Installing the App on Your Phone</h2>
+      <p>Add Wild4Life to your home screen like a regular app — no app store needed</p>
+    </div>
+  </div>
+
+  <p>
+    Wild4Life is a <strong>Progressive Web App (PWA)</strong>. This means you can install it on your phone
+    or computer so it opens instantly like a normal app — without going through the Google Play Store
+    or Apple App Store. It also works offline for certain features.
+  </p>
+
+  <h3>Installing on Android (Chrome)</h3>
+  <ul class="steps">
+    <li>
+      <div class="step-body">
+        <strong>Open the Wild4Life website in Chrome</strong>
+        <p>Type the website address into Chrome and open the public homepage.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Wait for the install banner to appear</strong>
+        <p>After about 5 seconds, a small banner at the bottom of the screen will say
+        <em>"Add Wild4Life to your home screen"</em>. Tap it.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Tap "Install" or "Add"</strong>
+        <p>A small pop-up will confirm. Tap the button and the Wild4Life icon will appear on your home screen.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Open the app from your home screen</strong>
+        <p>It opens in full-screen mode, just like a regular app — no browser bars visible.</p>
+      </div>
+    </li>
+  </ul>
+
+  <div class="callout tip">
+    <div class="callout-icon">&#128161;</div>
+    <p>If the banner does not appear automatically, tap the <strong>three dots (⋮) menu</strong> in Chrome's top-right corner,
+    then select <strong>"Add to Home Screen"</strong> or <strong>"Install App"</strong>.</p>
+  </div>
+
+  <h3>Installing on iPhone (Safari)</h3>
+  <ul class="steps">
+    <li>
+      <div class="step-body">
+        <strong>Open Safari</strong>
+        <p>The install feature only works in Safari on iPhone — not Chrome or Firefox.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Go to the Wild4Life website</strong>
+        <p>Visit the public homepage in Safari.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Tap the Share button</strong>
+        <p>This is the square with an upward arrow, found at the bottom of the screen in Safari.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Scroll down and tap "Add to Home Screen"</strong>
+        <p>Give it a name (or leave as "Wild4Life") and tap <em>Add</em> in the top-right corner.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Open the app from your home screen</strong>
+        <p>The Wild4Life icon will appear on your iPhone home screen like any other app.</p>
+      </div>
+    </li>
+  </ul>
+
+  <h3>Installing on a Computer (Windows or Mac)</h3>
+  <ul class="steps">
+    <li>
+      <div class="step-body">
+        <strong>Open Chrome or Edge on your computer</strong>
+        <p>Go to the Wild4Life website.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Look for the install icon in the address bar</strong>
+        <p>A small computer screen icon (&#8853;) or download arrow will appear at the right end of the address bar.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Click it and confirm</strong>
+        <p>Click <em>"Install"</em>. Wild4Life will open in its own window and a shortcut will appear on your desktop.</p>
+      </div>
+    </li>
+  </ul>
+
+
+  <!-- ── SECTION 3 ── -->
+  <div class="section-header" id="s3">
+    <div class="section-icon">&#128273;</div>
+    <div>
+      <h2>3. How to Access the Dashboard</h2>
+      <p>Finding the hidden staff login — the secret button</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>
+      The dashboard login is not advertised on the public website — this keeps it safe from
+      unauthorized visitors. It is accessed through a <strong>hidden button</strong> tucked away
+      at the very bottom of every page on the website.
+    </p>
+  </div>
+
+  <h3>Finding the Secret Button</h3>
+  <ul class="steps">
+    <li>
+      <div class="step-body">
+        <strong>Go to the Wild4Life public website</strong>
+        <p>Open any page — the home page, about page, or any other public page.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Scroll all the way to the very bottom</strong>
+        <p>Go past all the content, the footer links, the contact info — to the very last line of the page.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Look for the tiny black square in the credits line</strong>
+        <p>At the very bottom, you will see a line that reads <em>"Powered by Palset Digital"</em>.
+        Right next to it there is a tiny <strong>black square (&#9632;)</strong> — that is the secret staff portal button.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Click or tap the black square</strong>
+        <p>This will take you directly to the staff login page.</p>
+      </div>
+    </li>
+  </ul>
+
+  <div class="key-visual">
+    &#9632;
+    <div class="key-label">This tiny square — at the very bottom of every page — is your door to the dashboard</div>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-icon">&#9888;&#65039;</div>
+    <p><strong>Keep this secret.</strong>
+    Do not share the location of this button or the dashboard address with members of the public.
+    Only share it with authorised staff members.</p>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-icon">&#128161;</div>
+    <p><strong>Shortcut for regular use:</strong> Once you know the dashboard URL, you can bookmark it directly or
+    use it as your starting point. The dashboard also appears as a shortcut in the installed PWA app.</p>
+  </div>
+
+
+  <!-- ── SECTION 4 ── -->
+  <div class="section-header" id="s4">
+    <div class="section-icon">&#128275;</div>
+    <div>
+      <h2>4. Logging In</h2>
+      <p>Signing in to your staff account</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <p>Once you have reached the login page, signing in is straightforward.</p>
+    <br>
+    <ul class="steps">
+      <li>
+        <div class="step-body">
+          <strong>Enter your Username</strong>
+          <p>This was given to you when your account was created. It is usually your first name or initials.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Enter your Password</strong>
+          <p>Type your password carefully. Passwords are case-sensitive (uppercase and lowercase letters matter).</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Click "Sign In"</strong>
+          <p>If your details are correct, you will be taken directly to the Analytics overview page.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="callout danger">
+    <div class="callout-icon">&#128683;</div>
+    <p><strong>Cannot log in?</strong>
+    Only accounts that have been set up as staff accounts can log in here. If you see an error,
+    contact your administrator to check that your account exists and is active.
+    You cannot log in with a regular donor or public-facing account.</p>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-icon">&#128161;</div>
+    <p><strong>Forgot your password?</strong> Ask your system administrator to reset it for you through the dashboard's
+    Team &amp; Roles section. See <a href="#s13">Section 13</a> for details.</p>
+  </div>
+
+
+  <!-- ── SECTION 5 ── -->
+  <div class="section-header" id="s5">
+    <div class="section-icon">&#127959;&#65039;</div>
+    <div>
+      <h2>5. Understanding Your Role &amp; Permissions</h2>
+      <p>What you can see and do depends on your assigned role</p>
+    </div>
+  </div>
+
+  <p>
+    Every staff member is assigned one of three roles. Your role determines which sections of the
+    dashboard you can access. This is by design — it keeps sensitive information visible only to
+    those who need it.
+  </p>
+
+  <div class="card">
+    <table>
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>What They Can Do</th>
+          <th>Typical Person</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-admin">Admin</span></td>
+          <td>
+            Full access to everything: analytics, donations, donors, all blog posts,
+            staff accounts, team members, testimonials, gallery, FAQs, and site settings.
+          </td>
+          <td>Executive Director, IT Manager</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-manager">Manager</span></td>
+          <td>
+            Analytics, donations &amp; donors, all blog posts (can publish), team,
+            testimonials, gallery, and FAQs. Cannot manage staff accounts or site settings.
+          </td>
+          <td>Programme Manager, Communications Officer</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-writer">Writer</span></td>
+          <td>
+            Can only write blog posts — but only their own drafts. Cannot publish posts
+            (a manager or admin must approve and publish). Cannot see donations or donors.
+          </td>
+          <td>Content Writer, Volunteer</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-icon">&#128161;</div>
+    <p>If you need access to a section that is not appearing for you, ask an Admin to upgrade your role.
+    Your role is shown by name on the Team &amp; Roles page.</p>
+  </div>
+
+
+  <!-- ── SECTION 6 ── -->
+  <div class="section-header" id="s6">
+    <div class="section-icon">&#128200;</div>
+    <div>
+      <h2>6. The Analytics Overview</h2>
+      <p>Your live window into donations, donors, and financial performance</p>
+    </div>
+  </div>
+
+  <p>
+    The first page you see after logging in is the <strong>Analytics Overview</strong> (also called the
+    Dashboard Home). It shows you a complete live picture of how donations are performing —
+    no spreadsheet needed.
+  </p>
+
+  <h3>The Stat Cards</h3>
+  <p>Across the top of the page you will see ten coloured information boxes — called <em>stat cards</em>.
+  Each one shows a key number at a glance:</p>
+
+  <div class="stat-row">
+    <div class="stat-card">
+      <div class="sc-icon">&#128178;</div>
+      <div class="sc-label">Total Raised (USD)</div>
+      <div class="sc-desc">The total amount of all confirmed donations received in US Dollars.</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">&#128179;</div>
+      <div class="sc-label">Total Raised (ZWG)</div>
+      <div class="sc-desc">Total confirmed donations received in Zimbabwe Gold (local currency).</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">&#128101;</div>
+      <div class="sc-label">Total Donors</div>
+      <div class="sc-desc">The number of unique people who have donated at least once.</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">&#9989;</div>
+      <div class="sc-label">Success Rate</div>
+      <div class="sc-desc">The percentage of payment attempts that were completed successfully.</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">&#128197;</div>
+      <div class="sc-label">Today's Collections</div>
+      <div class="sc-desc">Donations received today — total amount and number of transactions.</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">&#128196;</div>
+      <div class="sc-label">This Month</div>
+      <div class="sc-desc">All donations received during the current calendar month.</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">&#129518;</div>
+      <div class="sc-label">Average Donation</div>
+      <div class="sc-desc">The average amount given per successful donation.</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">&#9203;</div>
+      <div class="sc-label">Pending</div>
+      <div class="sc-desc">Payments that were started but not yet confirmed or failed.</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">&#10060;</div>
+      <div class="sc-label">Failed</div>
+      <div class="sc-desc">Payments that were attempted but did not go through.</div>
+    </div>
+    <div class="stat-card">
+      <div class="sc-icon">&#128683;</div>
+      <div class="sc-label">Cancelled</div>
+      <div class="sc-desc">Payments that the donor started but then cancelled themselves.</div>
+    </div>
+  </div>
+
+  <h3>The Charts</h3>
+  <p>Below the stat cards, there are three interactive charts:</p>
+
+  <div class="card">
+    <h4 style="color:var(--brand); margin-bottom:8px;">&#128202; Chart 1 — 30-Day Trend Line</h4>
+    <p>
+      Shows the last 30 days of donation activity as a line graph. You can click the buttons above it
+      to switch between viewing the <strong>number of donations</strong> per day, or the
+      <strong>amount collected</strong> per day. This helps you spot busy days and quiet periods.
+    </p>
+  </div>
+
+  <div class="card">
+    <h4 style="color:var(--brand); margin-bottom:8px;">&#129528; Chart 2 — Status Breakdown (Donut)</h4>
+    <p>
+      A circular chart showing the <em>all-time</em> split of your donation statuses:
+      how many were paid, pending, failed, or cancelled. The legend on the side shows the exact
+      percentages. A high "Paid" slice and a low "Failed" slice is what you want to see.
+    </p>
+  </div>
+
+  <div class="card">
+    <h4 style="color:var(--brand); margin-bottom:8px;">&#128293; Chart 3 — Monthly Bar Chart</h4>
+    <p>
+      A bar chart showing confirmed USD donations month by month over the past year or more.
+      Great for comparing months and spotting seasonal patterns or campaign results.
+    </p>
+  </div>
+
+  <h3>Recent Activity Tables</h3>
+  <p>At the bottom of the analytics page, there are two tables:</p>
+  <div class="card-row">
+    <div class="card-sm">
+      <h4>&#128203; Recent Donations</h4>
+      <p>Shows the last 10 donation transactions — reference number, donor name, amount, status, and date.</p>
+    </div>
+    <div class="card-sm">
+      <h4>&#127942; Top Donors</h4>
+      <p>Shows your most generous supporters — ranked by total amount donated, with their phone and donation count.</p>
+    </div>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-icon">&#128161;</div>
+    <p>The analytics page refreshes every time you open it — you are always seeing live, up-to-date numbers.</p>
+  </div>
+
+
+  <!-- ── SECTION 7 ── -->
+  <div class="section-header" id="s7">
+    <div class="section-icon">&#128181;</div>
+    <div>
+      <h2>7. Donations &amp; Donors</h2>
+      <p>Viewing payment history and supporter information (Manager and Admin only)</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-icon">&#128274;</div>
+    <p><strong>Access required:</strong> This section is only visible to <span class="badge badge-manager">Manager</span>
+    and <span class="badge badge-admin">Admin</span> users. Writers do not have access to financial data.</p>
+  </div>
+
+  <h3 id="s7-1">7.1 Viewing Transactions (Donations List)</h3>
+  <p>In the sidebar, click <strong>Donations → Transactions</strong> to see the full list of all payment records.</p>
+
+  <div class="card">
+    <p>Each row in the list shows:</p>
+    <ul style="padding-left:20px; margin-top:10px;">
+      <li><strong>Reference:</strong> A unique code like <em>W4L-2026-000123</em> — use this for receipts or queries.</li>
+      <li><strong>Donor Name &amp; Phone:</strong> Who made the donation.</li>
+      <li><strong>Amount &amp; Currency:</strong> How much and in which currency (USD or ZWG).</li>
+      <li><strong>Status:</strong> Paid &#10003;, Pending &#8987;, Failed &#10007;, or Cancelled &#9746;.</li>
+      <li><strong>Date &amp; Time:</strong> When the payment was made.</li>
+    </ul>
+    <br>
+    <p>You can <strong>filter</strong> the list by status (e.g. show only "Paid") and by date range to
+    narrow down what you are looking for.</p>
+  </div>
+
+  <h3 id="s7-2">7.2 Viewing the Donor List</h3>
+  <p>In the sidebar, click <strong>Donations → Donors</strong> to see the list of all unique supporters.</p>
+
+  <div class="card">
+    <p>The donor list is <strong>sorted by total donated</strong>, so your most generous supporters appear first.
+    For each donor you can see:</p>
+    <ul style="padding-left:20px; margin-top:10px;">
+      <li>Their full name</li>
+      <li>Phone number and email address</li>
+      <li>Total amount donated (all time)</li>
+      <li>Number of times they have donated</li>
+    </ul>
+    <br>
+    <p>Use the <strong>search box</strong> at the top to look for a specific donor by name or phone number.</p>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-icon">&#9888;&#65039;</div>
+    <p><strong>Handle donor data with care.</strong> Donor names, phone numbers, and email addresses are
+    personal information. Only share this data when absolutely necessary, and never post it publicly.</p>
+  </div>
+
+
+  <!-- ── SECTION 8 ── -->
+  <div class="section-header" id="s8">
+    <div class="section-icon">&#9997;&#65039;</div>
+    <div>
+      <h2>8. Writing &amp; Publishing Blog Posts</h2>
+      <p>Share news, stories, and updates with the public</p>
+    </div>
+  </div>
+
+  <h3>Creating a New Blog Post</h3>
+  <ul class="steps">
+    <li>
+      <div class="step-body">
+        <strong>Click "Blog Posts" in the sidebar</strong>
+        <p>Then click the <strong>+ New Post</strong> button (or "New Post" in the sidebar shortcut).</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Enter the Post Title</strong>
+        <p>Write a clear, descriptive title. This is the headline that will appear on the blog page.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Write your content in the editor</strong>
+        <p>The editor works like a simple word processor — you can make text bold, italic, add bullet lists,
+        headings, and more using the toolbar buttons at the top of the writing area.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Add a Thumbnail Image (optional but recommended)</strong>
+        <p>Click the image upload area to add a photo that will appear as the cover image for the blog post
+        in the blog listing.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Write an Excerpt (short summary)</strong>
+        <p>This is a 1–2 sentence summary of the post. It appears in the blog listing to give readers
+        a preview of what the article is about.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Set the Status</strong>
+        <p>Choose <strong>Draft</strong> to save but not publish yet, or <strong>Published</strong>
+        to make it live on the website immediately.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Click "Save Post"</strong>
+        <p>Your post is saved. If you set it to Published, it is now live on the Wild4Life website.</p>
+      </div>
+    </li>
+  </ul>
+
+  <div class="callout tip">
+    <div class="callout-icon">&#128161;</div>
+    <p><strong>Writers note:</strong> If your role is <span class="badge badge-writer">Writer</span>,
+    your posts will always be saved as <em>Draft</em> even if you select Published.
+    A <span class="badge badge-manager">Manager</span> or <span class="badge badge-admin">Admin</span>
+    must open your post and change the status to Published to make it go live.</p>
+  </div>
+
+  <h3>Editing an Existing Post</h3>
+  <p>From the Blog Posts list, find the post you want to change and click the <strong>Edit (pencil)</strong> button on its row.
+  Make your changes and click <strong>Save Post</strong>.</p>
+
+  <h3>Deleting a Post</h3>
+  <p>From the Blog Posts list, click the <strong>Delete (bin)</strong> button next to the post.
+  You will be asked to confirm before it is permanently removed.</p>
+
+  <div class="callout danger">
+    <div class="callout-icon">&#9888;&#65039;</div>
+    <p><strong>Deletion is permanent.</strong> Once a blog post is deleted, it cannot be recovered.
+    If you just want to hide a post from the public temporarily, set its status to <em>Draft</em> instead of deleting it.</p>
+  </div>
+
+
+  <!-- ── SECTION 9 ── -->
+  <div class="section-header" id="s9">
+    <div class="section-icon">&#128101;</div>
+    <div>
+      <h2>9. Managing the Team Page</h2>
+      <p>Adding and updating board members and staff that appear on the public website</p>
+    </div>
+  </div>
+
+  <p>
+    The public <strong>Team page</strong> on the Wild4Life website shows two groups:
+    <em>Board Members</em> and <em>Staff Members</em>. You manage both from the dashboard under
+    <strong>Site Content → Team</strong>.
+  </p>
+
+  <h3>Adding a New Team Member</h3>
+  <ul class="steps">
+    <li>
+      <div class="step-body">
+        <strong>Go to Site Content → Team in the sidebar</strong>
+        <p>Then click the <strong>Add Member</strong> button.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Fill in their Name and Role</strong>
+        <p>For example: <em>Name: Dr. Patience Moyo</em> and <em>Role: Board Chairperson</em>.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Select the Member Type</strong>
+        <p>Choose <strong>Board</strong> if they sit on the board of directors, or <strong>Staff</strong>
+        for employees or operational team members.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Upload their Photo</strong>
+        <p>Click the photo field and select an image from your device. Use a clear, professional headshot.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Write their Bio</strong>
+        <p>A short paragraph introducing the person — their background, experience, and what they contribute to Wild4Life.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Fill in optional fields</strong>
+        <p>You may also enter their <em>Years of Experience</em>, <em>Qualifications</em>
+        (one qualification per line), <em>WhatsApp number</em>, and <em>Phone number</em>.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Set the Order number</strong>
+        <p>A lower number means they appear earlier on the page. For example: the Chairperson
+        should have Order 1, the Vice Chair Order 2, and so on.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Make sure "Active" is ticked, then save</strong>
+        <p>Only active members appear on the public website.</p>
+      </div>
+    </li>
+  </ul>
+
+  <div class="callout tip">
+    <div class="callout-icon">&#128161;</div>
+    <p><strong>To temporarily hide a team member</strong> without deleting them, edit their record and
+    un-tick the "Active" box. They will disappear from the public site but remain in your dashboard for future use.</p>
+  </div>
+
+
+  <!-- ── SECTION 10 ── -->
+  <div class="section-header" id="s10">
+    <div class="section-icon">&#10029;</div>
+    <div>
+      <h2>10. Managing Testimonials</h2>
+      <p>Sharing positive feedback and stories from the community</p>
+    </div>
+  </div>
+
+  <p>
+    Testimonials appear on the public <strong>Testimonials page</strong> and help build trust with
+    visitors and potential donors. Go to <strong>Site Content → Testimonials</strong> to manage them.
+  </p>
+
+  <h3>Adding a Testimonial</h3>
+  <ul class="steps">
+    <li>
+      <div class="step-body">
+        <strong>Click "Add Testimonial"</strong>
+        <p>From the Testimonials list page.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Enter the person's Name</strong>
+        <p>For example: <em>Mrs. Chiedza Manyika</em>.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Enter their Title or Role</strong>
+        <p>For example: <em>VHW Supervisor, Binga District</em>.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Enter their Location</strong>
+        <p>For example: <em>Binga, Zimbabwe</em>.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Write their Quote</strong>
+        <p>Type out what they said, in their own words where possible. Keep it genuine and concise.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Set the Rating (1–5 stars)</strong>
+        <p>Choose a rating from 1 to 5. Most testimonials are 4 or 5 stars.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Set the Order number and save</strong>
+        <p>Lower numbers appear first. Make sure "Active" is ticked.</p>
+      </div>
+    </li>
+  </ul>
+
+
+  <!-- ── SECTION 11 ── -->
+  <div class="section-header" id="s11">
+    <div class="section-icon">&#128247;</div>
+    <div>
+      <h2>11. Managing the Photo Gallery</h2>
+      <p>Uploading and organising photos that appear on the public gallery page</p>
+    </div>
+  </div>
+
+  <p>
+    The <strong>Gallery</strong> on the public website shows photos of Wild4Life's activities in the field.
+    Go to <strong>Site Content → Gallery</strong> to upload and manage images.
+  </p>
+
+  <h3>Uploading Photos</h3>
+  <ul class="steps">
+    <li>
+      <div class="step-body">
+        <strong>Click inside the upload area</strong>
+        <p>You will see a large drag-and-drop zone on the gallery management page. Click it to open your device's file picker.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Select one or more photos</strong>
+        <p>You can upload multiple photos at the same time by selecting several files at once
+        (hold Ctrl on Windows or Cmd on Mac while clicking).</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Add a caption (optional)</strong>
+        <p>Type a brief description of the photo — for example: <em>"Community health dialogue, Lupane 2025"</em>.
+        Captions help the public understand what they are looking at.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Click "Upload"</strong>
+        <p>The photos will be saved and appear in the gallery list below.</p>
+      </div>
+    </li>
+  </ul>
+
+  <h3>Organising Gallery Photos</h3>
+  <div class="card">
+    <p>
+      Each uploaded photo has an <strong>Order</strong> number. Lower numbers appear first on the public gallery.
+      Edit a photo to change its order number and rearrange how photos are displayed.
+    </p>
+    <br>
+    <p>To <strong>remove a photo</strong>, click the red Delete button next to it. It will be removed from the
+    gallery immediately. This cannot be undone.</p>
+  </div>
+
+  <div class="callout tip">
+    <div class="callout-icon">&#128161;</div>
+    <p><strong>Photo quality tip:</strong> Use photos that are at least 800 pixels wide and show your work clearly.
+    Avoid blurry, dark, or very small images. The first 8 photos also appear on the home page carousel.</p>
+  </div>
+
+
+  <!-- ── SECTION 12 ── -->
+  <div class="section-header" id="s12">
+    <div class="section-icon">&#10067;</div>
+    <div>
+      <h2>12. Managing FAQs</h2>
+      <p>Keeping the Frequently Asked Questions on the homepage up to date</p>
+    </div>
+  </div>
+
+  <p>
+    FAQs (Frequently Asked Questions) appear on the public home page as an expandable list.
+    They help visitors quickly find answers to common questions. Go to <strong>Site Content → FAQs</strong>
+    to manage them.
+  </p>
+
+  <h3>Adding a New FAQ</h3>
+  <ul class="steps">
+    <li>
+      <div class="step-body">
+        <strong>Click "Add FAQ"</strong>
+        <p>From the FAQs list page.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Type the Question</strong>
+        <p>Write it as a question a member of the public would ask — for example:
+        <em>"How do I donate using mobile money?"</em></p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Type the Answer</strong>
+        <p>Give a clear, helpful answer. Keep it simple and to the point.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Set the Order number and save</strong>
+        <p>FAQ with Order 1 appears at the top and is auto-expanded when the page loads.
+        Make sure "Active" is ticked for it to be visible.</p>
+      </div>
+    </li>
+  </ul>
+
+  <div class="callout tip">
+    <div class="callout-icon">&#128161;</div>
+    <p>Aim for 4–8 FAQs. Too few look sparse; too many overwhelm visitors. Focus on questions you actually
+    receive from the public, donors, or community members.</p>
+  </div>
+
+
+  <!-- ── SECTION 13 ── -->
+  <div class="section-header" id="s13">
+    <div class="section-icon">&#128272;</div>
+    <div>
+      <h2>13. Managing Staff Accounts &amp; Roles</h2>
+      <p>Adding new team members to the dashboard and controlling their access (Admin only)</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-icon">&#128274;</div>
+    <p><strong>Access required:</strong> Only <span class="badge badge-admin">Admin</span> users can
+    create, edit, or delete staff accounts. This section is under <strong>Administration → Team &amp; Roles</strong>
+    in the sidebar.</p>
+  </div>
+
+  <h3>Adding a New Staff User</h3>
+  <ul class="steps">
+    <li>
+      <div class="step-body">
+        <strong>Go to Administration → Team &amp; Roles</strong>
+        <p>You will see a list of all current staff accounts.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Click "Add Staff Member"</strong>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Enter their First Name, Last Name, and Username</strong>
+        <p>The username is what they will type to log in. Keep it simple — usually their first name or initials
+        in lowercase, e.g. <em>tendai</em> or <em>p.moyo</em>.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Enter their Email Address</strong>
+        <p>This is optional but useful for password reset communications.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Set a temporary Password</strong>
+        <p>Choose something the new staff member can use to log in for the first time. Ask them to
+        <a href="#s15">change it immediately</a> after their first login.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Choose their Role</strong>
+        <p>Select Admin, Manager, or Writer based on what they need access to. When in doubt, start with Writer
+        and upgrade later if needed.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Click "Save"</strong>
+        <p>The account is created. Share the username and temporary password with the new staff member privately.</p>
+      </div>
+    </li>
+  </ul>
+
+  <h3>Resetting a Staff Member's Password</h3>
+  <div class="card">
+    <p>
+      If a staff member has forgotten their password, an Admin can set a new one for them:
+    </p>
+    <br>
+    <ul class="steps">
+      <li>
+        <div class="step-body">
+          <strong>Find the staff member in Administration → Team &amp; Roles</strong>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Click their Edit button</strong>
+          <p>You can set a new password for them directly from the edit form.</p>
+        </div>
+      </li>
+      <li>
+        <div class="step-body">
+          <strong>Save and share the new password privately</strong>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <h3>Removing a Staff Member</h3>
+  <div class="card">
+    <p>When a staff member leaves Wild4Life, remove their dashboard access immediately.
+    Click the <strong>Delete</strong> button next to their name on the Team &amp; Roles list
+    and confirm the deletion. They will no longer be able to log in.</p>
+  </div>
+
+  <div class="callout danger">
+    <div class="callout-icon">&#9888;&#65039;</div>
+    <p><strong>Security reminder:</strong> Remove dashboard access promptly when a staff member leaves
+    the organisation. Do not allow former staff to retain login credentials.</p>
+  </div>
+
+
+  <!-- ── SECTION 14 ── -->
+  <div class="section-header" id="s14">
+    <div class="section-icon">&#9881;&#65039;</div>
+    <div>
+      <h2>14. Site Settings</h2>
+      <p>Updating contact details, social media, and legal registration info (Admin only)</p>
+    </div>
+  </div>
+
+  <div class="callout info">
+    <div class="callout-icon">&#128274;</div>
+    <p><strong>Access required:</strong> Only <span class="badge badge-admin">Admin</span> users can
+    access Site Settings. Go to <strong>Configuration → Site Settings</strong> in the sidebar.</p>
+  </div>
+
+  <p>
+    Site Settings is where you update the organisation's <em>official information</em> that appears
+    throughout the public website. Changes here take effect immediately across every page.
+  </p>
+
+  <h3>Contact &amp; Location</h3>
+  <div class="card">
+    <table>
+      <thead><tr><th>Field</th><th>What to put here</th></tr></thead>
+      <tbody>
+        <tr><td>Address</td><td>The physical address of the Wild4Life office.</td></tr>
+        <tr><td>Email</td><td>The main contact email address (e.g. info@wild4life.org.zw).</td></tr>
+        <tr><td>WhatsApp Number</td><td>The WhatsApp number for public enquiries (include country code, e.g. +263).</td></tr>
+        <tr><td>Phone (Primary)</td><td>The main landline or mobile number for calls.</td></tr>
+        <tr><td>Phone (Secondary)</td><td>A backup phone number (optional).</td></tr>
+        <tr><td>Office Hours</td><td>For example: "Monday–Friday, 08:00–17:00".</td></tr>
+        <tr><td>Google Maps Embed URL</td><td>The embed URL from Google Maps for the office location (shown as an embedded map on the Contact page).</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Social Media Links</h3>
+  <div class="card">
+    <p>Enter the full URL for each social media page:</p>
+    <ul style="padding-left:20px; margin-top:10px;">
+      <li><strong>Facebook:</strong> e.g. <em>https://www.facebook.com/Wild4LifeOrg</em></li>
+      <li><strong>Instagram:</strong> e.g. <em>https://www.instagram.com/wild4lifeorg</em></li>
+      <li><strong>LinkedIn:</strong> e.g. <em>https://www.linkedin.com/company/wild4life</em></li>
+    </ul>
+    <br>
+    <p>These links power the social media icons that appear in the website footer. Leave a field blank
+    if Wild4Life does not have that social media account.</p>
+  </div>
+
+  <h3>Certificate &amp; Registration Information</h3>
+  <div class="card">
+    <table>
+      <thead><tr><th>Field</th><th>What to put here</th></tr></thead>
+      <tbody>
+        <tr><td>PVO Number</td><td>The Private Voluntary Organisation registration number (e.g. 40/2017).</td></tr>
+        <tr><td>Trust Deed Number</td><td>The legal trust deed reference number (e.g. MA909/2012).</td></tr>
+        <tr><td>Certificate Image</td><td>Upload a photo or scan of the registration certificate to display on the website.</td></tr>
+        <tr><td>Certificate Caption</td><td>A short title for the certificate (e.g. "PVO Certificate of Registration").</td></tr>
+        <tr><td>Certificate Description</td><td>A one or two sentence explanation of what the certificate means.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Homepage Key Statistics</h3>
+  <div class="card">
+    <p>Three numbers appear prominently on the public homepage to show Wild4Life's impact.
+    Update these periodically to keep them accurate:</p>
+    <ul style="padding-left:20px; margin-top:10px;">
+      <li><strong>Years of Experience:</strong> How many years Wild4Life has been operating.</li>
+      <li><strong>Districts Covered:</strong> How many districts the organisation works in.</li>
+      <li><strong>Overall Score:</strong> A performance or satisfaction score (e.g. from an external audit).</li>
+    </ul>
+  </div>
+
+  <div class="callout warn">
+    <div class="callout-icon">&#9888;&#65039;</div>
+    <p><strong>After making changes, always click "Save Settings"</strong> at the bottom of the page.
+    Changes are not saved automatically.</p>
+  </div>
+
+
+  <!-- ── SECTION 15 ── -->
+  <div class="section-header" id="s15">
+    <div class="section-icon">&#128221;</div>
+    <div>
+      <h2>15. Changing Your Password</h2>
+      <p>Keeping your account secure</p>
+    </div>
+  </div>
+
+  <p>
+    Every staff member can change their own password at any time.
+    It is good practice to change your password if you have any reason to believe someone else may know it.
+  </p>
+
+  <ul class="steps">
+    <li>
+      <div class="step-body">
+        <strong>Click "Change Password" in the sidebar</strong>
+        <p>It is located near the bottom of the sidebar menu.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Enter your Current Password</strong>
+        <p>This confirms it is really you making the change.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Enter your New Password</strong>
+        <p>Choose something strong — at least 8 characters, mixing letters and numbers is recommended.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Confirm the New Password</strong>
+        <p>Type the same new password again to confirm there are no typos.</p>
+      </div>
+    </li>
+    <li>
+      <div class="step-body">
+        <strong>Click "Change Password"</strong>
+        <p>Your password is updated immediately. You will need to use the new password the next time you log in.</p>
+      </div>
+    </li>
+  </ul>
+
+  <div class="callout tip">
+    <div class="callout-icon">&#128161;</div>
+    <p><strong>Good password habits:</strong> Do not share your password with anyone — not even other staff members.
+    If someone else needs access, create them their own account. Never write your password on paper near your computer.</p>
+  </div>
+
+
+  <!-- ── SECTION 16 ── -->
+  <div class="section-header" id="s16">
+    <div class="section-icon">&#128218;</div>
+    <div>
+      <h2>16. Quick Reference &amp; Tips</h2>
+      <p>Everything at a glance</p>
+    </div>
+  </div>
+
+  <h3>Dashboard Sidebar — At a Glance</h3>
+  <div class="card">
+    <table>
+      <thead>
+        <tr><th>Sidebar Item</th><th>What it does</th><th>Who can see it</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>&#128200; Analytics</td><td>Live donation stats and charts</td><td>All staff</td></tr>
+        <tr><td>&#128181; Transactions</td><td>Full list of all donation payments</td><td>Manager, Admin</td></tr>
+        <tr><td>&#128101; Donors</td><td>List of all unique donors sorted by total given</td><td>Manager, Admin</td></tr>
+        <tr><td>&#128203; Blog Posts</td><td>View and manage all blog content</td><td>All staff</td></tr>
+        <tr><td>&#9997; New Post</td><td>Write a new blog article</td><td>All staff</td></tr>
+        <tr><td>&#128272; Team &amp; Roles</td><td>Manage staff dashboard accounts</td><td>Admin only</td></tr>
+        <tr><td>&#128101; Team</td><td>Manage board &amp; staff on the public website</td><td>All staff</td></tr>
+        <tr><td>&#10029; Testimonials</td><td>Manage community testimonials</td><td>All staff</td></tr>
+        <tr><td>&#128247; Gallery</td><td>Upload and manage photos</td><td>All staff</td></tr>
+        <tr><td>&#10067; FAQs</td><td>Manage the Frequently Asked Questions</td><td>All staff</td></tr>
+        <tr><td>&#9881; Site Settings</td><td>Contact info, social media, certificates</td><td>Admin only</td></tr>
+        <tr><td>&#128221; Change Password</td><td>Update your own login password</td><td>All staff</td></tr>
+        <tr><td>&#127758; View Site</td><td>Opens the public website in a new tab</td><td>All staff</td></tr>
+        <tr><td>&#128176; Donation Form</td><td>Opens the public donate page in a new tab</td><td>All staff</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h3>Common Tasks — Step Count Summary</h3>
+  <div class="card-row">
+    <div class="card-sm">
+      <h4>&#10133; Add a team member</h4>
+      <p>Site Content → Team → Add Member → Fill form → Save</p>
+    </div>
+    <div class="card-sm">
+      <h4>&#10133; Add a testimonial</h4>
+      <p>Site Content → Testimonials → Add Testimonial → Fill form → Save</p>
+    </div>
+    <div class="card-sm">
+      <h4>&#128247; Upload gallery photos</h4>
+      <p>Site Content → Gallery → Click upload zone → Select photos → Upload</p>
+    </div>
+    <div class="card-sm">
+      <h4>&#9997; Write a blog post</h4>
+      <p>Blog Posts → New Post → Write content → Set status → Save Post</p>
+    </div>
+    <div class="card-sm">
+      <h4>&#128272; Add a staff login</h4>
+      <p>Administration → Team &amp; Roles → Add Staff Member → Fill form → Save</p>
+    </div>
+    <div class="card-sm">
+      <h4>&#9881; Update contact info</h4>
+      <p>Configuration → Site Settings → Edit fields → Save Settings</p>
+    </div>
+  </div>
+
+  <h3>Troubleshooting Common Issues</h3>
+
+  <div class="card">
+    <table>
+      <thead><tr><th>Problem</th><th>Solution</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Cannot log in</td>
+          <td>Double-check your username and password. Make sure Caps Lock is off. Ask an Admin to reset your password if needed.</td>
+        </tr>
+        <tr>
+          <td>A menu item is missing from the sidebar</td>
+          <td>Your role may not have access to that section. Ask an Admin to review your role permissions.</td>
+        </tr>
+        <tr>
+          <td>A blog post is not showing on the public site</td>
+          <td>Check that the post status is set to <em>Published</em> (not Draft). Writers cannot publish their own posts — a Manager or Admin must do it.</td>
+        </tr>
+        <tr>
+          <td>A team member or testimonial is not appearing publicly</td>
+          <td>Edit the record and make sure the "Active" checkbox is ticked.</td>
+        </tr>
+        <tr>
+          <td>A photo in the gallery looks wrong or is broken</td>
+          <td>Delete the broken image and re-upload. Use JPEG or PNG files under 5MB for best results.</td>
+        </tr>
+        <tr>
+          <td>Donation amount looks wrong on analytics</td>
+          <td>Only <em>Paid</em> (confirmed) donations are counted in totals. Pending, failed, and cancelled are shown separately but not added to totals.</td>
+        </tr>
+        <tr>
+          <td>Cannot find the secret login button</td>
+          <td>Scroll to the very last line at the very bottom of any public page and look for a tiny &#9632; square next to the "Powered by Palset Digital" text.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="highlight">
+    <h4>&#127881; You are now ready to manage the Wild4Life website</h4>
+    <p>
+      This guide covers every section of the Wild4Life dashboard. Remember — the dashboard is your tool;
+      the public website is your product. Every change you make here is immediately reflected on the live
+      website seen by visitors, donors, and the community.
+    </p>
+    <br>
+    <p>
+      If you are ever unsure about something, the safest approach is to save as a draft, check with
+      a colleague, and only publish when you are confident. You can always edit anything after saving.
+    </p>
+  </div>
+
+</div>
+
+
+<!-- ══════════════════════════════════════════
+     DOCUMENT FOOTER
+══════════════════════════════════════════ -->
+<div class="doc-footer">
+  <p>
+    <strong>Wild4Life Organisation</strong> &nbsp;·&nbsp; Staff User Guide &nbsp;·&nbsp; Version 1.0 &nbsp;·&nbsp; June 2026
+  </p>
+  <p style="margin-top:8px;">
+    For technical support, contact <strong>Palset Digital</strong>.
+    &nbsp; Internal use only — do not distribute publicly.
+  </p>
+</div>
+
+</body>
+</html>

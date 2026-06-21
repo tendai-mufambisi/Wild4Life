@@ -108,6 +108,104 @@
 }
 .donor-pwa-dismiss:hover { color: #fff; }
 
+/* ── Hero donation CTA ──────────────────────────────────────────────────── */
+.hero .hero-cta-group {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hero .btn-donate-hero {
+  color: #fff;
+  background: #c0392b;
+  font-family: var(--heading-font);
+  font-weight: 700;
+  font-size: 17px;
+  letter-spacing: .5px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 13px 38px;
+  border-radius: 50px;
+  text-decoration: none;
+  position: relative;
+  transition: background .3s, transform .25s;
+  animation: fadeInUp 1s both 0.4s;
+}
+
+.hero .btn-donate-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 50px;
+  border: 2px solid rgba(192,57,43,.7);
+  animation: w4l-donate-pulse 2.5s ease-out 1.6s infinite;
+  pointer-events: none;
+}
+
+.hero .btn-donate-hero:hover {
+  background: #a93226;
+  color: #fff;
+  transform: translateY(-3px);
+}
+
+.hero .btn-get-started.btn-ghost {
+  background: transparent;
+  border: 2px solid rgba(255,255,255,.75);
+  color: #fff;
+}
+
+.hero .btn-get-started.btn-ghost:hover {
+  background: rgba(255,255,255,.15);
+  color: #fff;
+}
+
+.hero .hero-impact-note {
+  margin-top: 18px;
+  font-size: 13.5px;
+  color: rgba(255,255,255,.85);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  animation: fadeInUp 1s both 0.65s;
+}
+
+.hero .hero-impact-note i {
+  color: #7ee57e;
+  font-size: 15px;
+}
+
+.hero .hero-stats-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  font-size: 13px;
+  color: rgba(255,255,255,.7);
+  animation: fadeInUp 1s both 0.8s;
+}
+
+.hero .hero-stats-row strong {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.hero .hero-stats-sep { opacity: .35; }
+
+@keyframes w4l-donate-pulse {
+  0%   { transform: scale(1);    opacity: .7; }
+  70%  { transform: scale(1.55); opacity: 0;  }
+  100% { transform: scale(1.55); opacity: 0;  }
+}
+
+@media (max-width: 576px) {
+  .hero .btn-donate-hero { font-size: 15px; padding: 11px 28px; }
+  .hero .hero-stats-row  { flex-wrap: wrap; justify-content: center; }
+}
+
 /* Pagination */
 .w4l-pagination { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-top: 3rem; }
 .w4l-page-btn {
