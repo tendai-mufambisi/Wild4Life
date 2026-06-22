@@ -20,7 +20,7 @@ def sw_view(request):
     """Serve service worker from the site root (required scope)."""
     sw_path = settings.BASE_DIR / "static" / "sw.js"
     if sw_path.exists():
-        content = sw_path.read_text()
+        content = sw_path.read_text(encoding="utf-8")
     else:
         content = "// service worker placeholder"
     return HttpResponse(content, content_type="application/javascript")
