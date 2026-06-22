@@ -57,6 +57,9 @@ if DEFAULT_CURRENCY not in ("USD", "ZWG"):
 DATABASES = {
     "default": env.db("DATABASE_URL", default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 }
+# Tells Django the MySQL server's clock is in Africa/Harare, so it skips
+# CONVERT_TZ() calls that require timezone tables (unavailable on shared hosting).
+DATABASES["default"]["TIME_ZONE"] = "Africa/Harare"
 
 # ─── Application definition ──────────────────────────────────────────────────
 
