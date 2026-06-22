@@ -243,6 +243,7 @@ def blog_list(request: HttpRequest) -> HttpResponse:
 
 
 @dashboard_login_required
+@dashboard_login_required
 def blog_create(request: HttpRequest) -> HttpResponse:
     profile = _get_profile(request.user)
     if request.method == "POST":
