@@ -310,7 +310,7 @@ def _save_blog(request, post, profile):
         post.thumbnail = None
 
     post.save()
-    return redirect("donations:blog_list")
+    return redirect("donations:blog_list_dash")
 
 
 @dashboard_login_required
@@ -321,7 +321,7 @@ def blog_delete(request: HttpRequest, post_id) -> HttpResponse:
         return HttpResponseForbidden()
     if request.method == "POST":
         post.delete()
-    return redirect("donations:blog_list")
+    return redirect("donations:blog_list_dash")
 
 
 # ── User management (admin only) ──────────────────────────────────────────────
