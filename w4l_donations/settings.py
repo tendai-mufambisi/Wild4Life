@@ -44,6 +44,8 @@ DEBUG = env.bool("DEBUG", default=False)
 
 ALLOWED_HOSTS: list[str] = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1"])
 
+CSRF_TRUSTED_ORIGINS: list[str] = env.list("CSRF_TRUSTED_ORIGINS", default=[SITE_BASE_URL])
+
 DEFAULT_CURRENCY = env.str("DEFAULT_CURRENCY", default="USD")
 if DEFAULT_CURRENCY not in ("USD", "ZWG"):
     raise ImproperlyConfigured(
