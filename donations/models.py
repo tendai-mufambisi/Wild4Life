@@ -366,6 +366,12 @@ class SiteSettings(models.Model):
         return "Site Settings"
 
 
+@receiver(post_save, sender=SiteSettings)
+def _clear_site_settings_cache(sender, **kwargs):
+    from django.core.cache import cache
+    cache.delete("site_settings_singleton")
+
+
 class TeamMember(models.Model):
     BOARD = "board"
     STAFF = "staff"
