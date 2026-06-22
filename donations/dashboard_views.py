@@ -11,13 +11,12 @@ Access control:
 
 import json
 from collections import defaultdict
-from datetime import timedelta
+from datetime import datetime, timedelta
 from functools import wraps
 
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.decorators import login_required
 from django.db.models import Avg, Count, Q, Sum
-from django.db.models.functions import TruncDay, TruncMonth
 from django.http import HttpRequest, HttpResponse, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -132,14 +131,21 @@ def dashboard_index(request: HttpRequest) -> HttpResponse:
     month_raised = Donation.objects.filter(status="PAID", paid_at__date__gte=month_start).aggregate(t=Sum("amount"))["t"] or 0
     month_count  = Donation.objects.filter(created_at__date__gte=month_start).count()
 
-    daily_qs = (
-        Donation.objects.filter(created_at__gte=last_30_start)
-        .annotate(day=TruncDay("created_at"))
-        .values("day")
-        .annotate(count=Count("id"), raised=Sum("amount", filter=Q(status="PAID")))
-        .order_by("day")
+    # Group in Python to avoid CONVERT_TZ — shared MySQL hosting has no timezone tables
+    daily_raw = (
+        Donation.objects
+        .filter(created_at__gte=last_30_start)
+        .values("created_at", "status", "amount")
     )
-    daily_map = {row["day"].date(): row for row in daily_qs}
+    daily_map = {}
+    for _row in daily_raw:
+        if _row["created_at"]:
+            _d = _row["created_at"].date()
+            if _d not in daily_map:
+                daily_map[_d] = {"count": 0, "raised": None}
+            daily_map[_d]["count"] += 1
+            if _row["status"] == "PAID":
+                daily_map[_d]["raised"] = (daily_map[_d]["raised"] or 0) + float(_row["amount"] or 0)
     labels_30, series_count, series_raised = [], [], []
     for i in range(30):
         d = (last_30_start + timedelta(days=i)).date()
@@ -148,13 +154,13 @@ def dashboard_index(request: HttpRequest) -> HttpResponse:
         series_count.append(row.get("count", 0))
         series_raised.append(float(row.get("raised") or 0))
 
-    monthly_qs = list(
-        Donation.objects.filter(status="PAID", paid_at__isnull=False)
-        .annotate(month=TruncMonth("paid_at"))
-        .values("month")
-        .annotate(total=Sum("amount"))
-        .order_by("month")
-    )[-6:]
+    _monthly_totals: dict[str, float] = defaultdict(float)
+    for _r in Donation.objects.filter(status="PAID", paid_at__isnull=False).values("paid_at", "amount"):
+        if _r["paid_at"]:
+            _monthly_totals[_r["paid_at"].strftime("%Y-%m")] += float(_r["amount"] or 0)
+    monthly_qs = [
+        {"month_key": k, "total": v} for k, v in sorted(_monthly_totals.items())
+    ][-6:]
 
     top_donors = list(
         Donor.objects.annotate(
@@ -183,8 +189,8 @@ def dashboard_index(request: HttpRequest) -> HttpResponse:
         "chart_labels_30":    json.dumps(labels_30),
         "chart_count":        json.dumps(series_count),
         "chart_raised":       json.dumps(series_raised),
-        "chart_labels_monthly": json.dumps([r["month"].strftime("%b %Y") for r in monthly_qs]),
-        "chart_monthly":      json.dumps([float(r["total"]) for r in monthly_qs]),
+        "chart_labels_monthly": json.dumps([datetime.strptime(r["month_key"], "%Y-%m").strftime("%b %Y") for r in monthly_qs]),
+        "chart_monthly":      json.dumps([r["total"] for r in monthly_qs]),
         "chart_status":       json.dumps([paid_count, pending_count, failed_count, cancelled_count]),
     }
     return render(request, "dashboard/index.html", ctx)

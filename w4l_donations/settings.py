@@ -138,7 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "Africa/Harare"
 USE_I18N = True
-USE_TZ = False  # shared-hosting MySQL lacks timezone tables; store datetimes in local time
+USE_TZ = True
 
 # ─── Static files ─────────────────────────────────────────────────────────────
 
