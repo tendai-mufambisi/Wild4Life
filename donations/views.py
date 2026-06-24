@@ -21,6 +21,7 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
+from django.templatetags.static import static as _static
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
@@ -51,7 +52,15 @@ def services(request: HttpRequest) -> HttpResponse:
 
 def gallery(request: HttpRequest) -> HttpResponse:
     gallery_images = GalleryImage.objects.filter(is_active=True)
-    return render(request, "site/gallery.html", {"gallery_images": gallery_images})
+    static_gallery: list[str] = []
+    if not gallery_images.exists():
+        nums = list(range(1, 36)) + list(range(37, 59))  # all gallery images; 36 does not exist
+        for n in nums:
+            try:
+                static_gallery.append(_static(f'site/img/gallery/1 ({n}).jpg'))
+            except Exception:
+                pass
+    return render(request, "site/gallery.html", {"gallery_images": gallery_images, "static_gallery": static_gallery})
 
 
 def team(request: HttpRequest) -> HttpResponse:

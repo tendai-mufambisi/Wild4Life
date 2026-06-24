@@ -60,20 +60,17 @@
       </div>
     </section>
     {% else %}
-    {# ── Hardcoded fallback — shown until images are uploaded via the dashboard ── #}
     <section class="gallery section">
       <div class="container">
         <div class="gallery-grid">
-          {% with imgs="10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 31 32 33 34 35 37 38 39 40 41 42 43 44 45 46 47 48 49 50 51 52 53 54 55 56 57 58" %}
-          {% for n in imgs.split %}
+          {% for img_url in static_gallery %}
           <div class="gallery-item {% if forloop.counter == 2 or forloop.counter == 7 %}featured{% endif %}">
-            <a class="glightbox" data-gallery="images-gallery" href="{% static 'site/img/gallery/1 (' %}{{ n }}).jpg">
-              <img src="{% static 'site/img/gallery/1 (' %}{{ n }}).jpg" class="img-fluid" alt="Wild4Life field work">
+            <a class="glightbox" data-gallery="images-gallery" href="{{ img_url }}">
+              <img src="{{ img_url }}" class="img-fluid" alt="Wild4Life field work">
               <div class="gallery-overlay"><i class="bi bi-plus-lg"></i></div>
             </a>
           </div>
           {% endfor %}
-          {% endwith %}
         </div>
       </div>
     </section>
